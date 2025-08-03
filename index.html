@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Поміч у Празі</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <title>Прага Фушки</title>
   <style>
     body {
       margin: 0;
@@ -12,127 +11,58 @@
       background: url('https://i.ibb.co/fbpjfnm/Prague.jpg') no-repeat center center fixed;
       background-size: cover;
     }
-    header, nav, section, footer {
-      padding: 1rem;
-      color: white;
-    }
     .tabs {
       display: flex;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
     }
-    .tabs button {
-      background: none;
+    .tab-button {
+      padding: 10px 20px;
       border: none;
-      padding: 1rem;
-      color: white;
+      background: none;
       font-weight: bold;
       cursor: pointer;
-      flex: 1;
     }
-    .tabs button.active {
-      border-bottom: 3px solid #fff;
+    .tab-button.active {
+      background-color: #ddd;
     }
-    section {
+    .tab-content {
       display: none;
+      padding: 20px;
+      height: 80vh;
+      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(15px);
     }
-    section.active {
+    .tab-content.active {
       display: block;
     }
-    #chat {
-      height: 80vh;
+    #chat-messages {
+      max-height: 60vh;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    #chat-messages div {
+      margin: 5px 0;
+    }
+    #auth-form, #message-form {
       display: flex;
       flex-direction: column;
-      backdrop-filter: blur(8px);
-      background-color: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
+      gap: 5px;
     }
-    #messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
+    .hidden {
+      display: none;
     }
-    #messages div {
-      margin-bottom: 0.5rem;
-      background: rgba(255, 255, 255, 0.2);
-      padding: 0.5rem;
-      border-radius: 5px;
-    }
-    #chat form {
-      display: flex;
-      padding: 1rem;
-      gap: 0.5rem;
-    }
-    #chat input[type="text"] {
-      flex: 1;
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: none;
-    }
-    #mapid {
-      height: 80vh;
-      border-radius: 10px;
-    }
-    .filter-buttons {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-    .filter-buttons button {
-      padding: 0.5rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    @media (max-width: 600px) {
-      .tabs button {
-        padding: 0.5rem;
-        font-size: 0.9rem;
-      }
-      #chat, #mapid {
-        height: 70vh;
-      }
+    #map {
+      height: 60vh;
     }
   </style>
-</head>
-<body>
-  <header>
-    <h1>Допомога українцям у Празі</h1>
-  </header>
-  <nav class="tabs">
-    <button data-tab="chat" class="active" aria-pressed="true">Чат</button>
-    <button data-tab="map">Карта допомоги</button>
-    <button data-tab="info">Корисна інформація</button>
-  </nav>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-  <section id="chat" class="active">
-    <div id="messages"></div>
-    <form id="chatForm">
-      <input type="text" id="messageInput" placeholder="Напишіть повідомлення..." required />
-      <input type="file" id="imageInput" accept="image/*">
-      <button type="submit">Відправити</button>
-    </form>
-  </section>
-
-  <section id="map">
-    <div class="filter-buttons">
-      <button onclick="updateMarkers('all')">Всі</button>
-      <button onclick="updateMarkers('medicine')">Медицина</button>
-      <button onclick="updateMarkers('social')">Соціальна</button>
-      <button onclick="updateMarkers('shops')">Магазини/Курси</button>
-      <button onclick="updateMarkers('law')">Юридична</button>
-    </div>
-    <div id="mapid"></div>
-  </section>
-
-  <section id="info">
-    <p>📞 Гарячі лінії, безкоштовна допомога, притулки та інше — скоро тут!</p>
-  </section>
-
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js"></script>
-  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDV2BslF-Ll37a1XO3GEfzNMXa7YsSXL1o",
       authDomain: "web-app-b4633.firebaseapp.com",
@@ -141,94 +71,112 @@
       messagingSenderId: "1041887915171",
       appId: "1:1041887915171:web:84d62eae54e9291b47a316",
       measurementId: "G-C65BPE81SJ",
-      databaseURL: "https://web-app-b4633-default-rtdb.europe-west1.firebasedatabase.app/"
+      databaseURL: "https://web-app-b4633-default-rtdb.europe-west1.firebasedatabase.app"
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
 
-    let username = localStorage.getItem('username');
-    if (!username) {
-      username = prompt('Ваш нікнейм:');
-      const email = prompt('Email:');
-      const password = prompt('Пароль:');
-      localStorage.setItem('username', username);
-    }
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth();
 
-    const messagesRef = db.ref('messages');
+    let userName = "";
 
-    document.getElementById('chatForm').addEventListener('submit', e => {
+    const chatRef = ref(db, "chat");
+
+    const chatMessages = document.getElementById("chat-messages");
+    const authForm = document.getElementById("auth-form");
+    const messageForm = document.getElementById("message-form");
+
+    authForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const text = document.getElementById('messageInput').value;
-      const file = document.getElementById('imageInput').files[0];
+      const nick = document.getElementById("nick").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-      if (file && file.size > 5 * 1024 * 1024) {
-        alert('Файл занадто великий (максимум 5MB).');
-        return;
-      }
-
-      const msg = { user: username, text, time: Date.now() };
-      messagesRef.push(msg);
-      document.getElementById('messageInput').value = '';
-    });
-
-    messagesRef.on('child_added', snapshot => {
-      const msg = snapshot.val();
-      const div = document.createElement('div');
-      div.innerHTML = `<strong>${msg.user}</strong>: ${msg.text}`;
-      document.getElementById('messages').appendChild(div);
-      document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
-    });
-
-    const tabButtons = document.querySelectorAll('nav button');
-    const sections = document.querySelectorAll('section');
-    tabButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tabButtons.forEach(b => {
-          b.classList.remove('active');
-          b.setAttribute('aria-pressed', 'false');
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          userName = nick;
+          authForm.classList.add("hidden");
+          messageForm.classList.remove("hidden");
         });
-        sections.forEach(sec => sec.classList.remove('active'));
-        const tab = btn.getAttribute('data-tab');
-        document.getElementById(tab).classList.add('active');
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed', 'true');
-      });
     });
-  </script>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script>
-    const map = L.map('mapid').setView([50.0755, 14.4378], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
+    messageForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const message = document.getElementById("message").value;
+      if (message.trim()) {
+        push(chatRef, { user: userName, text: message });
+        document.getElementById("message").value = "";
+      }
+    });
 
-    const points = [
-      { id: 1, category: 'medicine', name: 'Лікарня Мотол', coords: [50.078, 14.345], phone: '+420 224 431 111' },
-      { id: 2, category: 'medicine', name: 'Поліклініка Прага 1', coords: [50.082, 14.422], phone: '+420 123 456 789' },
-      { id: 3, category: 'medicine', name: 'Аптека «Свобода»', coords: [50.073, 14.417], phone: '+420 987 654 321' },
-      { id: 4, category: 'social', name: 'OAMP Прага 1', coords: [50.081, 14.423], phone: '+420 123 456 789' },
-      { id: 5, category: 'social', name: 'Волонтерський центр «Pomoc»', coords: [50.078, 14.450], phone: '+420 555 666 777' },
-      { id: 6, category: 'shops', name: 'Магазин Pomoc', coords: [50.075, 14.418], phone: '+420 987 654 321' },
-      { id: 7, category: 'shops', name: 'Курси «Česky snadno»', coords: [50.077, 14.421], phone: '+420 222 333 444' },
-      { id: 8, category: 'law', name: 'Консультація «Pravda»', coords: [50.087, 14.420], phone: '+420 555 123 456' },
-      { id: 9, category: 'law', name: 'Центр правової підтримки', coords: [50.083, 14.419], phone: '+420 555 654 321' }
-    ];
+    onChildAdded(chatRef, (data) => {
+      const { user, text } = data.val();
+      const div = document.createElement("div");
+      div.textContent = `${user}: ${text}`;
+      chatMessages.appendChild(div);
+    });
 
-    let markers = [];
-
-    function updateMarkers(category) {
-      markers.forEach(marker => map.removeLayer(marker));
-      markers = [];
-
-      const filtered = category === 'all' ? points : points.filter(p => p.category === category);
-      filtered.forEach(p => {
-        const m = L.marker(p.coords).addTo(map).bindPopup(`<strong>${p.name}</strong><br>${p.phone}`);
-        markers.push(m);
-      });
+    function openTab(tab) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".tab-button").forEach(el => el.classList.remove("active"));
+      document.getElementById(tab).classList.add("active");
+      document.getElementById(tab + "-btn").classList.add("active");
     }
 
-    updateMarkers('all');
+    window.openTab = openTab;
+
+    window.onload = () => {
+      openTab("chat");
+    }
   </script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="tabs">
+    <button class="tab-button active" id="chat-btn" onclick="openTab('chat')">Чат</button>
+    <button class="tab-button" id="map-btn" onclick="openTab('map')">Карта допомоги</button>
+    <button class="tab-button" id="info-btn" onclick="openTab('info')">Корисна інформація</button>
+  </div>
+
+  <div id="chat" class="tab-content active">
+    <h3>👋 Вітаємо українців! Напишіть, як ми можемо допомогти.</h3>
+    <form id="auth-form">
+      <input type="text" id="nick" placeholder="Ваше ім’я" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Пароль" required />
+      <button type="submit">Зареєструватися</button>
+    </form>
+
+    <form id="message-form" class="hidden">
+      <div id="chat-messages"></div>
+      <input type="text" id="message" placeholder="Ваше повідомлення" required />
+      <button type="submit">Надіслати</button>
+    </form>
+  </div>
+
+  <div id="map" class="tab-content">
+    <div id="mapid" style="height: 60vh;"></div>
+    <script>
+      const map = L.map('mapid').setView([50.0755, 14.4378], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      const helpPoints = [
+        { lat: 50.087, lon: 14.42, text: "Безкоштовна їжа" },
+        { lat: 50.08, lon: 14.43, text: "Медична допомога" },
+        { lat: 50.09, lon: 14.44, text: "Юридична консультація" },
+      ];
+
+      helpPoints.forEach(point => {
+        L.marker([point.lat, point.lon]).addTo(map).bindPopup(point.text);
+      });
+    </script>
+  </div>
+
+  <div id="info" class="tab-content">
+    <p>Корисна інформація для українців у Празі буде тут.</p>
+  </div>
 </body>
-</html>
+        </html>
