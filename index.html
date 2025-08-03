@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Помощь украинцам и русскоязычным в Праге</title>
+<title>Допомога УКРАЇНЦЯМ в Празі</title>
 
 <!-- Leaflet CSS -->
 <link
@@ -15,6 +15,7 @@
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
   body, html {
     margin: 0; padding: 0; height: 100%;
     font-family: 'Roboto', sans-serif;
@@ -28,9 +29,10 @@
     color: white;
     padding: 15px 20px;
     text-align: center;
-    font-weight: 700;
-    font-size: 1.8rem;
+    font-weight: 900;
+    font-size: 2rem;
     user-select: none;
+    letter-spacing: 1.5px;
   }
   nav {
     background: #319795;
@@ -43,11 +45,13 @@
     background: #2c7a7b;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 25px;
     font-weight: 700;
     cursor: pointer;
     border-radius: 30px;
+    font-size: 1rem;
     transition: background-color 0.3s ease;
+    user-select: none;
   }
   nav button.active,
   nav button:hover {
@@ -57,11 +61,11 @@
   main {
     flex: 1;
     max-width: 1000px;
-    margin: 20px auto;
+    margin: 20px auto 40px auto;
     background: white;
     border-radius: 10px;
-    box-shadow: 0 0 15px rgb(0 0 0 / 0.1);
-    padding: 20px;
+    box-shadow: 0 0 20px rgb(0 0 0 / 0.1);
+    padding: 25px 30px;
     box-sizing: border-box;
   }
 
@@ -72,557 +76,589 @@
     display: block;
   }
 
-  /* --- Главная (карта и объявления) --- */
-  #map {
-    height: 400px;
-    border-radius: 8px;
-    margin-top: 15px;
-  }
-  .category-list {
+  /* --- Головна сторінка --- */
+  #home h1 {
+    font-weight: 900;
+    font-size: 2.8rem;
     margin-bottom: 15px;
+    color: #2c7a7b;
+    user-select: none;
   }
-  .category-list li {
-    margin-bottom: 6px;
+  #home h1 .highlight {
+    font-size: 3.2rem;
+    color: #d35400;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+  #home p.description {
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+    line-height: 1.5;
+    color: #4a4a4a;
   }
 
-  /* --- Полезная информация --- */
-  #info-section h2 {
-    margin-top: 0;
+  /* --- Карта --- */
+  #map {
+    height: 450px;
+    border-radius: 12px;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgb(0 0 0 / 0.15);
   }
-  #info-section ul {
-    padding-left: 20px;
+  nav[aria-label="Фільтр категорій на карті"] {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
   }
-  #info-section a {
+  nav[aria-label="Фільтр категорій на карті"] button {
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 10px 18px;
+    border-radius: 25px;
+    border: none;
+    background: #319795;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  nav[aria-label="Фільтр категорій на карті"] button.active,
+  nav[aria-label="Фільтр категорій на карті"] button:hover {
+    background: #ed8936;
+  }
+
+  /* --- Форма зворотного зв'язку --- */
+  #contact-form {
+    margin-top: 35px;
+    max-width: 450px;
+  }
+  #contact-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 700;
     color: #2c7a7b;
+  }
+  #contact-form input[type="text"],
+  #contact-form input[type="email"],
+  #contact-form textarea {
+    width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    border: 1.8px solid #319795;
+    border-radius: 12px;
+    box-sizing: border-box;
+    outline-offset: 2px;
+    transition: border-color 0.3s ease;
+  }
+  #contact-form input[type="text"]:focus,
+  #contact-form input[type="email"]:focus,
+  #contact-form textarea:focus {
+    border-color: #ed8936;
+  }
+  #contact-form button[type="submit"] {
+    background-color: #ed8936;
+    border: none;
+    color: white;
+    font-weight: 800;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  #contact-form button[type="submit"]:hover {
+    background-color: #d35400;
+  }
+
+  /* --- Корисна інформація --- */
+  #info h2 {
+    margin-top: 0;
+    color: #2c7a7b;
+  }
+  #info ul {
+    padding-left: 20px;
+    margin-bottom: 25px;
+  }
+  #info li {
+    margin-bottom: 12px;
+    line-height: 1.3;
+    font-size: 1rem;
+  }
+  #info b {
+    color: #319795;
+  }
+  #info a {
+    color: #ed8936;
     text-decoration: none;
   }
-  #info-section a:hover {
+  #info a:hover {
     text-decoration: underline;
   }
 
   /* --- Чат --- */
   #chat-section {
-    height: 600px;
-    max-width: 700px;
+    height: 650px;
+    max-width: 720px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+    position: relative;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgb(0 0 0 / 0.3);
+    background: url('https://i.ibb.co/fbpjfnm/Prague.jpg') no-repeat center center fixed;
     background-size: cover;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgb(0 0 0 / 0.3);
     color: white;
     overflow: hidden;
   }
   #chat-container {
-    background: rgba(255 255 255 / 0.9);
-    flex: 1;
+    position: absolute;
+    inset: 15px;
+    background: rgba(44, 122, 123, 0.85);
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
-    border-radius: 12px;
-    padding: 15px;
-    box-sizing: border-box;
-    overflow: hidden;
+    box-shadow: 0 0 20px rgb(0 0 0 / 0.7);
+  }
+  #chat-header {
+    padding: 15px 25px;
+    font-size: 1.7rem;
+    font-weight: 900;
+    border-bottom: 2px solid #ed8936;
+    user-select: none;
+    text-align: center;
+    letter-spacing: 1.8px;
+  }
+  #chat-description {
+    font-size: 1.1rem;
+    padding: 10px 25px;
+    color: #f9f9f9dd;
+    font-style: italic;
+    text-align: center;
+    line-height: 1.4;
+    user-select: none;
   }
   #messages {
     flex: 1;
     overflow-y: auto;
-    padding-right: 10px;
+    padding: 20px 30px;
+    scrollbar-width: thin;
+    scrollbar-color: #ed8936 #2c7a7b;
+  }
+  #messages::-webkit-scrollbar {
+    width: 10px;
+  }
+  #messages::-webkit-scrollbar-thumb {
+    background-color: #ed8936;
+    border-radius: 10px;
+  }
+  #messages::-webkit-scrollbar-track {
+    background: #2c7a7b;
   }
   .message {
     max-width: 70%;
-    margin-bottom: 12px;
-    padding: 10px 14px;
-    border-radius: 18px;
+    margin-bottom: 15px;
+    padding: 14px 20px;
+    border-radius: 20px;
     word-wrap: break-word;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.3);
     display: inline-block;
+    font-size: 1rem;
+    line-height: 1.4;
+    transition: background-color 0.3s ease;
   }
   .message.sent {
-    background-color: #27ae60;
+    background-color: #ed8936;
     color: white;
     align-self: flex-end;
-    border-bottom-right-radius: 4px;
+    border-bottom-right-radius: 6px;
   }
   .message.received {
-    background-color: #ececec;
-    color: #333;
+    background-color: #2c7a7b;
+    color: #f9f9f9;
     align-self: flex-start;
-    border-bottom-left-radius: 4px;
+    border-bottom-left-radius: 6px;
   }
   .message img {
     max-width: 100%;
-    border-radius: 10px;
-    margin-top: 6px;
+    margin-top: 10px;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgb(0 0 0 / 0.5);
+    cursor: pointer;
+    transition: transform 0.25s ease;
+  }
+  .message img:hover {
+    transform: scale(1.05);
   }
   #input-area {
     display: flex;
     align-items: center;
-    padding: 10px 0 0 0;
-    gap: 10px;
+    padding: 15px 25px;
+    gap: 12px;
+    background: #2c7a7b;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
   }
   #text-input {
     flex: 1;
-    padding: 10px 14px;
+    padding: 12px 18px;
     font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 20px;
+    border: none;
+    border-radius: 25px;
     outline: none;
+    box-sizing: border-box;
   }
   #file-input {
-    border-radius: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: white;
+    padding: 5px 8px;
   }
   #send-btn {
-    padding: 10px 20px;
-    background-color: #27ae60;
+    padding: 12px 28px;
+    background-color: #ed8936;
     border: none;
     color: white;
-    font-weight: 700;
-    border-radius: 20px;
+    font-weight: 900;
+    font-size: 1rem;
+    border-radius: 25px;
     cursor: pointer;
+    user-select: none;
     transition: background-color 0.3s ease;
   }
   #send-btn:hover {
-    background-color: #219150;
+    background-color: #d35400;
   }
-  /* Scrollbar for messages */
-  #messages::-webkit-scrollbar {
-    width: 8px;
-  }
-  #messages::-webkit-scrollbar-thumb {
-    background-color: #27ae60;
-    border-radius: 4px;
-  }
-  #messages::-webkit-scrollbar-track {
-    background: #f1f1f1;
+
+  /* Адаптив */
+  @media(max-width: 760px) {
+    main {
+      margin: 15px 10px 30px 10px;
+      padding: 20px;
+    }
+    #chat-section {
+      height: 550px;
+      max-width: 100%;
+    }
+    #chat-container {
+      inset: 10px;
+    }
+    #messages {
+      padding: 15px 20px;
+    }
   }
 </style>
 </head>
 <body>
 
-<header>Помощь украинцам и русскоязычным в Праге</header>
+<header>Допомога <span class="highlight">УКРАЇНЦЯМ</span> в Празі</header>
 
 <nav>
-  <button class="tab-btn active" data-tab="home">Главная</button>
-  <button class="tab-btn" data-tab="info">Полезная информация</button>
-  <button class="tab-btn" data-tab="chat">Прага Фушки (чат)</button>
+  <button class="tab-btn" data-tab="home">Головна</button>
+  <button class="tab-btn" data-tab="info">Корисна інформація</button>
+  <button class="tab-btn active" data-tab="chat" aria-pressed="true">Прага Фушки (чат)</button>
 </nav>
 
 <main>
-  <!-- Главная -->
-  <section id="home" class="active" role="region" aria-label="Главная страница">
-    <h2>Категории объявлений</h2>
+  <!-- Головна -->
+  <section id="home" role="region" aria-label="Головна сторінка">
+    <h1>Допомога <span class="highlight">УКРАЇНЦЯМ</span> в Празі</h1>
+    <p class="description">
+      Цей сайт створено, щоб допомагати нашим співвітчизникам у Чехії — знаходити житло, роботу, отримувати юридичну, медичну та соціальну підтримку.
+    </p>
+
+    <h2>Категорії оголошень</h2>
     <ul class="category-list">
-      <li>Жильё (аренда, поиск соседей)</li>
-      <li>Работа (подработка, курьер, уборка и т.д.)</li>
-      <li>Продажа и обмен вещей</li>
-      <li>Услуги (переводы, помощь с документами)</li>
+      <li>Житло (оренда, пошук сусідів)</li>
+      <li>Робота (підробіток, кур'єр, прибирання тощо)</li>
+      <li>Продаж та обмін речей</li>
+      <li>Послуги (переклади, допомога з документами)</li>
     </ul>
 
-    <h2>Карта с важными точками</h2>
-    <nav aria-label="Фильтр категорий на карте">
-      <button data-filter="all" class="active" aria-pressed="true">Все</button>
+    <h2>Карта з важливими точками</h2>
+    <nav aria-label="Фільтр категорій на карті">
+      <button data-filter="all" class="active" aria-pressed="true">Всі</button>
       <button data-filter="medicine" aria-pressed="false">Медицина</button>
-      <button data-filter="social" aria-pressed="false">Соцслужбы</button>
-      <button data-filter="shops" aria-pressed="false">Магазины</button>
-      <button data-filter="law" aria-pressed="false">Юридическая помощь</button>
+      <button data-filter="social" aria-pressed="false">Соцслужби</button>
+      <button data-filter="shops" aria-pressed="false">Магазини</button>
+      <button data-filter="law" aria-pressed="false">Юридична допомога</button>
     </nav>
-    <div id="map" tabindex="0" aria-label="Интерактивная карта"></div>
+    <div id="map" tabindex="0" aria-label="Інтерактивна карта"></div>
 
-    <h2>Обратная связь</h2>
-    <form id="contact-form" aria-label="Форма обратной связи">
-      <label for="name">Имя</label>
+    <h2>Зворотній зв'язок</h2>
+    <form id="contact-form" aria-label="Форма зворотнього зв’язку">
+      <label for="name">Ім'я</label>
       <input type="text" id="name" name="name" required autocomplete="name" />
 
       <label for="email">Email</label>
       <input type="email" id="email" name="email" required autocomplete="email" />
 
-      <label for="message">Сообщение</label>
+      <label for="message">Повідомлення</label>
       <textarea id="message" name="message" rows="4" required></textarea>
 
-      <button type="submit">Отправить</button>
+      <button type="submit">Відправити</button>
     </form>
   </section>
 
-  <!-- Полезная информация -->
-  <section id="info" role="region" aria-label="Полезная информация">
-    <h2>Полезная информация и контакты</h2>
+  <!-- Корисна інформація -->
+  <section id="info" role="region" aria-label="Корисна інформація">
+    <h2>Корисна інформація та контакти</h2>
 
-    <h3>Медицинские учреждения</h3>
+    <h3>Медичні заклади</h3>
     <ul>
-      <li><b>Больница Мотол</b> — V Úvalu 84, Praha 5<br/>
+      <li><b>Лікарня Мотол</b> — V Úvalu 84, Praha 5<br/>
         Телефон: +420 224 431 111<br/>
-        Языки: русский, украинский, чешский<br/>
-        Круглосуточно
+        Мови: українська, російська, чеська<br/>
+        Працює цілодобово
       </li>
-      <li><b>Поликлиника Прага 1</b> — Jungmannova 35, Praha 1<br/>
+      <li><b>Поліклініка Прага 1</b> — Jungmannova 35, Praha 1<br/>
         Телефон: +420 123 456 789<br/>
-        Языки: чешский, русский<br/>
+        Мови: українська, чеська<br/>
         9:00–17:00
       </li>
       <li><b>Аптека «Свобода»</b> — Karlovo náměstí 14, Praha 2<br/>
         Телефон: +420 987 654 321<br/>
-        Языки: русский, украинский<br/>
+        Мови: українська, російська<br/>
         8:00–20:00
       </li>
     </ul>
 
-    <h3>Социальные службы и волонтёры</h3>
+    <h3>Соціальні служби та волонтери</h3>
     <ul>
       <li><b>OAMP Прага 1</b> — Jungmannova 35, Praha 1<br/>
         Телефон: +420 123 456 789<br/>
-        Языки: чешский, русский<br/>
+        Мови: чеська, українська<br/>
         9:00–17:00
       </li>
-      <li><b>Волонтёрский центр «Pomoc»</b> — Vinohradská 52, Praha 3<br/>
+      <li><b>Волонтерський центр «Pomoc»</b> — Vinohradská 52, Praha 3<br/>
         Телефон: +420 555 666 777<br/>
-        Языки: украинский, русский<br/>
+        Мови: українська, російська<br/>
         10:00–18:00
       </li>
     </ul>
 
-    <h3>Юридическая помощь</h3>
+    <h3>Юридична допомога</h3>
     <ul>
-      <li><b>Консультация «Pravda»</b> — Národní 10, Praha 1<br/>
+      <li><b>Консультація «Pravda»</b> — Národní 10, Praha 1<br/>
         Телефон: +420 555 123 456<br/>
-        Языки: русский, чешский<br/>
+        Мови: українська, чеська<br/>
         9:00–18:00
       </li>
-      <li><b>Центр правовой поддержки</b> — Jungmannova 35, Praha 1<br/>
+      <li><b>Центр правової підтримки</b> — Jungmannova 35, Praha 1<br/>
         Телефон: +420 555 654 321<br/>
-        Языки: украинский, русский<br/>
+        Мови: українська, російська<br/>
         9:00–17:00
       </li>
     </ul>
 
-    <h3>Магазины и курсы чешского языка</h3>
+    <h3>Магазини та курси чеської мови</h3>
     <ul>
-      <li><b>Магазин для мигрантов «Pomoc»</b> — Karlovo nám. 23, Praha 2<br/>
+      <li><b>Магазин для мігрантів «Pomoc»</b> — Karlovo nám. 23, Praha 2<br/>
         Телефон: +420 987 654 321<br/>
-        Языки: русский, украинский<br/>
+        Мови: українська, російська<br/>
         10:00–20:00
       </li>
-      <li><b>Курсы чешского языка «Česky snadno»</b> — Vodičkova 14, Praha 1<br/>
+      <li><b>Курси чеської мови «Česky snadno»</b> — Vodičkova 14, Praha 1<br/>
         Телефон: +420 222 333 444<br/>
-        Языки: украинский, русский, чешский<br/>
+        Мови: українська, російська, чеська<br/>
         9:00–19:00
       </li>
     </ul>
   </section>
 
   <!-- Чат -->
-  <section id="chat" role="region" aria-label="Онлайн чат Прага Фушки">
-    <div id="chat-section">
-      <div id="chat-container" role="main" aria-live="polite" aria-label="Чат сообщений">
-        <div id="messages" tabindex="0"></div>
+  <section id="chat" role="region" aria
+class="active" role="region" aria-label="Чат Прага Фушки">
+  <div id="chat-section" aria-live="polite" aria-relevant="additions" aria-atomic="false">
+    <div id="chat-container" role="region" aria-label="Чат з Українцями в Празі">
+      <div id="chat-header">Прага Фушки — чат для УКРАЇНЦІВ</div>
+      <div id="chat-description">
+        Шановні українці, цей сайт створено, щоб допомагати нашим співвітчизникам. Тут ви можете поспілкуватися, знайти роботу, житло або просто підтримку.
+      </div>
+      <div id="messages" role="log" aria-live="polite" aria-atomic="false"></div>
 
+      <form id="chat-form" aria-label="Форма надсилання повідомлень">
         <div id="input-area">
           <input
             type="text"
             id="text-input"
-            placeholder="Напишите сообщение..."
-            aria-label="Поле ввода текста сообщения"
+            name="message"
+            placeholder="Напишіть повідомлення..."
+            autocomplete="off"
+            aria-label="Текст повідомлення"
+            required
           />
-          <input type="file" id="file-input" accept="image/*" aria-label="Выбрать изображение для отправки" />
-          <button id="send-btn" aria-label="Отправить сообщение">Отправить</button>
+          <input
+            type="file"
+            id="file-input"
+            accept="image/*"
+            aria-label="Додати фото"
+            title="Додати фото"
+          />
+          <button type="submit" id="send-btn" aria-label="Відправити повідомлення">Відправити</button>
         </div>
-      </div>
+      </form>
     </div>
-  </section>
-</main>
+  </div>
+</section>
 
-<footer style="background:#2c7a7b; color:white; padding:15px 20px; text-align:center; font-weight:700;">
-  © 2025 Помощь в Праге для украинцев и русскоязычных
-</footer>
-
-<!-- Leaflet JS -->
-<script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-oUfkW33pM3Ef1mLuMuI1dx13B4E3UdyH6uyb+ZTOQoY="
-  crossorigin=""
-></script>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-oQWwQ9LZqvvuZLe7Xj0A+N7u8x3bZsZ3gFZk6YbPpqk="
+  crossorigin=""></script>
 <script>
-  // --- Переключение вкладок ---
-  const tabButtons = document.querySelectorAll('nav button.tab-btn');
-  const sections = document.querySelectorAll('main > section');
+  // --- Перемикач вкладок ---
+  const tabs = document.querySelectorAll('.tab-btn');
+  const sections = document.querySelectorAll('main section');
 
-  tabButtons.forEach(btn => {
+  tabs.forEach(btn => {
     btn.addEventListener('click', () => {
-      tabButtons.forEach(b => {
+      // Зняти активність у всіх кнопок і секцій
+      tabs.forEach(b => {
         b.classList.remove('active');
         b.setAttribute('aria-pressed', 'false');
       });
+      sections.forEach(s => s.classList.remove('active'));
+
+      // Активувати потрібну вкладку та секцію
       btn.classList.add('active');
       btn.setAttribute('aria-pressed', 'true');
-
-      const tab = btn.dataset.tab;
-      sections.forEach(sec => {
-        sec.classList.toggle('active', sec.id === tab);
-      });
-
-      // Если переключаемся на карту — сброс фильтров на "Все"
-      if(tab === 'home') {
-        filterButtons.forEach(b => {
-          b.classList.remove('active');
-          b.setAttribute('aria-pressed', 'false');
-          if(b.dataset.filter === 'all') {
-            b.classList.add('active');
-            b.setAttribute('aria-pressed', 'true');
-          }
-        });
-        filterMarkers('all');
-      }
+      const tabName = btn.dataset.tab;
+      document.getElementById(tabName).classList.add('active');
     });
   });
 
-  // --- КАРТА ---
-  const map = L.map("map").setView([50.0755, 14.4378], 12); // Центр Праги
+  // --- Карта Leaflet ---
+  const map = L.map('map').setView([50.0755, 14.4378], 13);
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  // OpenStreetMap tile layer
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution:
-      '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
 
-  const points = [
+  // Маркери з категоріями
+  const locations = [
     {
-      id: 1,
-      category: "medicine",
-      name: "Больница Мотол",
-      coords: [50.055, 14.383],
-      lang: ["рус", "укр", "чеш"],
-      address: "V Úvalu 84, Praha 5",
-      phone: "+420 224 431 111",
-      hours: "Круглосуточно",
-      description: "Больница с обслуживанием на русском, украинском и чешском"
+      coords: [50.0865, 14.4174],
+      title: 'Лікарня Мотол',
+      category: 'medicine',
+      description: 'Цілодобова лікарня з українськомовним персоналом.',
     },
     {
-      id: 2,
-      category: "medicine",
-      name: "Поликлиника Прага 1",
-      coords: [50.085, 14.421],
-      lang: ["рус", "чеш"],
-      address: "Jungmannova 35, Praha 1",
-      phone: "+420 123 456 789",
-      hours: "9:00–17:00",
-      description: "Поликлиника с русскоязычными врачами"
+      coords: [50.0811, 14.4205],
+      title: 'Поліклініка Прага 1',
+      category: 'medicine',
+      description: 'Поліклініка з доступом для переселенців.',
     },
     {
-      id: 3,
-      category: "medicine",
-      name: "Аптека «Свобода»",
-      coords: [50.083, 14.417],
-      lang: ["рус", "укр"],
-      address: "Karlovo náměstí 14, Praha 2",
-      phone: "+420 987 654 321",
-      hours: "8:00–20:00",
-      description: "Аптека с консультантами, говорящими на русском и украинском"
+      coords: [50.0820, 14.4390],
+      title: 'OAMP Прага 1',
+      category: 'social',
+      description: 'Соціальна служба для українців.',
     },
     {
-      id: 4,
-      category: "social",
-      name: "OAMP Прага 1",
-      coords: [50.084, 14.419],
-      lang: ["чеш", "рус"],
-      address: "Jungmannova 35, Praha 1",
-      phone: "+420 123 456 789",
-      hours: "9:00–17:00",
-      description: "Центр временной защиты"
+      coords: [50.0784, 14.4292],
+      title: 'Волонтерський центр Pomoc',
+      category: 'social',
+      description: 'Волонтерська допомога та підтримка.',
     },
     {
-      id: 5,
-      category: "social",
-      name: "Волонтёрский центр «Pomoc»",
-      coords: [50.076, 14.437],
-      lang: ["укр", "рус"],
-      address: "Vinohradská 52, Praha 3",
-      phone: "+420 555 666 777",
-      hours: "10:00–18:00",
-      description: "Поддержка мигрантов и волонтёрская помощь"
+      coords: [50.0745, 14.4280],
+      title: 'Магазин для мігрантів Pomoc',
+      category: 'shops',
+      description: 'Товари для українських переселенців.',
     },
     {
-      id: 6,
-      category: "law",
-      name: "Консультация «Pravda»",
-      coords: [50.086, 14.420],
-      lang: ["рус", "чеш"],
-      address: "Národní 10, Praha 1",
-      phone: "+420 555 123 456",
-      hours: "9:00–18:00",
-      description: "Юридическая помощь для мигрантов"
+      coords: [50.0751, 14.4357],
+      title: 'Консультація Pravda',
+      category: 'law',
+      description: 'Юридична допомога переселенцям.',
     },
-    {
-      id: 7,
-      category: "law",
-      name: "Центр правовой поддержки",
-      coords: [50.084, 14.418],
-      lang: ["укр", "рус"],
-      address: "Jungmannova 35, Praha 1",
-      phone: "+420 555 654 321",
-      hours: "9:00–17:00",
-      description: "Юридическая консультация и поддержка"
-    },
-    {
-      id: 8,
-      category: "shops",
-      name: "Магазин для мигрантов «Pomoc»",
-      coords: [50.084, 14.416],
-      lang: ["рус", "укр"],
-      address: "Karlovo nám. 23, Praha 2",
-      phone: "+420 987 654 321",
-      hours: "10:00–20:00",
-      description: "Товары и продукты для мигрантов"
-    },
-    {
-      id: 9,
-      category: "shops",
-      name: "Курсы чешского языка «Česky snadno»",
-      coords: [50.081, 14.420],
-      lang: ["укр", "рус", "чеш"],
-      address: "Vodičkova 14, Praha 1",
-      phone: "+420 222 333 444",
-      hours: "9:00–19:00",
-      description: "Курсы чешского для новичков"
-    }
   ];
 
   const markers = [];
 
-  // Иконки для разных категорий (по цвету)
-  const iconColors = {
-    medicine: "red",
-    social: "blue",
-    shops: "green",
-    law: "purple"
-  };
-
-  function createIcon(color) {
-    return L.icon({
-      iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41]
-    });
-  }
-
-  // Добавляем маркеры на карту
-  points.forEach(point => {
-    const icon = createIcon(iconColors[point.category] || 'blue');
-    const marker = L.marker(point.coords, {icon}).addTo(map);
-    marker.category = point.category;
-    marker.bindPopup(`
-      <b>${point.name}</b><br/>
-      ${point.description}<br/>
-      <b>Адрес:</b> ${point.address}<br/>
-      <b>Телефон:</b> <a href="tel:${point.phone}">${point.phone}</a><br/>
-      <b>Часы работы:</b> ${point.hours}<br/>
-      <b>Языки:</b> ${point.lang.join(', ')}
-    `);
+  locations.forEach((loc) => {
+    const marker = L.marker(loc.coords).addTo(map);
+    marker.bindPopup(`<b>${loc.title}</b><br>${loc.description}`);
+    marker.category = loc.category;
     markers.push(marker);
   });
 
-  // Фильтрация маркеров по категориям
-  const filterButtons = document.querySelectorAll('nav[aria-label="Фильтр категорий на карте"] button');
-
-  function filterMarkers(category) {
-    markers.forEach(marker => {
-      if (category === 'all' || marker.category === category) {
-        if (!map.hasLayer(marker)) map.addLayer(marker);
-      } else {
-        if (map.hasLayer(marker)) map.removeLayer(marker);
-      }
-    });
-  }
-
-  filterButtons.forEach(btn => {
+  // Фільтрація маркерів за категорією
+  const filterButtons = document.querySelectorAll(
+    'nav[aria-label="Фільтр категорій на карті"] button'
+  );
+  filterButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      filterButtons.forEach(b => {
+      filterButtons.forEach((b) => {
         b.classList.remove('active');
         b.setAttribute('aria-pressed', 'false');
       });
       btn.classList.add('active');
       btn.setAttribute('aria-pressed', 'true');
-      filterMarkers(btn.dataset.filter);
-    });
-  });
+      const filter = btn.dataset.filter;
 
-  // --- Обработка формы обратной связи ---
-  const contactForm = document.getElementById('contact-form');
-  contactForm.addEventListener('submit', e => {
-    e.preventDefault();
-    alert('Спасибо за сообщение! Мы свяжемся с вами.');
-    contactForm.reset();
+      markers.forEach((marker) => {
+        if (filter === 'all' || marker.category === filter) {
+          marker.addTo(map);
+        } else {
+          map.removeLayer(marker);
+        }
+      });
+    });
   });
 
   // --- Чат ---
-  const messagesDiv = document.getElementById('messages');
+  const chatForm = document.getElementById('chat-form');
+  const messagesContainer = document.getElementById('messages');
   const textInput = document.getElementById('text-input');
   const fileInput = document.getElementById('file-input');
-  const sendBtn = document.getElementById('send-btn');
 
-  let messages = [];
+  // Функція додавання повідомлення у чат
+  function addMessage(text, type = 'sent', imgSrc = null) {
+    const msg = document.createElement('div');
+    msg.classList.add('message', type);
 
-  function renderMessages() {
-    messagesDiv.innerHTML = '';
-    messages.forEach(({ text, type, imgSrc }) => {
-      const div = document.createElement('div');
-      div.classList.add('message');
-      div.classList.add(type === 'sent' ? 'sent' : 'received');
+    if (imgSrc) {
+      const img = document.createElement('img');
+      img.src = imgSrc;
+      img.alt = 'Відправлене фото';
+      msg.appendChild(img);
+    }
 
-      if(text) {
-        const p = document.createElement('p');
-        p.textContent = text;
-        div.appendChild(p);
-      }
+    if (text) {
+      const p = document.createElement('p');
+      p.textContent = text;
+      msg.appendChild(p);
+    }
 
-      if(imgSrc) {
-        const img = document.createElement('img');
-        img.src = imgSrc;
-        img.alt = "Прикрепленное изображение";
-        div.appendChild(img);
-      }
-
-      messagesDiv.appendChild(div);
-    });
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    messagesContainer.appendChild(msg);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
 
-  function addMessage(text, type, imgSrc = null) {
-    messages.push({ text, type, imgSrc });
-    renderMessages();
-  }
-
-  sendBtn.addEventListener('click', () => {
+  // Обробка надсилання форми
+  chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
     const text = textInput.value.trim();
-    if(!text && !fileInput.files.length) return;
+    const file = fileInput.files[0];
 
-    if(fileInput.files.length) {
-      const file = fileInput.files[0];
+    if (!text && !file) return; // нічого не відправляємо
+
+    if (file) {
+      // Відображаємо фото в чаті
       const reader = new FileReader();
-      reader.onload = function(e) {
-        addMessage(text || null, 'sent', e.target.result);
+      reader.onload = function (event) {
+        addMessage(text, 'sent', event.target.result);
       };
       reader.readAsDataURL(file);
+      fileInput.value = '';
     } else {
       addMessage(text, 'sent');
     }
 
     textInput.value = '';
-    fileInput.value = '';
-    textInput.focus();
   });
 
-  textInput.addEventListener('keydown', (e) => {
-    if(e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendBtn.click();
-    }
-  });
-
-  // Приветственное сообщение
-  addMessage("Добро пожаловать в чат 'Прага Фушки'! Здесь вы можете делиться фишками и фото.", "received");
 </script>
 
 </body>
