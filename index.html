@@ -1,182 +1,496 @@
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Прага Фушки</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: url('https://i.ibb.co/fbpjfnm/Prague.jpg') no-repeat center center fixed;
-      background-size: cover;
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(10px);
-    }
-    .tab-button {
-      padding: 10px 20px;
-      border: none;
-      background: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .tab-button.active {
-      background-color: #ddd;
-    }
-    .tab-content {
-      display: none;
-      padding: 20px;
-      height: 80vh;
-      overflow-y: auto;
-      background: rgba(255, 255, 255, 0.5);
-      backdrop-filter: blur(15px);
-    }
-    .tab-content.active {
-      display: block;
-    }
-    #chat-messages {
-      max-height: 60vh;
-      overflow-y: auto;
-      margin-bottom: 10px;
-    }
-    #chat-messages div {
-      margin: 5px 0;
-    }
-    #auth-form, #message-form {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    .hidden {
-      display: none;
-    }
-    #map {
-      height: 60vh;
-    }
-  </style>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Допомога українцям у Празі — Прага Фушки</title>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDV2BslF-Ll37a1XO3GEfzNMXa7YsSXL1o",
-      authDomain: "web-app-b4633.firebaseapp.com",
-      projectId: "web-app-b4633",
-      storageBucket: "web-app-b4633.appspot.com",
-      messagingSenderId: "1041887915171",
-      appId: "1:1041887915171:web:84d62eae54e9291b47a316",
-      measurementId: "G-C65BPE81SJ",
-      databaseURL: "https://web-app-b4633-default-rtdb.europe-west1.firebasedatabase.app"
-    };
+<!-- Leaflet CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-oUfkW33pM3Ef1mLuMuI1dx13B4E3UdyH6uyb+ZTOQoY="
+  crossorigin=""
+/>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth();
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-    let userName = "";
+  /* Общие стили */
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Roboto', sans-serif;
+    background: url('https://i.ibb.co/fbpjfnm/Prague.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background-color: rgba(44,122,123,0.85);
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.8rem;
+    user-select: none;
+  }
+  nav {
+    background: rgba(49,151,149,0.9);
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px 0;
+  }
+  nav button {
+    background: #2c7a7b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+  }
+  nav button.active,
+  nav button:hover {
+    background: #ed8936;
+  }
 
-    const chatRef = ref(db, "chat");
+  main {
+    flex: 1;
+    max-width: 1100px;
+    margin: 20px auto;
+    background: rgba(255 255 255 / 0.9);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgb(0 0 0 / 0.2);
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
 
-    const chatMessages = document.getElementById("chat-messages");
-    const authForm = document.getElementById("auth-form");
-    const messageForm = document.getElementById("message-form");
+  section {
+    display: none;
+  }
+  section.active {
+    display: block;
+  }
 
-    authForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const nick = document.getElementById("nick").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+  /* Чат */
+  #chat-section {
+    height: 600px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  #chat-container {
+    background: rgba(255 255 255 / 0.85);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #333;
+  }
+  .message {
+    max-width: 70%;
+    margin-bottom: 12px;
+    padding: 12px 16px;
+    border-radius: 18px;
+    word-wrap: break-word;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+    display: inline-block;
+    font-style: italic;
+    font-weight: 500;
+  }
+  .message.sent {
+    background-color: #27ae60;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .message.received {
+    background-color: #f0f0f0;
+    color: #222;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .message img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin-top: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.15);
+  }
+  #input-area {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    gap: 10px;
+  }
+  #text-input {
+    flex: 1;
+    padding: 12px 18px;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 25px;
+    outline: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 600;
+  }
+  #text-input:focus {
+    border-color: #27ae60;
+  }
+  #file-input {
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  #send-btn {
+    padding: 12px 25px;
+    background-color: #27ae60;
+    border: none;
+    color: white;
+    font-weight: 700;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #send-btn:hover {
+    background-color: #219150;
+  }
 
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          userName = nick;
-          authForm.classList.add("hidden");
-          messageForm.classList.remove("hidden");
-        });
-    });
+  /* Карта */
+  #map {
+    height: 600px;
+    border-radius: 12px;
+  }
+  .filter-buttons {
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .filter-buttons button {
+    background: #2c7a7b;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 6px;
+    font-weight: 700;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .filter-buttons button.active,
+  .filter-buttons button:hover {
+    background: #ed8936;
+  }
 
-    messageForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const message = document.getElementById("message").value;
-      if (message.trim()) {
-        push(chatRef, { user: userName, text: message });
-        document.getElementById("message").value = "";
-      }
-    });
+  /* Полезная информация */
+  #info-section {
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 15px;
+  }
+  #info-section h2, #info-section h3 {
+    color: #2c7a7b;
+    font-weight: 700;
+  }
+  #info-section ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+  }
+  #info-section li {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    line-height: 1.4;
+  }
+  #info-section img {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    margin-top: 8px;
+    box-shadow: 0 0 15px rgba(44,122,123,0.3);
+  }
 
-    onChildAdded(chatRef, (data) => {
-      const { user, text } = data.val();
-      const div = document.createElement("div");
-      div.textContent = `${user}: ${text}`;
-      chatMessages.appendChild(div);
-    });
-
-    function openTab(tab) {
-      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
-      document.querySelectorAll(".tab-button").forEach(el => el.classList.remove("active"));
-      document.getElementById(tab).classList.add("active");
-      document.getElementById(tab + "-btn").classList.add("active");
+  /* Адаптив */
+  @media (max-width: 768px) {
+    main {
+      margin: 10px;
+      padding: 10px;
     }
-
-    window.openTab = openTab;
-
-    window.onload = () => {
-      openTab("chat");
+    #chat-section, #map, #info-section {
+      height: 400px;
     }
-  </script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    #text-input {
+      font-size: 0.9rem;
+    }
+    nav {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    nav button {
+      padding: 8px 15px;
+      font-size: 0.9rem;
+    }
+  }
+</style>
 </head>
 <body>
-  <div class="tabs">
-    <button class="tab-button active" id="chat-btn" onclick="openTab('chat')">Чат</button>
-    <button class="tab-button" id="map-btn" onclick="openTab('map')">Карта допомоги</button>
-    <button class="tab-button" id="info-btn" onclick="openTab('info')">Корисна інформація</button>
-  </div>
 
-  <div id="chat" class="tab-content active">
-    <h3>👋 Вітаємо українців! Напишіть, як ми можемо допомогти.</h3>
-    <form id="auth-form">
-      <input type="text" id="nick" placeholder="Ваше ім’я" required />
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="password" id="password" placeholder="Пароль" required />
-      <button type="submit">Зареєструватися</button>
-    </form>
+<header>ШАНОВНІ УКРАЇНЦІ! Допомога у Празі — Прага Фушки</header>
 
-    <form id="message-form" class="hidden">
-      <div id="chat-messages"></div>
-      <input type="text" id="message" placeholder="Ваше повідомлення" required />
-      <button type="submit">Надіслати</button>
-    </form>
-  </div>
+<nav>
+  <button class="tab-btn" data-tab="chat" aria-pressed="true">Прага Фушки (чат)</button>
+  <button class="tab-btn" data-tab="map" aria-pressed="false">Карта допомоги</button>
+  <button class="tab-btn" data-tab="info" aria-pressed="false">Корисна інформація</button>
+</nav>
 
-  <div id="map" class="tab-content">
-    <div id="mapid" style="height: 60vh;"></div>
-    <script>
-      const map = L.map('mapid').setView([50.0755, 14.4378], 12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
-      }).addTo(map);
+<main>
+  <!-- Чат -->
+  <section id="chat" class="active" role="region" aria-label="Онлайн чат Прага Фушки">
+    <div id="chat-section">
+      <div id="chat-container" role="main" aria-live="polite" aria-label="Чат повідомлень">
+        <div id="messages" tabindex="0" aria-live="polite" aria-relevant="additions"></div>
 
-      const helpPoints = [
-        { lat: 50.087, lon: 14.42, text: "Безкоштовна їжа" },
-        { lat: 50.08, lon: 14.43, text: "Медична допомога" },
-        { lat: 50.09, lon: 14.44, text: "Юридична консультація" },
-      ];
+        <div id="input-area">
+          <input
+            type="text"
+            id="text-input"
+            placeholder="Напишіть повідомлення..."
+            aria-label="Поле введення тексту повідомлення"
+          />
+          <input type="file" id="file-input" accept="image/*" aria-label="Додати зображення" />
+          <button id="send-btn" aria-label="Відправити повідомлення">Відправити</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      helpPoints.forEach(point => {
-        L.marker([point.lat, point.lon]).addTo(map).bindPopup(point.text);
+  <!-- Карта -->
+  <section id="map" role="region" aria-label="Інтерактивна карта допомоги">
+    <div class="filter-buttons" role="toolbar" aria-label="Фільтр категорій на карті">
+      <button data-filter="all" class="active" aria-pressed="true">Всі</button>
+      <button data-filter="medicine" aria-pressed="false">Медицина</button>
+      <button data-filter="social" aria-pressed="false">Соціальні служби</button>
+      <button data-filter="shops" aria-pressed="false">Магазини</button>
+      <button data-filter="law" aria-pressed="false">Юридична допомога</button>
+    </div>
+    <div id="map"></div>
+  </section>
+
+  <!-- Полезная информация -->
+  <section id="info" role="region" aria-label="Корисна інформація та контакти">
+    <div id="info-section" tabindex="0">
+      <h2>Корисна інформація для українців у Празі</h2>
+
+      <h3>Медичні установи</h3>
+      <ul>
+        <li>
+          <b>Лікарня Мотол</b> — V Úvalu 84, Praha 5<br/>
+          Телефон: +420 224 431 111<br/>
+          Працює цілодобово<br/>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Motol_Hospital_building_2012.jpg/320px-Motol_Hospital_building_2012.jpg" alt="Лікарня Мотол" />
+        </li>
+        <li>
+          <b>Поліклініка Прага 1</b> — Jungmannova 35, Praha 1<br/>
+          Телефон: +420 123 456 789<br/>
+          9:00–17:00<br/>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Jungmannova_Street_Praha_1.jpg/320px-Jungmannova_Street_Praha_1.jpg" alt="Поліклініка Прага 1" />
+        </li>
+        <li>
+          <b>Аптека «Свобода»</b> — Karlovo náměstí 14, Praha 2<br/>
+          Телефон: +420 987 654 321<br/>
+          8:00–20:00<br/>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Pharmacy_sign_-_Praha.jpg/320px-Pharmacy_sign_-_Praha.jpg" alt="Аптека Свобода" />
+        </li>
+      </ul>
+
+      <h3>Соціальні служби та волонтери</h3>
+      <ul>
+        <li>
+          <b>OAMP Прага 1</b> — Jungmannova 35, Praha 1<br/>
+          Телефон: +420 123 456 789<br/>
+          9:00–17:00<br/>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Praha_OAMP.jpg/320px-Praha_OAMP.jpg" alt="OAMP Прага 1" />
+        </li>
+        <li>
+          <b>Волонтерський центр «Pomoc»</b> — Vinohradská 52, Praha 3<br/>
+          Телефон: +420 555 666 777<br/>
+          10:00–18:00<br/>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Volunteer_helping.jpg/320px-Volunteer_helping.jpg" alt="Волонтерський центр Pomoc" />
+        </li>
+      </ul>
+
+      <h3>Юридична допомога</h3>
+      <ul>
+        <li>
+          <b>Консультація «Pravda»</b> — Národní 10, Praha 1<br/>
+          Телефон: +420 555 123 456<br/>
+          9:00–18:00<br/>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Legal_advice_building.jpg/320px-Legal_advice_building.jpg" alt="Консультація Pravda" />
+        </li>
+        <li>
+          <b>Центр правової підтримки</b> — Jungmannova 35, Praha 1<br/>
+          Телефон: +420 555 654 321<br/>
+          9:00–17:00<br/>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Legal_counseling_office.jpg/320px-Legal_counseling_office.jpg" alt="Центр правової підтримки" />
+        </li>
+      </ul>
+
+      <h3>Магазини та курси чеської мови</h3>
+      <ul>
+        <li>
+          <b>Магазин для мігрантів «Pomoc»</b> — Karlovo nám. 23, Praha 2<br/>
+          Телефон: +420 987 654 321<br/>
+          10:00–20:00<br/>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Shopfront_in_Praha.jpg/320px-Shopfront_in_Praha.jpg" alt="Магазин Pomoc" />
+        </li>
+        <li>
+          <b>Курси чеської «Česky snadno»</b> — Vodičkova 14, Praha 1<br/>
+          Телефон: +420 222 333 444<br/>
+          9:00–19:00<br/>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Language_school_classroom.jpg/320px-Language_school_classroom.jpg" alt="Курси чеської мови" />
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer style="background: rgba(44,122,123,0.85); color: white; padding: 15px 20px; text-align: center; font-weight: 700;">
+  © 2025 Допомога у Празі для українців — Прага Фушки
+</footer>
+
+<!-- Leaflet JS -->
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-oUfkW33pM3Ef1mLuMuI1dx13B4E3UdyH6uyb+ZTOQoY="
+  crossorigin=""
+></script>
+
+<script>
+  // Переключение вкладок
+  const tabButtons = document.querySelectorAll('nav button.tab-btn');
+  const sections = document.querySelectorAll('main > section');
+
+  tabButtons.forEach(btn => {
+    btn.addEvent
+// Юридична допомога (продовження)
+    { id: 8, category: 'law', name: 'Консультація «Pravda»', coords: [50.087, 14.420], phone: '+420 555 123 456' },
+    { id: 9, category: 'law', name: 'Центр правової підтримки', coords: [50.083, 14.419], phone: '+420 555 654 321' }
+  ];
+
+  // Создаем слой для маркеров
+  const markersLayer = L.layerGroup().addTo(map);
+
+  // Функция для добавления маркеров в зависимости от фильтра
+  function updateMarkers(filter) {
+    markersLayer.clearLayers();
+    points.forEach((point) => {
+      if (filter === 'all' || point.category === filter) {
+        const marker = L.marker(point.coords).addTo(markersLayer);
+        marker.bindPopup(`<b>${point.name}</b><br>Телефон: ${point.phone}`);
+      }
+    });
+  }
+
+  // Изначально показываем все
+  updateMarkers('all');
+
+  // Фильтр по кнопкам
+  const filterButtons = document.querySelectorAll('nav.filter-buttons button');
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach((b) => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
       });
-    </script>
-  </div>
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+      updateMarkers(btn.getAttribute('data-filter'));
+    });
+  });
 
-  <div id="info" class="tab-content">
-    <p>Корисна інформація для українців у Празі буде тут.</p>
-  </div>
+  // --- ЧАТ ---
+
+  const messagesContainer = document.getElementById('messages');
+  const textInput = document.getElementById('text-input');
+  const sendBtn = document.getElementById('send-btn');
+  const fileInput = document.getElementById('file-input');
+
+  // Загружаем сообщения из localStorage
+  let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+
+  // Функция отображения сообщений
+  function renderMessages() {
+    messagesContainer.innerHTML = '';
+    messages.forEach(msg => {
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message', 'sent');
+      if (msg.type === 'text') {
+        msgDiv.textContent = msg.content;
+      } else if (msg.type === 'image') {
+        const img = document.createElement('img');
+        img.src = msg.content;
+        img.alt = 'Зображення у чаті';
+        msgDiv.appendChild(img);
+      }
+      messagesContainer.appendChild(msgDiv);
+    });
+    // Скроллим вниз
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  renderMessages();
+
+  // Отправка текста
+  function sendMessage() {
+    const text = textInput.value.trim();
+    if (!text) return;
+    messages.push({ type: 'text', content: text });
+    localStorage.setItem('chatMessages', JSON.stringify(messages));
+    renderMessages();
+    textInput.value = '';
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+
+  // Отправка по Enter
+  textInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  // Отправка фото
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      messages.push({ type: 'image', content: e.target.result });
+      localStorage.setItem('chatMessages', JSON.stringify(messages));
+      renderMessages();
+      fileInput.value = '';
+    };
+    reader.readAsDataURL(file);
+  });
+
+</script>
+
 </body>
-        </html>
+</html>
+
