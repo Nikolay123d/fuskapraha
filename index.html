@@ -1,264 +1,495 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Допомога українцям у Празі</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Допомога українцям у Празі – житло, робота, карта, чат</title>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <style>
-    :root {
-      --yellow: #ffd700;
-      --blue: #0057b8;
-    }
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
 
-    * {
-      box-sizing: border-box;
-    }
+<!-- Leaflet CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  crossorigin=""
+/>
 
-    body, html {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, var(--yellow), var(--blue));
-    }
+<style>
+  :root {
+    --accent: #005bbb;
+    --accent-light: #ffd500;
+    --bg-chat-overlay: rgba(0, 0, 0, 0.6);
+  }
 
-    header {
-      background: var(--blue);
-      color: white;
-      text-align: center;
-      padding: 1em;
-      font-size: 1.8em;
-      font-weight: bold;
-    }
+  body {
+    margin: 0;
+    font-family: 'Comfortaa', cursive;
+    background: url('https://i.ibb.co/fbpjfnm/Prague.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      background: var(--yellow);
-      padding: 10px;
-    }
+  header {
+    background: var(--accent);
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: bold;
+  }
 
-    nav button {
-      background: white;
-      border: none;
-      border-radius: 20px;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-weight: bold;
-    }
+  main {
+    flex: 1;
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto 30px;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+  }
 
-    nav button.active {
-      background: var(--blue);
-      color: white;
-    }
+  h2, h3 {
+    color: var(--accent-light);
+  }
 
+  /* --- Карта --- */
+  #map {
+    height: 400px;
+    border-radius: 12px;
+    margin: 20px 0;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  }
+
+  nav.filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  nav.filter-buttons button {
+    background: var(--accent);
+    border: none;
+    padding: 8px 16px;
+    color: var(--accent-light);
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+  }
+  nav.filter-buttons button.active,
+  nav.filter-buttons button:hover {
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+
+  /* --- Інформація --- */
+  #info-section ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 30px;
+  }
+  #info-section li {
+    margin-bottom: 15px;
+    background: rgba(255 255 255 / 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(255 255 255 / 0.15);
+  }
+  #info-section li img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.6);
+  }
+  #info-section a {
+    color: var(--accent-light);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  #info-section a:hover {
+    text-decoration: underline;
+  }
+
+  /* --- Чат --- */
+  .chat-container {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--bg-chat-overlay);
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 20px rgba(0,0,0,0.7);
+  }
+
+  .chat-header {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    color: var(--accent-light);
+    text-align: center;
+  }
+
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 350px;
+    padding-right: 10px;
+    margin-bottom: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-light) transparent;
+  }
+  #messages::-webkit-scrollbar {
+    width: 8px;
+  }
+  #messages::-webkit-scrollbar-thumb {
+    background-color: var(--accent-light);
+    border-radius: 10px;
+  }
+
+  .message {
+    background: #fff;
+    color: #000;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    max-width: 75%;
+    word-wrap: break-word;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .message.sent {
+    background: #bee5d3;
+    align-self: flex-end;
+  }
+  .message img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 6px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  }
+
+  .input-area {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .input-area input[type="text"] {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 25px;
+    border: none;
+    font-family: 'Comfortaa', cursive;
+    font-size: 1rem;
+    outline: none;
+  }
+
+  .input-area input[type="file"] {
+    display: none;
+  }
+
+  .photo-label {
+    cursor: pointer;
+    font-size: 1.6rem;
+    user-select: none;
+  }
+
+  .input-area button {
+    padding: 10px 20px;
+    background: var(--accent-light);
+    border: none;
+    border-radius: 25px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Comfortaa', cursive;
+  }
+  .input-area button:hover {
+    background: var(--accent);
+    color: var(--accent-light);
+  }
+
+  footer {
+    text-align: center;
+    padding: 10px;
+    background: var(--accent);
+    font-size: 0.9rem;
+  }
+
+  /* Адаптив */
+  @media (max-width: 768px) {
     main {
-      max-width: 1200px;
-      margin: 10px auto;
-      padding: 15px;
-    }
-
-    section {
-      display: none;
-      background-image: url("https://i.ibb.co/fbpjfnm/Prague.jpg");
-      background-size: cover;
-      background-position: center;
-      border-radius: 12px;
-      padding: 15px;
-      color: white;
-    }
-
-    section.active {
-      display: block;
-    }
-
-    #map {
-      height: 400px;
-      border-radius: 10px;
+      padding: 15px 10px;
+      max-width: 100%;
       margin-bottom: 20px;
     }
 
-    .info-box, .chat-box {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 15px;
-      border-radius: 12px;
-      color: #222;
-    }
-
-    .chat-messages {
+    #map {
       height: 300px;
-      overflow-y: auto;
-      background: #f0f0f0;
-      padding: 10px;
-      border-radius: 10px;
-      margin-bottom: 10px;
     }
 
-    .message {
-      margin-bottom: 10px;
-    }
-
-    #chat-input {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    #chat-input input[type="text"] {
-      padding: 10px;
-      border-radius: 20px;
-      border: 1px solid #ccc;
-    }
-
-    #chat-input input[type="file"] {
-      border: none;
-    }
-
-    #chat-input button {
-      background: var(--blue);
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-    }
-
-    .info-image {
+    .chat-container {
       max-width: 100%;
-      border-radius: 12px;
-      margin-top: 10px;
+      padding: 15px;
     }
 
-    @media (min-width: 768px) {
-      #chat-input {
-        flex-direction: row;
-        align-items: center;
-      }
+    .input-area input[type="text"] {
+      font-size: 0.9rem;
     }
-  </style>
+  }
+</style>
 </head>
 <body>
 
-<header>ДОПОМОГА УКРАЇНЦЯМ У ПРАЗІ</header>
-
-<nav>
-  <button class="tab-btn active" data-tab="chat">Прага-Фушки</button>
-  <button class="tab-btn" data-tab="home">Головна</button>
-  <button class="tab-btn" data-tab="info">Корисна інформація</button>
-</nav>
+<header>Допомога українцям у Празі</header>
 
 <main>
-  <section id="chat" class="active">
-    <div class="chat-box">
-      <h2>Чат "Прага-Фушки"</h2>
-      <p>Шановні українці, цей сайт створено, щоб допомагати нашим співвітчизникам. Діліться новинами, шукайте роботу, житло або просто поспілкуйтесь.</p>
-      <div class="chat-messages" id="chat-messages"></div>
-      <div id="chat-input">
-        <input type="text" id="chat-text" placeholder="Ваше повідомлення...">
-        <input type="file" id="chat-file" accept="image/*">
-        <button id="chat-send">Відправити</button>
+
+  <section id="info-section" aria-label="Корисна інформація">
+    <h2>Корисна інформація та контакти</h2>
+
+    <h3>Медичні заклади</h3>
+    <ul>
+      <li>
+        <b>Лікарня Мотол</b> — V Úvalu 84, Praha 5<br/>
+        Телефон: +420 224 431 111<br/>
+        Години роботи: 24/7<br/>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/FN_Motol_logo.svg/1200px-FN_Motol_logo.svg.png" alt="Лікарня Мотол" />
+      </li>
+      <li>
+        <b>Поліклініка Прага 1</b> — Jungmannova 35, Praha 1<br/>
+        Телефон: +420 123 456 789<br/>
+        Години роботи: 9:00–17:00<br/>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/97/Polyclinic_in_Prague_1.JPG" alt="Поліклініка Прага 1" />
+      </li>
+      <li>
+        <b>Аптека «Свобода»</b> — Karlovo náměstí 14, Praha 2<br/>
+        Телефон: +420 987 654 321<br/>
+        Години роботи: 8:00–20:00<br/>
+        <img src="https://cdn.pixabay.com/photo/2018/05/02/20/05/pharmacy-3367040_960_720.jpg" alt="Аптека Свобода" />
+      </li>
+    </ul>
+
+    <h3>Соціальні служби та волонтери</h3>
+    <ul>
+      <li>
+        <b>OAMP Прага 1</b> — Jungmannova 35, Praha 1<br/>
+        Телефон: +420 123 456 789<br/>
+        Години роботи: 9:00–17:00<br/>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/OAMP_Logo.svg/1200px-OAMP_Logo.svg.png" alt="OAMP Прага 1" />
+      </li>
+      <li>
+        <b>Волонтерський центр «Pomoc»</b> — Vinohradská 52, Praha 3<br/>
+        Телефон: +420 555 666 777<br/>
+        Години роботи: 10:00–18:00<br/>
+        <img src="https://cdn.pixabay.com/photo/2017/06/11/18/56/volunteers-2399516_960_720.jpg" alt="Волонтерський центр Помоч" />
+      </li>
+    </ul>
+
+    <h3>Юридична допомога</h3>
+    <ul>
+      <li>
+        <b>Консультація «Pravda»</b> — Národní 10, Praha 1<br/>
+        Телефон: +420 555 123 456<br/>
+        Години роботи: 9:00–18:00<br/>
+        <img src="https://cdn.pixabay.com/photo/2016/08/25/07/44/law-1619783_960_720.jpg" alt="Юридична допомога" />
+      </li>
+      <li>
+        <b>Центр правової підтримки</b> — Jungmannova 35, Praha 1<br/>
+        Телефон: +420 555 654 321<br/>
+        Години роботи: 9:00–17:00<br/>
+        <img src="https://cdn.pixabay.com/photo/2017/01/29/11/36/scales-2017796_960_720.jpg" alt="Центр правової підтримки" />
+      </li>
+    </ul>
+
+    <h3>Магазини та курси</h3>
+    <ul>
+      <li>
+        <b>Магазин для мігрантів «Pomoc»</b> — Karlovo nám. 23, Praha 2<br/>
+        Телефон: +420 987 654 321<br/>
+        Години роботи: 10:00–20:00<br/>
+        <img src="https://cdn.pixabay.com/photo/2016/03/26/22/22/supermarket-1284423_960_720.jpg" alt="Магазин для мігрантів" />
+      </li>
+      <li>
+        <b>Курси чеської мови «Česky snadno»</b> — Vodičkova 14, Praha 1<br/>
+        Телефон: +420 222 333 444<br/>
+        Години роботи: 9:00–19:00<br/>
+        <img src="https://cdn.pixabay.com/photo/2016/01/19/17/46/classroom-1149147_960_720.jpg" alt="Курси чеської мови" />
+      </li>
+    </ul>
+  </section>
+
+  <section aria-label="Карта з важливими точками">
+    <h2>Карта з важливими точками</h2>
+    <nav class="filter-buttons" aria-label="Фільтр категорій на карті">
+      <button data-filter="all" class="active" aria-pressed="true">Всі</button>
+      <button data-filter="medicine" aria-pressed="false">Медицина</button>
+      <button data-filter="social" aria-pressed="false">Соцслужби</button>
+      <button data-filter="shops" aria-pressed="false">Магазини</button>
+      <button data-filter="law" aria-pressed="false">Юридична допомога</button>
+    </nav>
+    <div id="map" tabindex="0" aria-label="Інтерактивна карта Праги"></div>
+  </section>
+
+  <section aria-label="Онлайн чат Прага Фушки" style="margin-top:40px;">
+    <div class="chat-container">
+      <div class="chat-header">
+        Шановні українці, цей чат створено для підтримки та обміну корисними порадами у Празі 🇺🇦
+      </div>
+      <div id="messages"></div>
+      <div class="input-area">
+        <input type="text" id="text-input" placeholder="Напишіть повідомлення..." aria-label="Поле вводу повідомлення" />
+        <label for="file-input" class="photo-label" title="Додати фото" aria-label="Додати фото">📷</label>
+        <input type="file" id="file-input" accept="image/*" aria-label="Вибрати зображення" />
+        <button id="send-btn" aria-label="Надіслати повідомлення">Надіслати</button>
       </div>
     </div>
   </section>
 
-  <section id="home">
-    <div id="map"></div>
-  </section>
-
-  <section id="info">
-    <div class="info-box">
-      <h2>Медична допомога</h2>
-      <p>Лікарня Motol, Виногради, Thomayerova, IKEM, Аптеки Benu та інші доступні для українців.</p>
-      <img src="https://source.unsplash.com/800x400/?clinic" class="info-image" alt="Медична допомога">
-
-      <h2>Соціальні служби</h2>
-      <p>Центри реєстрації, OAMP, волонтерські організації, благодійні фонди.</p>
-      <img src="https://source.unsplash.com/800x400/?help,volunteer" class="info-image" alt="Соціальні служби">
-
-      <h2>Українські магазини та доставка</h2>
-      <p>"Українські смаколики", "Сало і душа", "Babuska" — знижки для біженців, продукти з України.</p>
-      <img src="https://source.unsplash.com/800x400/?ukrainian,food" class="info-image" alt="Магазини">
-
-      <h2>Юридична допомога</h2>
-      <p>"Pravda", "Ukrajinska Pravo", консультації з документами, статусом тимчасового захисту, роботою.</p>
-      <img src="https://source.unsplash.com/800x400/?law,counseling" class="info-image" alt="Юридична допомога">
-
-      <h2>Пошук роботи</h2>
-      <p>Платформи з підробітками, кур’єри, клінінг, няні, складські працівники. Поради з працевлаштування.</p>
-      <img src="https://source.unsplash.com/800x400/?job,work" class="info-image" alt="Робота">
-    </div>
-  </section>
 </main>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-  const tabs = document.querySelectorAll('.tab-btn');
-  const sections = document.querySelectorAll('main > section');
+<footer>© 2025 Допомога українцям у Празі</footer>
 
-  tabs.forEach(btn => {
+<!-- Leaflet JS -->
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  crossorigin=""
+></script>
+
+<script>
+  // --- КАРТА ---
+  const map = L.map('map').setView([50.0755, 14.4378], 12); // Центр Праги
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:
+      '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  // Точки (больше и разнообразнее)
+  const points = [
+    // Медицина
+    { id: 1, category: 'medicine', name: 'Лікарня Мотол', coords: [50.055, 14.383], phone: '+420 224 431 111' },
+    { id: 2, category: 'medicine', name: 'Поліклініка Прага 1', coords: [50.085, 14.421], phone: '+420 123 456 789' },
+    { id: 3, category: 'medicine', name: 'Аптека «Свобода»', coords: [50.083, 14.417], phone: '+420 987 654 321' },
+    { id: 10, category: 'medicine', name: 'Клініка «Žitná»', coords: [50.086, 14.428], phone: '+420 234 567 890' },
+    { id: 11, category: 'medicine', name: 'Медичний центр «Praha»', coords: [50.078, 14.420], phone: '+420 345 678 901' },
+
+    // Соцслужби
+    { id: 4, category: 'social', name: 'OAMP Прага 1', coords: [50.084, 14.419], phone: '+420 123 456 789' },
+    { id: 5, category: 'social', name: 'Волонтерський центр «Pomoc»', coords: [50.076, 14.437], phone: '+420 555 666 777' },
+    { id: 12, category: 'social', name: 'Центр допомоги мігрантам', coords: [50.075, 14.410], phone: '+420 456 789 012' },
+
+    // Магазини
+    { id: 6, category: 'shops', name: 'Магазин для мігрантів «Pomoc»', coords: [50.084, 14.416], phone: '+420 987 654 321' },
+    { id: 7, category: 'shops', name: 'Крамниця українських продуктів', coords: [50.073, 14.432], phone: '+420 876 543 210' },
+    { id: 13, category: 'shops', name: 'Супермаркет «Billa»', coords: [50.072, 14.425], phone: '+420 765 432 109' },
+    // Юридична допомога (продовження)
+    { id: 8, category: 'law', name: 'Консультація «Pravda»', coords: [50.087, 14.420], phone: '+420 555 123 456' },
+    { id: 9, category: 'law', name: 'Центр правової підтримки', coords: [50.083, 14.419], phone: '+420 555 654 321' }
+  ];
+
+  // Создаем слой для маркеров
+  const markersLayer = L.layerGroup().addTo(map);
+
+  // Функция для добавления маркеров в зависимости от фильтра
+  function updateMarkers(filter) {
+    markersLayer.clearLayers();
+    points.forEach((point) => {
+      if (filter === 'all' || point.category === filter) {
+        const marker = L.marker(point.coords).addTo(markersLayer);
+        marker.bindPopup(`<b>${point.name}</b><br>Телефон: ${point.phone}`);
+      }
+    });
+  }
+
+  // Изначально показываем все
+  updateMarkers('all');
+
+  // Фильтр по кнопкам
+  const filterButtons = document.querySelectorAll('nav.filter-buttons button');
+  filterButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      tabs.forEach(b => b.classList.remove('active'));
+      filterButtons.forEach((b) => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
       btn.classList.add('active');
-      sections.forEach(sec => sec.classList.remove('active'));
-      document.getElementById(btn.dataset.tab).classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+      updateMarkers(btn.getAttribute('data-filter'));
     });
   });
 
-  const map = L.map('map').setView([50.0755, 14.4378], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap'
-  }).addTo(map);
+  // --- ЧАТ ---
 
-  const locations = [
-    [50.055, 14.383, "Лікарня Motol"],
-    [50.082, 14.487, "Лікарня Thomayerova"],
-    [50.027, 14.436, "Лікарня IKEM"],
-    [50.090, 14.430, "OAMP Jungmannova"],
-    [50.076, 14.437, "Волонтерський центр Pomoc"],
-    [50.084, 14.416, "Магазин Babuska"],
-    [50.086, 14.420, "Юридична консультація Pravda"],
-    [50.079, 14.395, "Аптека Benu"],
-    [50.075, 14.450, "Український магазин Сало і душа"],
-    [50.074, 14.410, "Пункт допомоги Українцям"]
-  ];
+  const messagesContainer = document.getElementById('messages');
+  const textInput = document.getElementById('text-input');
+  const sendBtn = document.getElementById('send-btn');
+  const fileInput = document.getElementById('file-input');
 
-  locations.forEach(loc => {
-    L.marker([loc[0], loc[1]]).addTo(map).bindPopup(loc[2]);
-  });
+  // Загружаем сообщения из localStorage
+  let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
 
-  const chatSend = document.getElementById('chat-send');
-  const chatText = document.getElementById('chat-text');
-  const chatFile = document.getElementById('chat-file');
-  const chatMessages = document.getElementById('chat-messages');
-
-  chatSend.addEventListener('click', () => {
-    const text = chatText.value.trim();
-    const file = chatFile.files[0];
-    if (!text && !file) return;
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message');
-    if (text) msgDiv.innerText = text;
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
+  // Функция отображения сообщений
+  function renderMessages() {
+    messagesContainer.innerHTML = '';
+    messages.forEach(msg => {
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message', 'sent');
+      if (msg.type === 'text') {
+        msgDiv.textContent = msg.content;
+      } else if (msg.type === 'image') {
         const img = document.createElement('img');
-        img.src = e.target.result;
-        img.style.maxWidth = '200px';
-        img.style.display = 'block';
-        img.style.marginTop = '10px';
+        img.src = msg.content;
+        img.alt = 'Зображення у чаті';
         msgDiv.appendChild(img);
-      };
-      reader.readAsDataURL(file);
+      }
+      messagesContainer.appendChild(msgDiv);
+    });
+    // Скроллим вниз
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  renderMessages();
+
+  // Отправка текста
+  function sendMessage() {
+    const text = textInput.value.trim();
+    if (!text) return;
+    messages.push({ type: 'text', content: text });
+    localStorage.setItem('chatMessages', JSON.stringify(messages));
+    renderMessages();
+    textInput.value = '';
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+
+  // Отправка по Enter
+  textInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
     }
-    chatMessages.appendChild(msgDiv);
-    chatText.value = '';
-    chatFile.value = '';
-    chatMessages.scrollTop = chatMessages.scrollHeight;
   });
+
+  // Отправка фото
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      messages.push({ type: 'image', content: e.target.result });
+      localStorage.setItem('chatMessages', JSON.stringify(messages));
+      renderMessages();
+      fileInput.value = '';
+    };
+    reader.readAsDataURL(file);
+  });
+
 </script>
 
 </body>
-    </html>
+</html>
