@@ -1,177 +1,620 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Прага-Фушки | Допомога Українцям</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: url('https://i.ibb.co/fbpjfnm/Prague.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Прага Фушки — допомога українцям</title>
+<!-- Leaflet CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+  integrity="sha256-sA+oX2k8X41vtVfbGUoXB+7MjlgkQQk3Ptm94uShwrw="
+  crossorigin=""
+/>
+<style>
+  /* Базові стилі і скидання */
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin:0; padding:0; height:100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('https://i.ibb.co/fbpjfnm/Prague.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #eee;
+  }
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    backdrop-filter: brightness(0.3);
+    background-color: rgba(0,0,0,0.4);
+  }
+  header {
+    padding: 10px 15px;
+    background-color: rgba(0, 0, 0, 0.6);
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    user-select:none;
+  }
+  nav {
+    display: flex;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.6);
+  }
+  nav button {
+    background: none;
+    border: none;
+    color: #ddd;
+    padding: 15px 25px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.3s, background-color 0.3s;
+  }
+  nav button.active,
+  nav button:hover {
+    color: #00b894;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 5px 5px 0 0;
+  }
+  main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0,0,0,0.4);
+    overflow: hidden;
+  }
+  section {
+    display: none;
+    flex-grow: 1;
+    overflow: hidden;
+    flex-direction: column;
+  }
+  section.active {
+    display: flex;
+  }
+  /* === Чат === */
+  #chat {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  #chat-header {
+    flex-shrink: 0;
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+  #messages {
+    flex-grow: 1;
+    padding: 10px 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse; /* чтобы лента была снизу вверх и бесконечно скроллилась */
+  }
+  .message {
+    margin-bottom: 12px;
+    max-width: 75%;
+    padding: 8px 14px;
+    border-radius: 18px;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    word-wrap: break-word;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+  .message.sent {
+    background-color: #00b894;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+  }
+  .message.received {
+    background-color: #2d3436;
+    color: #ddd;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+  }
+  .message img {
+    max-width: 100%;
+    margin-top: 8px;
+    border-radius: 10px;
+  }
+  #input-area {
+    flex-shrink: 0;
+    display: flex;
+    padding: 10px 15px;
+    background: rgba(0,0,0,0.6);
+    align-items: center;
+  }
+  #text-input {
+    flex-grow: 1;
+    border-radius: 20px;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    outline: none;
+  }
+  #file-input {
+    display: none;
+  }
+  #attach-btn {
+    background: none;
+    border: none;
+    color: #00b894;
+    font-size: 1.5rem;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  #send-btn {
+    background-color: #00b894;
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 10px 18px;
+    margin-left: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  #send-btn:disabled {
+    background-color: #4cd1a1;
+    cursor: not-allowed;
+  }
+
+  /* Форма регистрации (модал) */
+  #register-modal {
+    position: fixed;
+    top: 0; left: 0; right:0; bottom:0;
+    background-color: rgba(0,0,0,0.75);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  #register-modal.active {
+    display: flex;
+  }
+  #register-form {
+    background-color: #222;
+    padding: 25px 30px;
+    border-radius: 15px;
+    width: 320px;
+    max-width: 90vw;
+    color: #eee;
+    box-shadow: 0 0 15px #00b894;
+  }
+  #register-form h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  #register-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  #register-form input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+  }
+  #register-form button {
+    width: 100%;
+    padding: 12px 0;
+    background-color: #00b894;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+  }
+  #register-form button:hover {
+    background-color: #019875;
+  }
+  #register-error {
+    color: #ff7675;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  /* Карта */
+  #map {
+    flex-grow: 1;
+    min-height: 100%;
+  }
+  /* Кнопки фильтра на карте */
+  .filter-buttons {
+    background: rgba(0,0,0,0.6);
+    padding: 6px 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .filter-buttons button {
+    border: none;
+    padding: 8px 14px;
+    background-color: #333;
+    color: #eee;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+  }
+  .filter-buttons button:hover,
+  .filter-buttons button.active {
+    background-color: #00b894;
+    color: white;
+  }
+
+  /* Вкладка информации */
+  #info-content {
+    padding: 15px 20px;
+    overflow-y: auto;
+    color: #eee;
+    font-size: 1rem;
+  }
+  #info-content h2 {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  #info-content img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 10px 0;
+  }
+
+  /* Адаптив */
+  @media (max-width: 720px) {
+    nav button {
+      padding: 12px 14px;
+      font-size: 1rem;
     }
-    .tabs {
-      display: flex;
-      justify-content: space-around;
-      background-color: rgba(0,0,0,0.7);
-      padding: 10px;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+    #register-form {
+      width: 90vw;
     }
-    .tabs button {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .section {
-      display: none;
-      padding: 20px;
-      backdrop-filter: blur(10px);
-    }
-    .section.active { display: block; }
-    #chat-box { max-height: 70vh; overflow-y: auto; margin-bottom: 10px; }
-    .message { margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; }
-    input, button { padding: 10px; border-radius: 5px; border: none; }
-    .map { height: 60vh; width: 100%; margin-top: 20px; }
-  </style>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  }
+</style>
+
 </head>
 <body>
-  <div class="tabs">
-    <button data-tab="chat" class="active">Чат</button>
-    <button data-tab="map">Карта</button>
-    <button data-tab="info">Корисна інформація</button>
-  </div>
+<div id="app">
+  <header>
+    Шановні українці! Цей сайт створено, щоб допомагати нашим співвітчизникам у Празі.
+  </header>
+  <nav>
+    <button class="tab-btn active" data-tab="chat">Чат</button>
+    <button class="tab-btn" data-tab="map-section">Карта допомоги</button>
+    <button class="tab-btn" data-tab="info-section">Інформація</button>
+  </nav>
 
-  <div id="chat" class="section active">
-    <p><em>Шановні українці! Цей сайт створено, щоб допомагати нашим співвітчизникам у Празі.</em></p>
-    <div id="chat-box"></div>
-    <input id="msg" placeholder="Ваше повідомлення" />
-    <input id="img" type="file" accept="image/*" />
-    <button id="send">Надіслати</button>
-  </div>
+  <main>
+    <section id="chat" class="active">
+      <div id="chat-header">Прага-Фушки — допомога українцям</div>
+      <div id="messages"></div>
+      <div id="input-area">
+        <input type="text" id="text-input" placeholder="Введіть повідомлення..." autocomplete="off" />
+        <input type="file" id="file-input" accept="image/*" />
+        <button id="attach-btn" title="Прикріпити фото">&#128247;</button>
+        <button id="send-btn" disabled>Відправити</button>
+      </div>
+    </section>
 
-  <div id="map" class="section">
-    <div class="map" id="map-container"></div>
-  </div>
+    <section id="map-section">
+      <div class="filter-buttons">
+        <button data-filter="all" class="active">Всі</button>
+        <button data-filter="medicine">Медицина</button>
+        <button data-filter="social">Соцслужби</button>
+        <button data-filter="shops">Магазини</button>
+        <button data-filter="law">Юридична допомога</button>
+      </div>
+      <div id="map"></div>
+    </section>
 
-  <div id="info" class="section">
-    <h3>Медичні центри</h3>
-    <p>Лікарня Мотол, Поліклініка Прага 1, тощо...</p>
-    <h3>Соціальні служби</h3>
-    <p>OAMP, Центри допомоги...</p>
-    <h3>Магазини</h3>
-    <p>Українські продукти, гуманітарна допомога...</p>
-  </div>
+    <section id="info-section">
+      <h2>Корисна інформація</h2>
+      <p>Тут ви знайдете адреси, контакти та посилання на важливі служби у Празі.</p>
+      <h3>Медицина</h3>
+      <ul>
+        <li>Лікарня Мотол — +420 123 456 789</li>
+        <li>Поліклініка Прага 1 — +420 987 654 321</li>
+        <li>Аптека Зеленый Крест — +420 234 567 890</li>
+      </ul>
+      <img src="https://cdn.pixabay.com/photo/2017/02/20/18/03/hospital-2081469_960_720.jpg" alt="Лікарня Мотол" />
+      <h3>Соцслужби</h3>
+      <ul>
+        <li>OAMP Прага 1 — +420 111 222 333</li>
+        <li>Волонтерський центр Pomoc — +420 444 555 666</li>
+      </ul>
+      <img src="https://cdn.pixabay.com/photo/2016/11/29/10/07/volunteer-1866784_960_720.jpg" alt="Волонтерський центр" />
+      <h3>Магазини</h3>
+      <ul>
+        <li>Магазин Pomoc — вул. Празька, 12</li>
+      </ul>
+      <img src="https://cdn.pixabay.com/photo/2016/11/18/17/54/shop-1837257_960_720.jpg" alt="Магазин Pomoc" />
+      <h3>Юридична допомога</h3>
+      <ul>
+        <li>Консультація Pravda — +420 555 666 777</li>
+      </ul>
+      <img src="https://cdn.pixabay.com/photo/2017/02/10/11/40/law-2059691_960_720.jpg" alt="Юридична допомога" />
+    </section>
+  </main>
+</div>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDV2BslF-Ll37a1XO3GEfzNMXa7YsSXL1o",
-      authDomain: "web-app-b4633.firebaseapp.com",
-      projectId: "web-app-b4633",
-      storageBucket: "web-app-b4633.appspot.com",
-      messagingSenderId: "1041887915171",
-      appId: "1:1041887915171:web:84d62eae54e9291b47a316"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
+<!-- Модал реєстрації -->
+<div id="register-modal">
+  <form id="register-form">
+    <h2>Реєстрація</h2>
+    <div id="register-error"></div>
+    <label for="nickname">Нікнейм</label>
+    <input type="text" id="nickname" required autocomplete="username" />
+    <label for="email">Електронна пошта</label>
+    <input type="email" id="email" required autocomplete="email" />
+    <label for="password">Пароль</label>
+    <input type="password" id="password" required autocomplete="new-password" minlength="6" />
+    <button type="submit">Зареєструватися</button>
+  </form>
+</div>
 
-    let user = JSON.parse(localStorage.getItem('chatUser'));
-    if (!user) {
-      const nick = prompt('Ваш нікнейм:');
-      const email = prompt('Ваш email:');
-      const pass = prompt('Створіть пароль:');
-      auth.createUserWithEmailAndPassword(email, pass)
-        .then(cred => {
-          user = { nick, uid: cred.user.uid };
-          localStorage.setItem('chatUser', JSON.stringify(user));
-        })
-        .catch(() => alert('Можливо, користувач вже існує.'));
-    }
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore-compat.js"></script>
 
-    const sendBtn = document.getElementById("send");
-    const msgInput = document.getElementById("msg");
-    const imgInput = document.getElementById("img");
-    const chatBox = document.getElementById("chat-box");
+<!-- Leaflet JS -->
+<script
+  src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+  integrity="sha256-o9N1j64pgZXq2lwFpLY+T6lHwZbMc3M6z6+WUEz1p+U="
+  crossorigin=""
+></script>
 
-    function loadMessages() {
-      db.collection("messages").orderBy("time")
-        .onSnapshot(snapshot => {
-          chatBox.innerHTML = "";
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const div = document.createElement("div");
-            div.className = "message";
-            div.innerHTML = `<strong>${data.nick}</strong>: ${data.text || ''}`;
-            if (data.image) {
-              div.innerHTML += `<br><img src="${data.image}" width="100"/>`;
-            }
-            chatBox.appendChild(div);
-            chatBox.scrollTop = chatBox.scrollHeight;
-          });
-        });
-    }
-    loadMessages();
+<script>
+  // Firebase конфігурація (твій)
+  const firebaseConfig = {
+    apiKey: "AIzaSyDV2BslF-Ll37a1XO3GEfzNMXa7YsSXL1o",
+    authDomain: "web-app-b4633.firebaseapp.com",
+    projectId: "web-app-b4633",
+    storageBucket: "web-app-b4633.appspot.com",
+    messagingSenderId: "1041887915171",
+    appId: "1:1041887915171:web:84d62eae54e9291b47a316",
+    measurementId: "G-C65BPE81SJ"
+  };
+  // Ініціалізація Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-    sendBtn.onclick = async () => {
-      const text = msgInput.value.trim();
-      const file = imgInput.files[0];
-      let img64 = null;
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = async () => {
-          img64 = reader.result;
-          await db.collection("messages").add({
-            nick: user.nick,
-            text,
-            image: img64,
-            time: new Date()
-          });
-          msgInput.value = "";
-          imgInput.value = null;
-        };
-        reader.readAsDataURL(file);
-      } else if (text) {
-        await db.collection("messages").add({
-          nick: user.nick,
-          text,
-          image: null,
-          time: new Date()
-        });
-        msgInput.value = "";
-      }
-    };
+  // Елементи UI
+  const tabButtons = document.querySelectorAll('nav button.tab-btn');
+  const sections = document.querySelectorAll('main > section');
 
-    document.querySelectorAll('.tabs button').forEach(btn => {
-      btn.onclick = () => {
-        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-        document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-        document.getElementById(btn.dataset.tab).classList.add('active');
-        btn.classList.add('active');
-      };
+  const messagesContainer = document.getElementById("messages");
+  const textInput = document.getElementById("text-input");
+  const fileInput = document.getElementById("file-input");
+  const attachBtn = document.getElementById("attach-btn");
+  const sendBtn = document.getElementById("send-btn");
+
+  const registerModal = document.getElementById("register-modal");
+  const registerForm = document.getElementById("register-form");
+  const registerError = document.getElementById("register-error");
+
+  const nicknameInput = document.getElementById("nickname");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+
+  let currentUser = null;
+
+  // Перемикач вкладок
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      tabButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const tab = btn.dataset.tab;
+      sections.forEach(section => {
+        section.classList.toggle("active", section.id === tab);
+      });
     });
+  });
 
-    // Карта
-    const map = L.map('map-container').setView([50.0755, 14.4378], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    const points = [
-      { name: "Лікарня Мотол", lat: 50.0737, lng: 14.3456 },
-      { name: "OAMP Прага", lat: 50.087, lng: 14.423 },
-      { name: "Магазин Pomoc", lat: 50.073, lng: 14.418 }
-    ];
-    points.forEach(p => L.marker([p.lat, p.lng]).addTo(map).bindPopup(p.name));
-  </script>
+  // Відкрити/закрити прикріплення фото
+  attachBtn.addEventListener("click", () => {
+    fileInput.click();
+  });
+
+  // Активувати кнопку "Відправити", якщо є текст або файл
+  function updateSendBtnState() {
+    sendBtn.disabled = !textInput.value.trim() && !fileInput.files.length;
+  }
+  textInput.addEventListener("input", updateSendBtnState);
+  fileInput.addEventListener("change", updateSendBtnState);
+
+  // Показати повідомлення
+  function renderMessages(docs) {
+    messagesContainer.innerHTML = "";
+    // Відображаємо у зворотньому порядку (найновіші внизу)
+    docs.forEach(doc => {
+      const msg = doc.data();
+      const div = document.createElement("div");
+      div.className = "message " + (msg.uid === currentUser.uid ? "sent" : "received");
+      let html = `<strong>${msg.nickname || "Анонім"}</strong>:<br>`;
+      html += msg.text ? msg.text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>") : "";
+      if (msg.imageUrl) {
+        html += `<br><img src="${msg.imageUrl}" alt="Фото" />`;
+      }
+      div.innerHTML = html;
+      messagesContainer.appendChild(div);
+    });
+    // Скролл внизу
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  // Підписка на оновлення повідомлень Firestore
+  function subscribeMessages() {
+    db.collection("messages")
+      .orderBy("createdAt", "desc")
+      .limit(50)
+      .onSnapshot(snapshot => {
+        renderMessages(snapshot.docs);
+      });
+  }
+
+  // Відправка повідомлення (текст + фото)
+  sendBtn.addEventListener("click", async () => {
+    if (!currentUser) {
+      // Якщо не авторизований — показати форму реєстрації
+      registerModal.classList.add("active");
+      return;
+    }
+    const text = textInput.value.trim();
+    const file = fileInput.files[0];
+    if (!text && !file) return;
+
+    sendBtn.disabled = true;
+
+    let imageUrl = null;
+
+    if (file) {
+      // Завантажуємо фото в Firebase Storage
+      const storageRef = firebase.storage().ref();
+      const imageRef = storageRef.child(`chat_images/${Date.now()}_${file.name}`);
+      try {
+        const snapshot = await imageRef.put(file);
+        imageUrl = await snapshot.ref.getDownloadURL();
+      } catch (err) {
+        alert("Помилка завантаження зображення: " + err.message);
+        sendBtn.disabled = false;
+        return;
+      }
+    }
+
+    try {
+      await db.collection("messages").add({
+        uid: currentUser.uid,
+        nickname: currentUser.displayName || "Анонім",
+        text,
+        imageUrl,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+      textInput.value = "";
+      fileInput.value = null;
+      updateSendBtnState();
+    } catch (err) {
+      alert("Помилка надсилання повідомлення: " + err.message);
+    }
+
+    sendBtn.disabled = false;
+  });
+
+  // Реєстрація користувача
+  registerForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    registerError.textContent = "";
+    const nickname = nicknameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!nickname || !email || !password) {
+      registerError.textContent = "Будь ласка, заповніть всі поля";
+      return;
+    }
+    try {
+      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+      await userCredential.user.updateProfile({ displayName: nickname });
+      currentUser = userCredential.user;
+      registerModal.classList.remove("active");
+      registerForm.reset();
+      subscribeMessages();
+    } catch (error) {
+      registerError.textContent = error.message;
+    }
+  });
+
+  // Перевірка авторизації при завантаженні
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+      subscribeMessages();
+    } else {
+      currentUser = null;
+    }
+  });
+
+  // Ініціалізація карти Leaflet
+  const map = L.map('map').setView([50.0755, 14.4378], 12);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Категорії з точками
+  const categories = {
+    all: [],
+    medicine: [
+      { name: 'Лікарня Мотол', lat: 50.0737, lng: 14.3456 },
+      { name: 'Поліклініка Прага 1', lat: 50.082, lng: 14.423 },
+      { name: 'Аптека Зеленый Крест', lat: 50.0805, lng: 14.412 },
+      { name: 'Центр швидкої допомоги', lat: 50.069, lng: 14.438 }
+    ],
+    social: [
+      { name: 'OAMP Прага 1', lat: 50.087, lng: 14.423 },
+      { name: 'Волонтерський центр Pomoc', lat: 50.081, lng: 14.449 },
+      { name: 'Центр підтримки біженців', lat: 50.074, lng: 14.430 }
+    ],
+    shops: [
+      { name: 'Магазин Pomoc', lat: 50.073, lng: 14.418 },
+      { name: 'Український магазин "Смачно"', lat: 50.076, lng: 14.435 },
+      { name: 'Супермаркет Globus', lat: 50.084, lng: 14.427 }
+    ],
+    law: [
+      { name: 'Консультація Pravda', lat: 50.085, lng: 14.420 },
+      { name: 'Юридична допомога "Права людини"', lat: 50.077, lng: 14.432 }
+    ]
+  };
+
+  // Об'єднуємо всі точки в all
+  Object.keys(categories).forEach(cat => {
+    if (cat !== 'all') categories.all.push(...categories[cat]);
+  });
+
+  let markers = [];
+
+  function clearMarkers() {
+    markers.forEach(m => map.removeLayer(m));
+    markers = [];
+  }
+
+  function renderMarkers(filter) {
+    clearMarkers();
+    categories[filter].forEach(p => {
+      const marker = L.marker([p.lat, p.lng]).addTo(map).bindPopup(p.name);
+      markers.push(marker);
+    });
+  }
+
+  // Відповідь на натискання кнопок фільтра
+  document.querySelectorAll('.filter-buttons button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-buttons button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderMarkers(btn.dataset.filter);
+    });
+  });
+
+  // Відобразити всі маркери при завантаженні карти
+  renderMarkers('all');
+
+</script>
+
+<!-- Firebase Storage SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-storage-compat.js"></script>
+
 </body>
 </html>
