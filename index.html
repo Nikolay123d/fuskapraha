@@ -4,252 +4,100 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Прага-Фушки — Допомога українцям</title>
-  <style>
-    /* Всі стилі з чатом як месенджер, адаптація, вкладки, карта Google Maps, інформація */
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f5f5f5;
-      overflow: hidden;
-    }
-    .tabs {
-      display: flex;
-      background: #FFD700;
-      justify-content: space-around;
-      padding: 0.5rem 0;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 100;
-    }
-    .tabs button {
-      border: none;
-      background: none;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .tabs button.active {
-      border-bottom: 3px solid #000;
-    }
-    .tab-content {
-      display: none;
-      height: 100%;
-      padding-top: 50px;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    /* Чат */
-    #chat {
-      background: url('https://i.ibb.co/fbpjfnm/Prague.jpg') center/cover no-repeat;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-    #messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .message {
-      max-width: 75%;
-      padding: 10px;
-      border-radius: 10px;
-      background: #fff;
-      color: #000;
-    }
-    .sent {
-      align-self: flex-end;
-      background: #FFD700;
-    }
-    .received {
-      align-self: flex-start;
-      background: #eee;
-    }
-    #chat-input-container {
-      display: flex;
-      padding: 10px;
-      background: #fff;
-    }
-    #text-input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 20px;
-      border: 1px solid #ccc;
-    }
-    #send-btn {
-      padding: 10px 20px;
-      margin-left: 10px;
-      background: #FFD700;
-      border: none;
-      border-radius: 20px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    /* Карта */
-    #map {
-      height: 100%;
-      width: 100%;
-    }
-    /* Інформація */
-    #info {
-      padding: 20px;
-      overflow-y: auto;
-      height: calc(100% - 50px);
-    }
-    /* Реєстрація */
-    #register-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
-    #register-form {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      width: 300px;
-    }
-    #register-form input {
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    #register-form button {
-      padding: 10px;
-      background: #FFD700;
-      border: none;
-      font-weight: bold;
-      border-radius: 5px;
-    }
-  </style>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+
+  <!-- Подключаем стили -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Подключаем Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    integrity="sha256-sA+Rl6P4BWh+/2ku0FgNx0H6AuYsaMPOO1Q+wV1z+0I="
+    crossorigin=""
+  />
+
 </head>
 <body>
+
   <div class="tabs">
     <button class="tab-btn active" data-tab="chat">Чат</button>
     <button class="tab-btn" data-tab="map">Карта</button>
     <button class="tab-btn" data-tab="info">Інформація</button>
   </div>
 
-  <div id="chat" class="tab-content active">
-    <div id="messages"></div>
-    <div id="chat-input-container">
-      <input id="text-input" placeholder="Напишіть повідомлення..." />
-      <button id="send-btn">Відправити</button>
+  <!-- Чат -->
+  <section id="chat" class="tab-content active" aria-label="Чат">
+    <div class="overlay"></div>
+    <div id="chat-content">
+      <div id="chat-header">Шановні українці, цей сайт створений щоб допомагати нашим співвітчизникам.</div>
+      <div id="messages" aria-live="polite" aria-relevant="additions"></div>
+      <div id="chat-input-container">
+        <input id="text-input" type="text" placeholder="Введіть повідомлення..." aria-label="Текст повідомлення" />
+        <input type="file" id="file-input" accept="image/*" aria-label="Додати фото" />
+        <button id="btn-photo" title="Додати фото 📷" aria-label="Додати фото">📷</button>
+        <button id="send-btn" aria-label="Відправити повідомлення">Відправити</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div id="map" class="tab-content"></div>
-  <div id="info" class="tab-content">Тут буде корисна інформація.</div>
+  <!-- Карта -->
+  <section id="map" class="tab-content" aria-label="Карта допомоги">
+    <div id="map"></div>
+  </section>
 
-  <div id="register-modal">
+  <!-- Информация -->
+  <section id="info" class="tab-content" aria-label="Корисна інформація">
+    <div id="info-content">
+      <h2>Корисна інформація для українців у Празі</h2>
+      <p>Тут зібрані важливі контакти, адреси, телефони та поради, щоб допомогти вам у складний час.</p>
+      <h3>Медицина</h3>
+      <ul>
+        <li>Лікарня Мотол — вул. V Úvalu 84, Прага 5</li>
+        <li>Поліклініка Прага 1 — вул. Štěpánská 28, Прага 1</li>
+        <li>Швидка допомога — телефон 155</li>
+      </ul>
+      <h3>Соціальні служби</h3>
+      <ul>
+        <li>OAMP Прага 1 — вул. Politických vězňů 910/10</li>
+        <li>Волонтерський центр Pomoc — вул. Lazarská 7, Прага 1</li>
+      </ul>
+      <h3>Магазини</h3>
+      <ul>
+        <li>Український магазин Pomoc — вул. Štěpánská 25, Прага 1</li>
+      </ul>
+      <h3>Юридична допомога</h3>
+      <ul>
+        <li>Консультація Pravda — вул. Václavské náměstí 21, Прага 1</li>
+      </ul>
+      <img src="images/prague_graffiti.jpg" alt="Графіті у Празі" />
+      <p>Пам'ятайте, що підтримка — це найважливіше!</p>
+    </div>
+  </section>
+
+  <!-- Модалка регистрации -->
+  <div id="register-modal" role="dialog" aria-modal="true" aria-labelledby="register-title">
     <form id="register-form">
-      <input id="reg-nick" placeholder="Нікнейм" />
-      <input id="reg-email" type="email" placeholder="Email" />
-      <input id="reg-password" type="password" placeholder="Пароль" />
-      <button>Зареєструватися</button>
+      <h2 id="register-title">Реєстрація</h2>
+      <input type="text" id="reg-nick" placeholder="Нікнейм" required autocomplete="off" />
+      <input type="email" id="reg-email" placeholder="Email" required autocomplete="off" />
+      <input type="password" id="reg-password" placeholder="Пароль" required autocomplete="off" />
+      <button type="submit">Зареєструватися</button>
     </form>
   </div>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDV2BslF-Ll37a1XO3GEfzNMXa7YsSXL1o",
-      authDomain: "web-app-b4633.firebaseapp.com",
-      databaseURL: "https://web-app-b4633-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "web-app-b4633",
-      storageBucket: "web-app-b4633.appspot.com",
-      messagingSenderId: "1041887915171",
-      appId: "1:1041887915171:web:84d62eae54e9291b47a316"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-    const tabs = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');
-    tabs.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tabs.forEach(b => b.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.tab).classList.add('active');
-      });
-    });
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-QVjd0z1Dt5IdZFRmOLmPJJsNVk9O0wWutRT6yJaaP8o="
+    crossorigin=""
+  ></script>
 
-    const messagesEl = document.getElementById('messages');
-    const inputEl = document.getElementById('text-input');
-    const sendBtn = document.getElementById('send-btn');
-    let currentUser = null;
-
-    sendBtn.onclick = async () => {
-      const text = inputEl.value.trim();
-      if (!text) return;
-      if (!currentUser) {
-        document.getElementById('register-modal').style.display = 'flex';
-        return;
-      }
-      const message = {
-        id: Date.now(),
-        uid: currentUser.uid,
-        nick: currentUser.displayName || "Анонім",
-        text
-      };
-      db.ref('messages/' + message.id).set(message);
-      inputEl.value = '';
-    };
-
-    db.ref('messages').on('child_added', snap => {
-      const msg = snap.val();
-      const div = document.createElement('div');
-      div.className = 'message ' + (msg.uid === (currentUser?.uid || '') ? 'sent' : 'received');
-      div.textContent = `${msg.nick}: ${msg.text}`;
-      messagesEl.appendChild(div);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    });
-
-    // Реєстрація
-    document.getElementById('register-form').onsubmit = async (e) => {
-      e.preventDefault();
-      const nick = document.getElementById('reg-nick').value;
-      const email = document.getElementById('reg-email').value;
-      const pass = document.getElementById('reg-password').value;
-      try {
-        const userCred = await auth.createUserWithEmailAndPassword(email, pass);
-        await userCred.user.updateProfile({ displayName: nick });
-        currentUser = userCred.user;
-        document.getElementById('register-modal').style.display = 'none';
-      } catch (err) {
-        alert('Помилка: ' + err.message);
-      }
-    };
-
-    // Google Map
-    const map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: 50.087, lng: 14.421 },
-      zoom: 13
-    });
-    const points = [
-      { lat: 50.0833, lng: 14.4171, title: "Поліклініка Прага 1" },
-      { lat: 50.0835, lng: 14.4112, title: "OAMP Прага 1" },
-      { lat: 50.0828, lng: 14.4200, title: "Юридична допомога" },
-    ];
-    points.forEach(p => new google.maps.Marker({ position: p, map, title: p.title }));
-  </script>
+  <!-- Подключаем скрипты -->
+  <script src="js/app.js"></script>
 </body>
-</html>
+    </html>
