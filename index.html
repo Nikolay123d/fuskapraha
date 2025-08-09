@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ru">
 <head>
@@ -5,20 +6,19 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ПРАГА ФУШКИ — Помощь украинцам</title>
 
-  <!-- Google fonts -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
     :root{
       --accent:#2ecc71;
-      --bg:#0b1220;
       --muted:rgba(0,0,0,0.6);
-      --glass: rgba(255,255,255,0.92);
-      --bubble-self: #E6FFEF;
+      --glass: rgba(255,255,255,0.94);
+      --darkglass: rgba(11,18,32,0.65);
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;background:var(--bg);color:#111}
-    /* fixed background image (Praha) */
+    html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;-webkit-font-smoothing:antialiased;color:#0b1220}
+    /* background Prague fixed and cover */
     body::before{
       content:"";
       position:fixed;
@@ -26,66 +26,61 @@
       background-image:url('https://i.ibb.co/27hgtZfY/Prague.jpg');
       background-size:cover;
       background-position:center;
-      filter:brightness(0.45);
+      background-attachment:fixed;
+      filter:brightness(0.5);
       z-index:-2;
-      will-change:transform;
-      transform:translateZ(0);
     }
-    /* subtle overlay for contrast */
     body::after{
       content:"";
       position:fixed;
       inset:0;
-      background:linear-gradient(180deg, rgba(3,7,18,0.3), rgba(3,7,18,0.4));
+      background:linear-gradient(180deg, rgba(3,7,18,0.25), rgba(3,7,18,0.35));
       z-index:-1;
     }
 
-    /* top header */
-    header.site-header{position:sticky;top:0;z-index:40;padding:18px 12px;text-align:center;color:#fff}
-    header.site-header h1{margin:0;font-family:Poppins, Inter, sans-serif;font-weight:700;font-size:28px;letter-spacing:1px;text-shadow:0 8px 30px rgba(2,6,23,0.5)}
-    header.site-header p{margin:6px 0 0;font-size:14px;color:#e6f9ea;opacity:0.95}
+    /* Header */
+    header.site-header{position:sticky;top:0;z-index:50;padding:18px 12px;text-align:center;color:#fff;backdrop-filter:blur(4px)}
+    header.site-header h1{margin:0;font-family:Poppins, Inter, sans-serif;font-weight:700;font-size:28px;letter-spacing:1px;text-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    header.site-header p{margin:8px 0 0;font-size:14px;color:#e8f5e9}
 
-    /* tabs */
-    nav.tabs{display:flex;gap:10px;justify-content:center;padding:10px 12px;position:sticky;top:78px;z-index:35}
-    .tab-button{background:transparent;border:none;color:#fff;padding:8px 16px;font-weight:700;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)}
-    .tab-button.active{box-shadow: inset 0 -4px 0 var(--accent);background:rgba(255,255,255,0.02)}
+    /* Tabs */
+    nav.tabs{display:flex;gap:10px;justify-content:center;padding:10px 12px;position:sticky;top:78px;z-index:48}
+    .tab-button{background:transparent;border:none;color:#fff;padding:8px 16px;font-weight:700;border-radius:12px;cursor:pointer}
+    .tab-button.active{box-shadow: inset 0 -4px 0 var(--accent);background:rgba(255,255,255,0.03)}
 
-    /* main container */
+    /* main */
     main.container{max-width:980px;margin:0 auto;padding:12px}
 
-    .sys-msg{max-width:980px;margin:12px auto;padding:12px;border-radius:14px;background:rgba(255,255,255,0.05);color:#fff;font-size:15px;text-align:center}
+    .sys-msg{max-width:980px;margin:12px auto;padding:12px;border-radius:14px;background:rgba(255,255,255,0.04);color:#fff;font-size:15px;text-align:center}
 
-    /* tab content */
     .tab-content{display:none}
     .tab-content.active{display:block}
 
-    /* chat */
+    /* Chat */
     .chat-wrap{position:relative}
     .chat-area{height:calc(100vh - 320px);overflow:auto;padding:14px 8px}
     .messages{display:flex;flex-direction:column;gap:12px;padding-bottom:120px}
     .message{display:flex;gap:10px;align-items:flex-start;max-width:78%;word-break:break-word}
     .message.self{margin-left:auto;flex-direction:row-reverse}
     .avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:0 0 44px;box-shadow:0 3px 10px rgba(0,0,0,0.3);cursor:pointer}
-    .message-content{background:rgba(255,255,255,0.95);padding:10px 12px;border-radius:14px;box-shadow:0 4px 18px rgba(2,6,23,0.12);color:#0b1220}
-    .message.self .message-content{background:var(--bubble-self)}
-    .message-meta{font-size:12px;color:#556; margin-bottom:6px}
+    .message-content{background:var(--glass);padding:10px 12px;border-radius:14px;box-shadow:0 4px 18px rgba(2,6,23,0.12);color:#0b1220}
+    .message.self .message-content{background:#E9FFF0}
+    .message-meta{font-size:12px;color:#556;margin-bottom:6px}
     .chat-image{max-width:260px;border-radius:8px;margin-top:6px;display:block}
 
-    /* ad card style */
-    .ad-card{display:flex;gap:10px;align-items:center;background:linear-gradient(90deg, rgba(255,255,255,0.96), rgba(250,250,250,0.94));padding:10px;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.06)}
-    .ad-card img{width:84px;height:64px;object-fit:cover;border-radius:8px}
-    .ad-card .ad-text{font-size:14px;color:#123}
-
-    /* chat input fixed bottom */
-    .chat-input{position:fixed;left:0;right:0;bottom:0;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));border-top:1px solid rgba(0,0,0,0.06);z-index:45;display:flex;gap:8px;align-items:center;max-width:980px;margin:0 auto}
+    /* Chat input fixed bottom */
+    .chat-input{position:fixed;left:0;right:0;bottom:0;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.98));border-top:1px solid rgba(0,0,0,0.06);z-index:60;display:flex;gap:8px;align-items:center;max-width:980px;margin:0 auto}
     .camera-btn{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;width:48px;height:48px;border-radius:50%;background:#fff;border:1px solid #e6e6e6}
     .camera-btn svg{width:20px;height:20px}
     .chat-input input[type="text"]{flex:1;padding:12px 14px;border-radius:24px;border:1px solid #d0d7de;font-size:16px;outline:none}
     .send-btn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(46,204,113,0.18)}
 
-    /* map */
+    /* Map */
     #map{width:100%;height:calc(100vh - 220px);border-radius:12px;overflow:hidden}
     .map-controls{display:flex;justify-content:space-between;align-items:center;padding:8px;background:rgba(255,255,255,0.9);border-radius:8px;margin:8px 0}
+    .filter-buttons{display:flex;gap:8px;flex-wrap:wrap}
+    .filter-btn{padding:8px 12px;border-radius:10px;border:1px solid #ddd;background:#fff;cursor:pointer}
+    .filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 
     /* help */
     .help-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:12px}
@@ -93,16 +88,17 @@
     .help-card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
 
     /* modal auth */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:80}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:95}
     .modal.show{display:flex}
     .modal-panel{background:#fff;border-radius:12px;padding:18px;width:92%;max-width:460px;position:relative;box-shadow:0 18px 80px rgba(2,6,23,0.4)}
     .modal-close{position:absolute;right:10px;top:8px;background:transparent;border:none;font-size:16px;cursor:pointer}
     .auth-form input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #dcdcdc}
     .auth-actions{display:flex;gap:8px;justify-content:space-between}
     .auth-actions button{flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
+    .error-line{color:#b91c1c;font-size:13px;margin-top:6px}
 
     /* profile floating button */
-    .profile-btn{position:fixed;right:12px;top:12px;z-index:90;width:48px;height:48px;border-radius:50%;border:2px solid #fff;background-size:cover;background-position:center;cursor:pointer}
+    .profile-btn{position:fixed;right:12px;top:12px;z-index:100;width:48px;height:48px;border-radius:50%;border:2px solid #fff;background-size:cover;background-position:center;cursor:pointer}
 
     @media (max-width:600px){
       header.site-header h1{font-size:22px}
@@ -112,7 +108,7 @@
   </style>
 </head>
 <body>
-  <header class="site-header">
+  <header class="site-header" role="banner">
     <h1>ПРАГА ФУШКИ</h1>
     <p>Приветствую вас, дорогие украинцы — этот чат создан, чтобы помогать нашим согражданам.</p>
   </header>
@@ -123,8 +119,8 @@
     <button class="tab-button" data-target="helpTab">❓ Помощь</button>
   </nav>
 
-  <main class="container">
-    <div class="sys-msg">Если вы впервые — нажмите «Отправить» — появится простая регистрация. 6 часов доступа без подтверждения email.</div>
+  <main class="container" role="main">
+    <div class="sys-msg">Если вы впервые — нажмите "Отправить" — появится простая регистрация. 6 часов доступа без подтверждения email.</div>
 
     <!-- CHAT -->
     <section id="chatTab" class="tab-content active" role="region" aria-label="Чат">
@@ -147,7 +143,7 @@
         </div>
         <div style="font-size:13px;color:#0b1220">Hotkeys: C=Чат M=Карта H=Помощь</div>
       </div>
-      <div id="map"></div>
+      <div id="map" aria-label="Карта мест помощи"></div>
     </section>
 
     <!-- HELP -->
@@ -178,17 +174,16 @@
     </section>
   </main>
 
-  <!-- profile floating button -->
+  <!-- Profile floating button -->
   <button id="profileBtn" class="profile-btn" title="Профиль" aria-label="Профиль"></button>
 
-  <!-- hidden file input for chat images -->
+  <!-- Hidden file input for chat images -->
   <input id="fileInput" type="file" accept="image/*" style="display:none" />
 
-  <!-- chat input (fixed) -->
+  <!-- Chat input (fixed bottom) -->
   <div class="chat-input" role="region" aria-label="Отправка сообщения">
     <label for="fileInput" class="camera-btn" title="Добавить фото">
-      <!-- simple camera svg -->
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 7H6L7 5H17L18 7H20C21.1 7 22 7.9 22 9V19C22 20.1 21.1 21 20 21H4C2.9 21 2 20.1 2 19V9C2 7.9 2.9 7 4 7Z" stroke="#111" stroke-width="1.2" fill="#fff"/>
         <circle cx="12" cy="13" r="3.5" stroke="#111" stroke-width="1.2" fill="#fff"/>
       </svg>
@@ -198,7 +193,7 @@
     <button id="sendButton" class="send-btn" aria-label="Отправить сообщение">Отправить</button>
   </div>
 
-  <!-- AUTH MODAL -->
+  <!-- Auth modal -->
   <div id="authModal" class="modal" aria-hidden="true">
     <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
       <button class="modal-close" id="modalClose" aria-label="Закрыть">✕</button>
@@ -207,11 +202,12 @@
       <form id="registerForm" class="auth-form" onsubmit="return false;">
         <input id="nickInput" type="text" placeholder="Никнейм" required />
         <input id="emailInput" type="email" placeholder="Email" required />
-        <input id="passwordInput" type="password" placeholder="Пароль" required />
+        <input id="passwordInput" type="password" placeholder="Пароль (min 6)" required />
         <div class="auth-actions">
           <button id="registerSubmit" type="button">Зарегистрироваться</button>
           <button id="loginShow" type="button" style="background:#4b5563">Войти</button>
         </div>
+        <div id="regError" class="error-line" aria-live="polite"></div>
         <p class="note" style="font-size:13px;color:#666;margin-top:8px">После регистрации у вас 6 часов доступа без подтверждения email.</p>
       </form>
 
@@ -222,40 +218,49 @@
           <button id="loginSubmit" type="button">Войти</button>
           <button id="backToRegister" type="button" style="background:#4b5563">Назад</button>
         </div>
+        <div id="loginError" class="error-line" aria-live="polite"></div>
       </form>
     </div>
   </div>
 
-  <!-- Firebase + App logic -->
+  <!-- Firebase + main script -->
   <script type="module">
-  // --------- Firebase imports (v9 modular) ----------
+  // ----------------
+  // Imports (как в прежних версиях)
+  // ----------------
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendEmailVerification, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
   import { getDatabase, ref as dbRef, set as dbSet, push as dbPush, onChildAdded, query, orderByChild, limitToLast, get as dbGet, endAt as dbEndAt } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
   import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 
-  // ----------------- CONFIG -----------------
-  // Firebase config (вставлено по твоему предыдущему сообщению)
+  // ----------------
+  // CONFIG (твои значения)
+  // ----------------
   const firebaseConfig = {
     apiKey: "AIzaSyDV2BslF-Ll37a1XO3GEfzNMXa7YsSXL1o",
     authDomain: "web-app-b4633.firebaseapp.com",
     databaseURL: "https://web-app-b4633-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "web-app-b4633",
-    storageBucket: "web-app-b4633.firebasestorage.app", // если будут проблемы: замените на "<project>.appspot.com"
+    storageBucket: "web-app-b4633.firebasestorage.app",
     messagingSenderId: "1041887915171",
     appId: "1:1041887915171:web:84d62eae54e9291b47a316",
     measurementId: "G-C65BPE81SJ"
   };
 
-  const MAP_KEY = "AlzaSyBFrxVhpb6nHJ6rhiL15"; // твой ключ, как просил
+  // Google Maps key (твой)
+  const MAP_KEY = "AlzaSyBFrxVhpb6nHJ6rhiL15";
 
-  // ----------------- INIT -----------------
+  // ----------------
+  // Init
+  // ----------------
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getDatabase(app);
   const storage = getStorage(app);
 
-  // ----------------- DOM -----------------
+  // ----------------
+  // DOM
+  // ----------------
   const tabButtons = document.querySelectorAll(".tab-button");
   const tabContents = document.querySelectorAll(".tab-content");
   const messagesEl = document.getElementById("messages");
@@ -277,19 +282,24 @@
   const modalClose = document.getElementById("modalClose");
   const profileBtn = document.getElementById("profileBtn");
   const chatArea = document.getElementById("chatArea");
+  const regError = document.getElementById("regError");
+  const loginError = document.getElementById("loginError");
 
-  // ----------------- State -----------------
+  // ----------------
+  // State
+  // ----------------
   const DEFAULT_AVATAR = "https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg";
   let currentUser = null;
   let messagesLoaded = false;
   let oldestTs = null;
   const PAGE = 15;
-  let dmWith = null; // uid of DM recipient
+  let dmWith = null;
   let lastShownTs = 0;
   let isAuthOpen = false;
-  let adInjectedLocal = false;
 
-  // ----------------- helpers -----------------
+  // ----------------
+  // Tabs and hotkeys (ignore when typing)
+  // ----------------
   function setActiveTab(id){
     tabButtons.forEach(b => b.classList.toggle("active", b.dataset.target === id));
     tabContents.forEach(c => {
@@ -297,86 +307,87 @@
       else { c.style.display = "none"; c.classList.remove("active"); }
     });
     if (id === "chatTab") messageInput.focus();
-    if (id === "mapTab" && window._mapReady) { /* map already init */ }
+    if (id === "mapTab" && window._mapReady) { /* init done */ }
   }
+  tabButtons.forEach(btn => btn.addEventListener("click", ()=> setActiveTab(btn.dataset.target)));
 
-  // prevent hotkeys while focusing inputs
   document.addEventListener("keydown", (e)=>{
     const active = document.activeElement;
     const tag = active && active.tagName ? active.tagName.toLowerCase() : "";
-    const isEditable = active && (active.isContentEditable || tag === "input" || tag === "textarea" || active.getAttribute("role") === "textbox");
-    if (isEditable) return; // don't handle hotkeys when typing
+    const isEditing = active && (active.isContentEditable || tag === "input" || tag === "textarea");
+    if (isEditing) return;
     if (e.key === "c" || e.key === "C") setActiveTab("chatTab");
     if (e.key === "m" || e.key === "M") setActiveTab("mapTab");
     if (e.key === "h" || e.key === "H") setActiveTab("helpTab");
   });
 
-  tabButtons.forEach(btn => {
-    btn.addEventListener("click", ()=> setActiveTab(btn.dataset.target));
-  });
-
-  // ----------------- Auth modal -----------------
-  function showAuthModal(){
-    authModal.classList.add("show"); authModal.setAttribute("aria-hidden","false"); isAuthOpen = true;
-  }
+  // ----------------
+  // Auth modal helpers
+  // ----------------
+  function showAuthModal(){ authModal.classList.add("show"); authModal.setAttribute("aria-hidden","false"); isAuthOpen = true; regError.textContent = ""; loginError.textContent = ""; }
   function hideAuthModal(){ authModal.classList.remove("show"); authModal.setAttribute("aria-hidden","true"); isAuthOpen = false; }
 
   modalClose?.addEventListener("click", ()=> hideAuthModal());
-  // don't close on outside click (prevents accidental close while typing)
-  // authModal?.addEventListener("click",(e)=>{ if (e.target===authModal) hideAuthModal(); });
+  // do NOT close modal on outside click to avoid losing typed data
+  // authModal?.addEventListener("click", (e)=> { if (e.target === authModal) hideAuthModal(); });
 
-  loginShow?.addEventListener("click", ()=>{ registerForm.style.display="none"; loginForm.style.display="block"; });
-  backToRegister?.addEventListener("click", ()=>{ registerForm.style.display="block"; loginForm.style.display="none"; });
+  loginShow?.addEventListener("click", ()=>{ registerForm.style.display="none"; loginForm.style.display="block"; regError.textContent = ""; loginError.textContent = ""; });
+  backToRegister?.addEventListener("click", ()=>{ registerForm.style.display="block"; loginForm.style.display="none"; regError.textContent = ""; loginError.textContent = ""; });
 
-  // Registration
+  // ----------------
+  // Registration & Login (with error handling)
+  // ----------------
   registerSubmit?.addEventListener("click", async ()=>{
+    regError.textContent = "";
     const nick = nickInput.value.trim();
     const email = emailInput.value.trim();
     const pass = passwordInput.value.trim();
-    if (!nick || !email || !pass) { alert("Заполните все поля"); return; }
+    if (!nick || !email || !pass) { regError.textContent = "Заполните все поля"; return; }
+    if (pass.length < 6) { regError.textContent = "Пароль должен быть как минимум 6 символов"; return; }
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
       await updateProfile(cred.user, { displayName: nick, photoURL: DEFAULT_AVATAR });
-      // записать createdAt и avatar в DB
-      await dbSet(dbRef(db, `users/${cred.user.uid}`), { nick, createdAt: Date.now(), email: email, avatar: DEFAULT_AVATAR });
+      await dbSet(dbRef(db, `users/${cred.user.uid}`), { nick, createdAt: Date.now(), email, avatar: DEFAULT_AVATAR });
       localStorage.setItem("regTime_" + cred.user.uid, String(Date.now()));
       await sendEmailVerification(cred.user);
-      alert("Вы зарегистрированы. Письмо подтверждения отправлено. У вас 6 часов доступа без подтверждения.");
       hideAuthModal();
+      alert("Вы зарегистрированы. Письмо подтверждения отправлено. У вас 6 часов доступа без подтверждения.");
     } catch (err) {
-      console.error(err);
-      alert("Ошибка регистрации: " + (err.message || err));
+      console.error("register err", err);
+      regError.textContent = err?.message || String(err);
     }
   });
 
-  // Login
   loginSubmit?.addEventListener("click", async ()=>{
+    loginError.textContent = "";
     const email = loginEmail.value.trim();
     const pass = loginPassword.value.trim();
-    if (!email || !pass) return alert("Заполните email и пароль");
+    if (!email || !pass) { loginError.textContent = "Заполните email и пароль"; return; }
     try {
       await signInWithEmailAndPassword(auth, email, pass);
       hideAuthModal();
     } catch (err) {
-      console.error(err);
-      alert("Ошибка входа: " + (err.message || err));
+      console.error("login err", err);
+      loginError.textContent = err?.message || String(err);
     }
   });
 
-  // track auth
+  // ----------------
+  // Auth state
+  // ----------------
   onAuthStateChanged(auth, (user)=>{
     currentUser = user;
     if (user) {
-      // update profile button avatar
       profileBtn.style.background = `url(${user.photoURL || DEFAULT_AVATAR}) center/cover`;
-      // if auth modal open, close it
       if (isAuthOpen) hideAuthModal();
     } else {
       profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
     }
   });
 
-  // can send message: email verified OR within 6 hours since createdAt
+  // ----------------
+  // canSendMessage rule: emailVerified OR within 6 hours of createdAt
+  // ----------------
   async function canSendMessage(){
     const user = auth.currentUser;
     if (!user) return false;
@@ -399,53 +410,43 @@
     return false;
   }
 
-  // ----------------- Chat messages -----------------
+  // ----------------
+  // Messages: display, load, paginate
+  // ----------------
   function timeStr(ts){
     const d = new Date(ts);
     return d.toLocaleString();
   }
 
-  function clearMessages(){ messagesEl.innerHTML = ""; }
-
   function createMessageElement(m, pushToTop=false){
     const wrap = document.createElement("div");
-    wrap.className = "message" + (m.uid===currentUser?.uid ? " self" : "");
-    // avatar
+    wrap.className = "message" + (m.uid === currentUser?.uid ? " self" : "");
     const avatar = document.createElement("img");
     avatar.className = "avatar";
     avatar.src = m.avatar || DEFAULT_AVATAR;
     avatar.alt = m.nick || "avatar";
     avatar.title = m.nick || "Открыть личку";
     avatar.addEventListener("click", ()=> openDM(m.uid, m.nick));
-    // content
+
     const txt = document.createElement("div");
     txt.className = "message-content";
-    // meta
     const meta = document.createElement("div");
     meta.className = "message-meta";
     meta.textContent = `${m.nick || "Аноним"} · ${timeStr(m.ts)}${m.recipientUid ? " → личное" : ""}`;
     meta.addEventListener("click", ()=> openDM(m.uid, m.nick));
     txt.appendChild(meta);
 
-    // if this is ad
-    if (m.isAd) {
-      const ad = document.createElement("div");
-      ad.className = "ad-card";
-      ad.innerHTML = `<img src="${m.image || 'https://i.ibb.co/7QpKsCX/camera-icon.png'}" alt="ad"><div class="ad-text"><strong>${m.title || 'Реклама'}</strong><div style="color:#334155">${m.text || 'Здесь будет ваша реклама / фушка'}</div></div>`;
-      txt.appendChild(ad);
-    } else {
-      if (m.text) {
-        const p = document.createElement("div");
-        p.innerText = m.text;
-        txt.appendChild(p);
-      }
-      if (m.image) {
-        const im = document.createElement("img");
-        im.src = m.image;
-        im.alt = "Фото";
-        im.className = "chat-image";
-        txt.appendChild(im);
-      }
+    if (m.text) {
+      const p = document.createElement("div");
+      p.innerText = m.text;
+      txt.appendChild(p);
+    }
+    if (m.image) {
+      const im = document.createElement("img");
+      im.src = m.image;
+      im.alt = "Фото";
+      im.className = "chat-image";
+      txt.appendChild(im);
     }
 
     wrap.appendChild(avatar);
@@ -455,10 +456,8 @@
     else messagesEl.appendChild(wrap);
   }
 
-  // filter for DM vs public
   function displayIfMatches(m, pushToTop=false){
     if (!dmWith) {
-      // public room: only messages with no recipient
       if (!m.recipientUid) createMessageElement(m, pushToTop);
     } else {
       const me = currentUser?.uid;
@@ -469,12 +468,11 @@
     }
   }
 
-  // load latest PAGE messages
   async function loadLatest(){
     try {
       const q = query(dbRef(db, "messages"), orderByChild("ts"), limitToLast(PAGE));
       const snap = await dbGet(q);
-      clearMessages();
+      messagesEl.innerHTML = "";
       let arr = [];
       if (snap && snap.exists()) {
         snap.forEach(ch => arr.push(ch.val()));
@@ -482,26 +480,20 @@
         arr.forEach(m => displayIfMatches(m));
         if (arr.length) oldestTs = arr[0].ts;
         lastShownTs = arr.length ? arr[arr.length-1].ts : 0;
-      } else {
-        // empty DB — inject local ad block
-        injectLocalAdIfNeeded();
       }
       messagesLoaded = true;
 
-      // subscribe to onChildAdded; display only new ones (ts > lastShownTs)
       onChildAdded(dbRef(db, "messages"), (sna)=>{
         const m = sna.val();
         if (!m || !m.ts) return;
-        if (m.ts <= lastShownTs) return; // already displayed
+        if (m.ts <= lastShownTs) return;
         displayIfMatches(m);
         lastShownTs = Math.max(lastShownTs, m.ts);
-        // autoscroll if at bottom
         if (chatArea.scrollTop + chatArea.clientHeight >= chatArea.scrollHeight - 120) {
           chatArea.scrollTop = chatArea.scrollHeight;
         }
       });
 
-      // scroll down
       chatArea.scrollTop = chatArea.scrollHeight;
     } catch (err) {
       console.error("loadLatest err", err);
@@ -517,69 +509,19 @@
       if (snap && snap.exists()) {
         snap.forEach(ch => arr.push(ch.val()));
         arr.sort((a,b)=>a.ts - b.ts);
-        // preserve scroll position: measure before
         const prevHeight = chatArea.scrollHeight;
-        arr.forEach(m => displayIfMatches(m, true)); // pushToTop
-        // adjust scroll to keep view
+        arr.forEach(m => displayIfMatches(m, true));
         const newHeight = chatArea.scrollHeight;
         chatArea.scrollTop = newHeight - prevHeight;
         if (arr.length) oldestTs = arr[0].ts;
       }
-    } catch (err){ console.error("loadOlder err", err); }
+    } catch (err) { console.error("loadOlder err", err); }
   }
 
-  // inject local ad if DB empty (not saving to DB)
-  function injectLocalAdIfNeeded(){
-    if (adInjectedLocal) return;
-    const ad = {
-      isAd: true,
-      title: "Здесь будет ваша реклама / Фушка",
-      text: "Разместите объявление: ищу подработку, предлагаю услуги — нажмите, чтобы оставить.",
-      image: "https://i.ibb.co/7QpKsCX/camera-icon.png",
-      ts: Date.now(),
-      uid: "system"
-    };
-    createMessageElement(ad);
-    adInjectedLocal = true;
-  }
-
-  // open DM
-  async function openDM(uid, nick){
-    if (!auth.currentUser) { alert("Войдите, чтобы начать личный диалог"); showAuthModal(); return; }
-    if (uid === currentUser.uid) { alert("Это вы сами"); return; }
-    dmWith = uid;
-    // clear and show notice
-    clearMessages();
-    const note = { uid: "system", nick: "Система", text: `Личные сообщения с ${nick}. Нажмите кнопку "Выйти из лички"`, ts: Date.now() };
-    createMessageElement(note);
-    // fetch a chunk and filter client-side
-    try {
-      const q = query(dbRef(db, "messages"), orderByChild("ts"), limitToLast(500)); // get recent chunk
-      const snap = await dbGet(q);
-      let arr = [];
-      if (snap && snap.exists()) {
-        snap.forEach(ch => arr.push(ch.val()));
-        arr.sort((a,b)=>a.ts - b.ts);
-        arr.forEach(m => displayIfMatches(m));
-      }
-    } catch (e) { console.error(e); }
-    // add exit button if not exists
-    if (!document.getElementById("exitDMBtn")) {
-      const btn = document.createElement("button");
-      btn.id = "exitDMBtn";
-      btn.textContent = "Выйти из лички";
-      btn.style.marginLeft = "10px";
-      btn.style.padding = "8px 10px";
-      btn.style.borderRadius = "8px";
-      btn.style.border = "1px solid #ddd";
-      btn.onclick = ()=>{ dmWith = null; document.getElementById("exitDMBtn").remove(); clearMessages(); loadLatest(); };
-      document.querySelector(".chat-input").appendChild(btn);
-    }
-  }
-
-  // send message
+  // ----------------
+  // Send message (text + optional image). Requires canSendMessage()
+  // ----------------
   sendButton.addEventListener("click", async ()=>{
-    // if not logged in -> show auth
     if (!auth.currentUser) { showAuthModal(); return; }
     const ok = await canSendMessage();
     if (!ok) { alert("Пожалуйста, подтвердите email — у вас 6 часов без подтверждения."); return; }
@@ -594,7 +536,6 @@
         const uid = auth.currentUser.uid;
         const sRef = storageRef(storage, `chat_images/${uid}/${Date.now()}_${file.name}`);
         const uploadTask = uploadBytesResumable(sRef, file);
-        // wait for finish
         await new Promise((res, rej)=>{
           uploadTask.on('state_changed', null, err => rej(err), async ()=>{
             imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
@@ -615,15 +556,13 @@
       text: text || null,
       image: imageUrl || null,
       ts: Date.now(),
-      recipientUid: dmWith || null,
-      isAd: false
+      recipientUid: dmWith || null
     };
 
     try {
       await dbPush(dbRef(db, "messages"), msg);
       messageInput.value = "";
       fileInput.value = "";
-      // if in public chat auto-scroll
       if (!dmWith) setTimeout(()=>{ chatArea.scrollTop = chatArea.scrollHeight; }, 80);
     } catch (err) {
       console.error("send err", err);
@@ -631,18 +570,17 @@
     }
   });
 
-  // pressing Enter sends message
+  // Enter to send
   messageInput.addEventListener("keydown", (e)=>{
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendButton.click(); }
   });
 
-  // prevent label click from opening auth if not logged (we show modal instead)
+  // file input click: if not logged show auth modal
   document.querySelector('label[for="fileInput"]').addEventListener("click", (e)=>{
     if (!auth.currentUser) { e.preventDefault(); showAuthModal(); return; }
-    // else allow file dialog
   });
 
-  // load older on scroll top
+  // scroll up to load older
   let loadingOlder = false;
   chatArea.addEventListener("scroll", async ()=>{
     if (chatArea.scrollTop < 120 && !loadingOlder && oldestTs) {
@@ -655,11 +593,46 @@
   // initial load
   loadLatest();
 
-  // ----------------- Profile button: upload avatar / logout -----------------
+  // ----------------
+  // DM open
+  // ----------------
+  async function openDM(uid, nick){
+    if (!auth.currentUser) { showAuthModal(); return; }
+    if (uid === currentUser.uid) { alert("Это вы сами"); return; }
+    dmWith = uid;
+    messagesEl.innerHTML = "";
+    const note = { uid: "system", nick: "Система", text: `Личные сообщения с ${nick}. Нажмите "Выйти из лички"`, ts: Date.now() };
+    createMessageElement(note);
+    try {
+      const q = query(dbRef(db, "messages"), orderByChild("ts"), limitToLast(500));
+      const snap = await dbGet(q);
+      let arr = [];
+      if (snap && snap.exists()) {
+        snap.forEach(ch => arr.push(ch.val()));
+        arr.sort((a,b)=>a.ts - b.ts);
+        arr.forEach(m => displayIfMatches(m));
+      }
+    } catch (e) { console.error(e); }
+    if (!document.getElementById("exitDMBtn")) {
+      const btn = document.createElement("button");
+      btn.id = "exitDMBtn";
+      btn.textContent = "Выйти из лички";
+      btn.style.marginLeft = "10px";
+      btn.style.padding = "8px 10px";
+      btn.style.borderRadius = "8px";
+      btn.style.border = "1px solid #ddd";
+      btn.onclick = ()=>{ dmWith = null; document.getElementById("exitDMBtn").remove(); messagesEl.innerHTML = ""; loadLatest(); };
+      document.querySelector(".chat-input").appendChild(btn);
+    }
+  }
+
+  // ----------------
+  // Profile button: upload avatar or logout
+  // ----------------
   profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
   profileBtn.addEventListener("click", ()=>{
     if (!auth.currentUser) { showAuthModal(); return; }
-    const choice = confirm("Загрузить новый аватар? Нажмите Отмена чтобы выйти из аккаунта.");
+    const choice = confirm("Загрузить новый аватар? Отмена — выйти из аккаунта.");
     if (choice) {
       const inpt = document.createElement("input");
       inpt.type = "file"; inpt.accept = "image/*"; inpt.style.display = "none";
@@ -688,14 +661,16 @@
     }
   });
 
-  // ----------------- Map -----------------
-  // marker icons and points
+  // ----------------
+  // Map: points + init
+  // ----------------
   const ICONS = {
     hospital: "https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp",
     lawyer: "https://i.ibb.co/0gWD5wW/images-5.jpg",
     shop: "https://i.ibb.co/R49shL6k/images-6.jpg",
     help: "https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg"
   };
+
   const POINTS = [
     { title: "Motol Hospital", pos:{lat:50.057, lng:14.378}, cat:"hospital"},
     { title: "Nemocnice Na Frantisku", pos:{lat:50.085, lng:14.420}, cat:"hospital"},
@@ -756,7 +731,6 @@
     });
   }
 
-  // initMap must be global for callback param
   window.initMap = function(){
     const center = { lat: 50.0755, lng: 14.4378 };
     map = new google.maps.Map(document.getElementById("map"), { center, zoom:13, gestureHandling:"greedy" });
@@ -765,15 +739,18 @@
     window._mapReady = true;
   };
 
-  // inject maps script dynamically
+  // Load Maps script with your key
   (function loadMaps(){
     const s = document.createElement("script");
     s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(MAP_KEY)}&callback=initMap`;
     s.defer = true; s.async = true;
+    s.onerror = function(){ console.error("Google Maps failed to load. Check API key and APIs enabled."); alert("Ошибка загрузки карты. Проверьте Google Maps API ключ."); };
     document.head.appendChild(s);
   })();
 
-  // ----------------- End of main script -----------------
+  // ----------------
+  // Done
+  // ----------------
   </script>
 </body>
 </html>
