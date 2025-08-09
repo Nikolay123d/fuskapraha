@@ -3,78 +3,110 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Прага Фушки — Помощь украинцам</title>
-  <meta name="description" content="Чат и карта помощи украинцам в Праге" />
+  <title>ПРАГА ФУШКИ — Помощь украинцам</title>
+
+  <!-- Google fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
   <style>
     :root{
       --accent:#2ecc71;
+      --bg:#0b1220;
       --muted:rgba(0,0,0,0.6);
-      --bg:#fafafa;
       --glass: rgba(255,255,255,0.92);
+      --bubble-self: #E6FFEF;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family: "Segoe UI", Tahoma, Arial, sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased;color:#222;font-size:18px}
-    /* chat background */
+    html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;background:var(--bg);color:#111}
+    /* fixed background image (Praha) */
     body::before{
       content:"";
-      position:fixed;inset:0;
+      position:fixed;
+      inset:0;
       background-image:url('https://i.ibb.co/27hgtZfY/Prague.jpg');
-      background-size:cover;background-position:center;
-      filter:brightness(0.55);
+      background-size:cover;
+      background-position:center;
+      filter:brightness(0.45);
       z-index:-2;
+      will-change:transform;
+      transform:translateZ(0);
     }
+    /* subtle overlay for contrast */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:linear-gradient(180deg, rgba(3,7,18,0.3), rgba(3,7,18,0.4));
+      z-index:-1;
+    }
+
     /* top header */
-    header.site-header{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,rgba(0,0,0,0.45),transparent);padding:12px 10px;color:#fff;text-align:center}
-    header.site-header h1{margin:0;font-size:28px;letter-spacing:1px}
-    header.site-header p{margin:6px 0 0;font-size:14px;color:#e8f5e9}
+    header.site-header{position:sticky;top:0;z-index:40;padding:18px 12px;text-align:center;color:#fff}
+    header.site-header h1{margin:0;font-family:Poppins, Inter, sans-serif;font-weight:700;font-size:28px;letter-spacing:1px;text-shadow:0 8px 30px rgba(2,6,23,0.5)}
+    header.site-header p{margin:6px 0 0;font-size:14px;color:#e6f9ea;opacity:0.95}
+
     /* tabs */
-    nav.tabs{display:flex;gap:8px;justify-content:center;padding:10px;position:sticky;top:68px;z-index:25;background:transparent}
-    .tab-button{background:transparent;border:none;color:#fff;padding:8px 14px;font-weight:700;border-radius:10px;cursor:pointer}
-    .tab-button.active{box-shadow: inset 0 -3px 0 var(--accent)}
-    main.container{max-width:980px;margin:0 auto;padding:0 10px}
-    /* greeting system message */
-    .sys-msg{max-width:900px;margin:12px auto 6px;padding:12px;border-radius:14px;background:rgba(255,255,255,0.06);color:#fff;backdrop-filter:blur(4px);font-size:15px}
-    /* layout */
+    nav.tabs{display:flex;gap:10px;justify-content:center;padding:10px 12px;position:sticky;top:78px;z-index:35}
+    .tab-button{background:transparent;border:none;color:#fff;padding:8px 16px;font-weight:700;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)}
+    .tab-button.active{box-shadow: inset 0 -4px 0 var(--accent);background:rgba(255,255,255,0.02)}
+
+    /* main container */
+    main.container{max-width:980px;margin:0 auto;padding:12px}
+
+    .sys-msg{max-width:980px;margin:12px auto;padding:12px;border-radius:14px;background:rgba(255,255,255,0.05);color:#fff;font-size:15px;text-align:center}
+
+    /* tab content */
     .tab-content{display:none}
     .tab-content.active{display:block}
-    /* chat area */
-    .chat-area{height:calc(100vh - 260px);overflow:auto;padding:12px 6px}
-    .messages{display:flex;flex-direction:column;gap:10px;padding-bottom:80px}
-    .message{display:flex;gap:10px;align-items:flex-start;max-width:80%;word-break:break-word}
+
+    /* chat */
+    .chat-wrap{position:relative}
+    .chat-area{height:calc(100vh - 320px);overflow:auto;padding:14px 8px}
+    .messages{display:flex;flex-direction:column;gap:12px;padding-bottom:120px}
+    .message{display:flex;gap:10px;align-items:flex-start;max-width:78%;word-break:break-word}
     .message.self{margin-left:auto;flex-direction:row-reverse}
-    .avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:0 0 36px;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
-    .message-content{background:var(--glass);padding:8px 12px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-    .message-meta{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .chat-image{max-width:240px;border-radius:8px;margin-top:6px;display:block}
-    /* input bar */
-    .chat-input{position:fixed;left:0;right:0;bottom:0;padding:10px;background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.98));display:flex;gap:8px;align-items:center;z-index:40;max-width:980px;margin:0 auto;right:0;left:0}
-    .chat-input input[type="text"]{flex:1;padding:10px 12px;border-radius:22px;border:1px solid #d0d7de;font-size:16px}
-    .send-btn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:700;cursor:pointer}
-    .camera-btn{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;width:44px;height:44px;border-radius:50%;background:#fff;border:1px solid #e6e6e6}
-    .camera-btn img{width:22px;height:22px;display:block}
+    .avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:0 0 44px;box-shadow:0 3px 10px rgba(0,0,0,0.3);cursor:pointer}
+    .message-content{background:rgba(255,255,255,0.95);padding:10px 12px;border-radius:14px;box-shadow:0 4px 18px rgba(2,6,23,0.12);color:#0b1220}
+    .message.self .message-content{background:var(--bubble-self)}
+    .message-meta{font-size:12px;color:#556; margin-bottom:6px}
+    .chat-image{max-width:260px;border-radius:8px;margin-top:6px;display:block}
+
+    /* ad card style */
+    .ad-card{display:flex;gap:10px;align-items:center;background:linear-gradient(90deg, rgba(255,255,255,0.96), rgba(250,250,250,0.94));padding:10px;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.06)}
+    .ad-card img{width:84px;height:64px;object-fit:cover;border-radius:8px}
+    .ad-card .ad-text{font-size:14px;color:#123}
+
+    /* chat input fixed bottom */
+    .chat-input{position:fixed;left:0;right:0;bottom:0;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));border-top:1px solid rgba(0,0,0,0.06);z-index:45;display:flex;gap:8px;align-items:center;max-width:980px;margin:0 auto}
+    .camera-btn{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;width:48px;height:48px;border-radius:50%;background:#fff;border:1px solid #e6e6e6}
+    .camera-btn svg{width:20px;height:20px}
+    .chat-input input[type="text"]{flex:1;padding:12px 14px;border-radius:24px;border:1px solid #d0d7de;font-size:16px;outline:none}
+    .send-btn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(46,204,113,0.18)}
+
     /* map */
-    #map{width:100%;height:calc(100vh - 150px);border-radius:12px;overflow:hidden}
+    #map{width:100%;height:calc(100vh - 220px);border-radius:12px;overflow:hidden}
     .map-controls{display:flex;justify-content:space-between;align-items:center;padding:8px;background:rgba(255,255,255,0.9);border-radius:8px;margin:8px 0}
-    .filter-buttons{display:flex;gap:8px;flex-wrap:wrap}
-    .filter-btn{padding:8px 12px;border-radius:10px;border:1px solid #ddd;background:#fff;cursor:pointer}
-    .filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
     /* help */
     .help-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:12px}
-    .help-card{background:rgba(255,255,255,0.95);padding:10px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .help-card{background:rgba(255,255,255,0.96);padding:10px;border-radius:10px;box-shadow:0 8px 30px rgba(2,6,23,0.06)}
     .help-card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+
     /* modal auth */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:60}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:80}
     .modal.show{display:flex}
-    .modal-panel{background:#fff;border-radius:12px;padding:18px;width:92%;max-width:420px;position:relative}
-    .modal-close{position:absolute;right:10px;top:8px;background:transparent;border:none;font-size:18px;cursor:pointer}
+    .modal-panel{background:#fff;border-radius:12px;padding:18px;width:92%;max-width:460px;position:relative;box-shadow:0 18px 80px rgba(2,6,23,0.4)}
+    .modal-close{position:absolute;right:10px;top:8px;background:transparent;border:none;font-size:16px;cursor:pointer}
     .auth-form input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #dcdcdc}
     .auth-actions{display:flex;gap:8px;justify-content:space-between}
     .auth-actions button{flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
-    /* small */
+
+    /* profile floating button */
+    .profile-btn{position:fixed;right:12px;top:12px;z-index:90;width:48px;height:48px;border-radius:50%;border:2px solid #fff;background-size:cover;background-position:center;cursor:pointer}
+
     @media (max-width:600px){
-      html,body{font-size:16px}
       header.site-header h1{font-size:22px}
-      .chat-area{height:calc(100vh - 300px)}
+      .chat-area{height:calc(100vh - 360px)}
       .chat-input{padding:8px}
     }
   </style>
@@ -92,16 +124,19 @@
   </nav>
 
   <main class="container">
-    <!-- Chat -->
+    <div class="sys-msg">Если вы впервые — нажмите «Отправить» — появится простая регистрация. 6 часов доступа без подтверждения email.</div>
+
+    <!-- CHAT -->
     <section id="chatTab" class="tab-content active" role="region" aria-label="Чат">
-      <div class="sys-msg">Приветствую вас, дорогие украинцы. Этот чат создан, чтобы помогать нашим согражданам.</div>
-      <div class="chat-area" id="chatArea" aria-live="polite">
-        <div id="messages" class="messages" role="log"></div>
+      <div class="chat-wrap">
+        <div class="chat-area" id="chatArea" aria-live="polite">
+          <div id="messages" class="messages" role="log"></div>
+        </div>
       </div>
     </section>
 
-    <!-- Map -->
-    <section id="mapTab" class="tab-content" role="region" aria-label="Карта помощи">
+    <!-- MAP -->
+    <section id="mapTab" class="tab-content" role="region" aria-label="Карта помощи" style="display:none;">
       <div class="map-controls">
         <div class="filter-buttons">
           <button class="filter-btn active" data-cat="all">Все</button>
@@ -110,18 +145,18 @@
           <button class="filter-btn" data-cat="shop">Магазины</button>
           <button class="filter-btn" data-cat="help">Центры</button>
         </div>
-        <div style="font-size:13px;color:#333">Горячие клавиши: C=Чат M=Карта H=Помощь</div>
+        <div style="font-size:13px;color:#0b1220">Hotkeys: C=Чат M=Карта H=Помощь</div>
       </div>
       <div id="map"></div>
     </section>
 
-    <!-- Help -->
-    <section id="helpTab" class="tab-content" role="region" aria-label="Помощь">
+    <!-- HELP -->
+    <section id="helpTab" class="tab-content" role="region" aria-label="Помощь" style="display:none;">
       <h2 style="color:#fff;margin:8px 0">Горячая помощь для украинцев в Праге</h2>
       <div class="help-grid" id="helpGrid">
         <article class="help-card">
           <img src="https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp" alt="Больница">
-          <h3>Med — Nemocnice Motol</h3>
+          <h3>Nemocnice Motol</h3>
           <p>Главная больница Праги. Адрес: V Uvalu 84</p>
         </article>
         <article class="help-card">
@@ -134,87 +169,93 @@
           <h3>Украинский магазин</h3>
           <p>Продукты и товары для украинцев.</p>
         </article>
-        <!-- extra -->
         <article class="help-card">
           <img src="https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg" alt="Волонтеры">
           <h3>Волонтёры</h3>
-          <p>Контакты волонтерских инициатив и групп поддержки.</p>
+          <p>Контакты волонтёрских инициатив и групп поддержки.</p>
         </article>
       </div>
     </section>
   </main>
 
-  <!-- auth modal -->
+  <!-- profile floating button -->
+  <button id="profileBtn" class="profile-btn" title="Профиль" aria-label="Профиль"></button>
+
+  <!-- hidden file input for chat images -->
+  <input id="fileInput" type="file" accept="image/*" style="display:none" />
+
+  <!-- chat input (fixed) -->
+  <div class="chat-input" role="region" aria-label="Отправка сообщения">
+    <label for="fileInput" class="camera-btn" title="Добавить фото">
+      <!-- simple camera svg -->
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M4 7H6L7 5H17L18 7H20C21.1 7 22 7.9 22 9V19C22 20.1 21.1 21 20 21H4C2.9 21 2 20.1 2 19V9C2 7.9 2.9 7 4 7Z" stroke="#111" stroke-width="1.2" fill="#fff"/>
+        <circle cx="12" cy="13" r="3.5" stroke="#111" stroke-width="1.2" fill="#fff"/>
+      </svg>
+    </label>
+
+    <input id="messageInput" type="text" inputmode="text" placeholder="Напишите сообщение..." aria-label="Текст сообщения" />
+    <button id="sendButton" class="send-btn" aria-label="Отправить сообщение">Отправить</button>
+  </div>
+
+  <!-- AUTH MODAL -->
   <div id="authModal" class="modal" aria-hidden="true">
     <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
       <button class="modal-close" id="modalClose" aria-label="Закрыть">✕</button>
       <h2 id="authTitle">Регистрация / Вход</h2>
-      <form id="registerForm" class="auth-form">
+
+      <form id="registerForm" class="auth-form" onsubmit="return false;">
         <input id="nickInput" type="text" placeholder="Никнейм" required />
         <input id="emailInput" type="email" placeholder="Email" required />
         <input id="passwordInput" type="password" placeholder="Пароль" required />
-        <div style="display:flex;gap:8px;margin-top:6px;">
+        <div class="auth-actions">
           <button id="registerSubmit" type="button">Зарегистрироваться</button>
           <button id="loginShow" type="button" style="background:#4b5563">Войти</button>
         </div>
-        <p class="note" style="font-size:13px;color:#666;margin-top:8px">После регистрации даётся 6 часов доступа без подтверждения email, затем — только после подтверждения почты.</p>
+        <p class="note" style="font-size:13px;color:#666;margin-top:8px">После регистрации у вас 6 часов доступа без подтверждения email.</p>
       </form>
 
-      <form id="loginForm" class="auth-form" style="display:none">
+      <form id="loginForm" class="auth-form" style="display:none;" onsubmit="return false;">
         <input id="loginEmail" type="email" placeholder="Email" required />
         <input id="loginPassword" type="password" placeholder="Пароль" required />
-        <div style="display:flex;gap:8px;margin-top:6px;">
+        <div class="auth-actions">
           <button id="loginSubmit" type="button">Войти</button>
           <button id="backToRegister" type="button" style="background:#4b5563">Назад</button>
         </div>
       </form>
-
-      <hr style="margin:10px 0">
-      <div style="font-size:13px;color:#444">Профиль: загрузите аватар после входа в профиль (кнопка появится в правом углу).</div>
     </div>
   </div>
 
-  <!-- hidden inputs -->
-  <input id="fileInput" type="file" accept="image/*" style="display:none" />
-  <div class="chat-input" style="max-width:980px;margin:0 auto;">
-    <label for="fileInput" class="camera-btn" title="Добавить фото">
-      <img src="https://i.ibb.co/7QpKsCX/camera-icon.png" alt="camera">
-    </label>
-    <input id="messageInput" type="text" inputmode="text" placeholder="Напишите сообщение..." aria-label="Текст сообщения" />
-    <button id="sendButton" class="send-btn">Отправить</button>
-  </div>
-
-  <!-- Firebase + App script -->
-  <!-- NOTE: Firebase SDK modules (v9 modular) -->
+  <!-- Firebase + App logic -->
   <script type="module">
-  // -----------------------
-  // Конфигурация (вставь свою, если нужно)
-  // -----------------------
+  // --------- Firebase imports (v9 modular) ----------
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendEmailVerification, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-  import { getDatabase, ref as dbRef, set as dbSet, push, onChildAdded, query, orderByChild, limitToLast, get, endAt } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+  import { getDatabase, ref as dbRef, set as dbSet, push as dbPush, onChildAdded, query, orderByChild, limitToLast, get as dbGet, endAt as dbEndAt } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
   import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 
-  // Твой firebaseConfig (взято из письма). Если storageBucket невалидный — замените.
+  // ----------------- CONFIG -----------------
+  // Firebase config (вставлено по твоему предыдущему сообщению)
   const firebaseConfig = {
     apiKey: "AIzaSyDV2BslF-Ll37a1XO3GEfzNMXa7YsSXL1o",
     authDomain: "web-app-b4633.firebaseapp.com",
     databaseURL: "https://web-app-b4633-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "web-app-b4633",
-    storageBucket: "web-app-b4633.firebasestorage.app", // если проблема — поменяй на *.appspot.com
+    storageBucket: "web-app-b4633.firebasestorage.app", // если будут проблемы: замените на "<project>.appspot.com"
     messagingSenderId: "1041887915171",
     appId: "1:1041887915171:web:84d62eae54e9291b47a316",
     measurementId: "G-C65BPE81SJ"
   };
 
+  const MAP_KEY = "AlzaSyBFrxVhpb6nHJ6rhiL15"; // твой ключ, как просил
+
+  // ----------------- INIT -----------------
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getDatabase(app);
   const storage = getStorage(app);
 
-  // -----------------------
-  // DOM
-  // -----------------------
+  // ----------------- DOM -----------------
   const tabButtons = document.querySelectorAll(".tab-button");
   const tabContents = document.querySelectorAll(".tab-content");
   const messagesEl = document.getElementById("messages");
@@ -234,59 +275,60 @@
   const loginEmail = document.getElementById("loginEmail");
   const loginPassword = document.getElementById("loginPassword");
   const modalClose = document.getElementById("modalClose");
+  const profileBtn = document.getElementById("profileBtn");
   const chatArea = document.getElementById("chatArea");
 
-  // state
+  // ----------------- State -----------------
   const DEFAULT_AVATAR = "https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg";
   let currentUser = null;
   let messagesLoaded = false;
-  let oldestTs = null; // for pagination
+  let oldestTs = null;
   const PAGE = 15;
-  let dmWith = null; // uid of DM recipient, null = public chat
+  let dmWith = null; // uid of DM recipient
+  let lastShownTs = 0;
+  let isAuthOpen = false;
+  let adInjectedLocal = false;
 
-  // tabs
-  tabButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      openTabById(btn.dataset.target);
-    });
-  });
-  function openTabById(id){
+  // ----------------- helpers -----------------
+  function setActiveTab(id){
     tabButtons.forEach(b => b.classList.toggle("active", b.dataset.target === id));
     tabContents.forEach(c => {
-      if (c.id === id) {
-        c.classList.add("active");
-        c.style.display = "block";
-      } else {
-        c.classList.remove("active");
-        c.style.display = "none";
-      }
+      if (c.id === id) { c.style.display = "block"; c.classList.add("active"); }
+      else { c.style.display = "none"; c.classList.remove("active"); }
     });
     if (id === "chatTab") messageInput.focus();
-    if (id === "mapTab" && window.initMap) { window.initMap(); }
+    if (id === "mapTab" && window._mapReady) { /* map already init */ }
   }
-  // hotkeys
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "c" || e.key === "C") openTabById("chatTab");
-    if (e.key === "m" || e.key === "M") openTabById("mapTab");
-    if (e.key === "h" || e.key === "H") openTabById("helpTab");
+
+  // prevent hotkeys while focusing inputs
+  document.addEventListener("keydown", (e)=>{
+    const active = document.activeElement;
+    const tag = active && active.tagName ? active.tagName.toLowerCase() : "";
+    const isEditable = active && (active.isContentEditable || tag === "input" || tag === "textarea" || active.getAttribute("role") === "textbox");
+    if (isEditable) return; // don't handle hotkeys when typing
+    if (e.key === "c" || e.key === "C") setActiveTab("chatTab");
+    if (e.key === "m" || e.key === "M") setActiveTab("mapTab");
+    if (e.key === "h" || e.key === "H") setActiveTab("helpTab");
   });
 
-  // -----------------------
-  // Auth modal helpers
-  // -----------------------
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", ()=> setActiveTab(btn.dataset.target));
+  });
+
+  // ----------------- Auth modal -----------------
   function showAuthModal(){
-    authModal.classList.add("show");
-    authModal.setAttribute("aria-hidden","false");
+    authModal.classList.add("show"); authModal.setAttribute("aria-hidden","false"); isAuthOpen = true;
   }
-  function hideAuthModal(){
-    authModal.classList.remove("show");
-    authModal.setAttribute("aria-hidden","true");
-  }
-  modalClose?.addEventListener("click", hideAuthModal);
-  authModal?.addEventListener("click", (e)=>{ if (e.target===authModal) hideAuthModal(); });
+  function hideAuthModal(){ authModal.classList.remove("show"); authModal.setAttribute("aria-hidden","true"); isAuthOpen = false; }
+
+  modalClose?.addEventListener("click", ()=> hideAuthModal());
+  // don't close on outside click (prevents accidental close while typing)
+  // authModal?.addEventListener("click",(e)=>{ if (e.target===authModal) hideAuthModal(); });
+
   loginShow?.addEventListener("click", ()=>{ registerForm.style.display="none"; loginForm.style.display="block"; });
   backToRegister?.addEventListener("click", ()=>{ registerForm.style.display="block"; loginForm.style.display="none"; });
 
+  // Registration
   registerSubmit?.addEventListener("click", async ()=>{
     const nick = nickInput.value.trim();
     const email = emailInput.value.trim();
@@ -295,18 +337,19 @@
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
       await updateProfile(cred.user, { displayName: nick, photoURL: DEFAULT_AVATAR });
-      // save createdAt in Realtime DB under users/{uid}
+      // записать createdAt и avatar в DB
       await dbSet(dbRef(db, `users/${cred.user.uid}`), { nick, createdAt: Date.now(), email: email, avatar: DEFAULT_AVATAR });
-      // local marker
       localStorage.setItem("regTime_" + cred.user.uid, String(Date.now()));
       await sendEmailVerification(cred.user);
       alert("Вы зарегистрированы. Письмо подтверждения отправлено. У вас 6 часов доступа без подтверждения.");
       hideAuthModal();
     } catch (err) {
-      alert("Ошибка регистрации: " + err.message);
+      console.error(err);
+      alert("Ошибка регистрации: " + (err.message || err));
     }
   });
 
+  // Login
   loginSubmit?.addEventListener("click", async ()=>{
     const email = loginEmail.value.trim();
     const pass = loginPassword.value.trim();
@@ -315,27 +358,25 @@
       await signInWithEmailAndPassword(auth, email, pass);
       hideAuthModal();
     } catch (err) {
-      alert("Ошибка входа: " + err.message);
+      console.error(err);
+      alert("Ошибка входа: " + (err.message || err));
     }
   });
 
-  // track auth state
+  // track auth
   onAuthStateChanged(auth, (user)=>{
     currentUser = user;
-    if (!user) {
-      console.log("No user");
+    if (user) {
+      // update profile button avatar
+      profileBtn.style.background = `url(${user.photoURL || DEFAULT_AVATAR}) center/cover`;
+      // if auth modal open, close it
+      if (isAuthOpen) hideAuthModal();
     } else {
-      console.log("Signed in:", user.uid, user.email, "verified:", user.emailVerified);
-      // try to fetch profile avatar from DB
-      get(dbRef(db, `users/${user.uid}/avatar`)).then(snap=>{
-        if (snap && snap.exists()) {
-          // nothing else for now
-        }
-      }).catch(()=>{});
+      profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
     }
   });
 
-  // canSendMessage: emailVerified OR within 6 hours since createdAt
+  // can send message: email verified OR within 6 hours since createdAt
   async function canSendMessage(){
     const user = auth.currentUser;
     if (!user) return false;
@@ -345,9 +386,8 @@
     const localVal = localStorage.getItem(localKey);
     const sixHours = 6 * 60 * 60 * 1000;
     if (localVal && (Date.now() - Number(localVal) < sixHours)) return true;
-    // try DB
     try {
-      const snap = await get(dbRef(db, `users/${uid}/createdAt`));
+      const snap = await dbGet(dbRef(db, `users/${uid}/createdAt`));
       if (snap && snap.exists()) {
         const createdAt = Number(snap.val());
         if (!Number.isNaN(createdAt) && (Date.now() - createdAt < sixHours)) {
@@ -355,163 +395,186 @@
           return true;
         }
       }
-    } catch(e){
-      console.error("db get error", e);
-    }
+    } catch(e){ console.error(e); }
     return false;
   }
 
-  // -----------------------
-  // Messages: load, paginate, display, send
-  // -----------------------
-  // helper: format datetime
+  // ----------------- Chat messages -----------------
   function timeStr(ts){
     const d = new Date(ts);
     return d.toLocaleString();
   }
 
-  // display a single message element
-  function displayMessage(m, pushToTop=false){
+  function clearMessages(){ messagesEl.innerHTML = ""; }
+
+  function createMessageElement(m, pushToTop=false){
     const wrap = document.createElement("div");
     wrap.className = "message" + (m.uid===currentUser?.uid ? " self" : "");
+    // avatar
     const avatar = document.createElement("img");
-    avatar.className="avatar";
+    avatar.className = "avatar";
     avatar.src = m.avatar || DEFAULT_AVATAR;
     avatar.alt = m.nick || "avatar";
-    avatar.title = m.nick || "avatar";
-    // click avatar/nick -> open DM
-    avatar.addEventListener("click", ()=>{ openDM(m.uid, m.nick); });
-
+    avatar.title = m.nick || "Открыть личку";
+    avatar.addEventListener("click", ()=> openDM(m.uid, m.nick));
+    // content
     const txt = document.createElement("div");
-    txt.className="message-content";
+    txt.className = "message-content";
+    // meta
     const meta = document.createElement("div");
-    meta.className="message-meta";
-    meta.textContent = `${m.nick || "Аноним"} · ${timeStr(m.ts)}${m.recipientUid ? " → (лично)" : ""}`;
-    meta.style.cursor = "pointer";
-    meta.addEventListener("click", ()=>{ openDM(m.uid, m.nick); });
-
+    meta.className = "message-meta";
+    meta.textContent = `${m.nick || "Аноним"} · ${timeStr(m.ts)}${m.recipientUid ? " → личное" : ""}`;
+    meta.addEventListener("click", ()=> openDM(m.uid, m.nick));
     txt.appendChild(meta);
-    if (m.text) {
-      const p = document.createElement("div");
-      p.innerText = m.text;
-      txt.appendChild(p);
+
+    // if this is ad
+    if (m.isAd) {
+      const ad = document.createElement("div");
+      ad.className = "ad-card";
+      ad.innerHTML = `<img src="${m.image || 'https://i.ibb.co/7QpKsCX/camera-icon.png'}" alt="ad"><div class="ad-text"><strong>${m.title || 'Реклама'}</strong><div style="color:#334155">${m.text || 'Здесь будет ваша реклама / фушка'}</div></div>`;
+      txt.appendChild(ad);
+    } else {
+      if (m.text) {
+        const p = document.createElement("div");
+        p.innerText = m.text;
+        txt.appendChild(p);
+      }
+      if (m.image) {
+        const im = document.createElement("img");
+        im.src = m.image;
+        im.alt = "Фото";
+        im.className = "chat-image";
+        txt.appendChild(im);
+      }
     }
-    if (m.image) {
-      const im = document.createElement("img");
-      im.src = m.image;
-      im.alt = "Фото";
-      im.className = "chat-image";
-      txt.appendChild(im);
-    }
+
     wrap.appendChild(avatar);
     wrap.appendChild(txt);
-
-    // DM visual hint
-    if (m.recipientUid) {
-      wrap.style.borderLeft = "3px solid #f1c40f";
-      wrap.style.paddingLeft = "8px";
-    }
 
     if (pushToTop) messagesEl.prepend(wrap);
     else messagesEl.appendChild(wrap);
   }
 
-  // load last PAGE messages initially
+  // filter for DM vs public
+  function displayIfMatches(m, pushToTop=false){
+    if (!dmWith) {
+      // public room: only messages with no recipient
+      if (!m.recipientUid) createMessageElement(m, pushToTop);
+    } else {
+      const me = currentUser?.uid;
+      if (!me) return;
+      if ((m.uid === me && m.recipientUid === dmWith) || (m.uid === dmWith && m.recipientUid === me)) {
+        createMessageElement(m, pushToTop);
+      }
+    }
+  }
+
+  // load latest PAGE messages
   async function loadLatest(){
-    // clear
-    messagesEl.innerHTML = "";
-    const q = query(dbRef(db, "messages"), orderByChild("ts"), limitToLast(PAGE));
     try {
-      const snap = await get(q);
-      const arr = [];
+      const q = query(dbRef(db, "messages"), orderByChild("ts"), limitToLast(PAGE));
+      const snap = await dbGet(q);
+      clearMessages();
+      let arr = [];
       if (snap && snap.exists()) {
         snap.forEach(ch => arr.push(ch.val()));
-        // sort by ts ascending
         arr.sort((a,b)=>a.ts - b.ts);
         arr.forEach(m => displayIfMatches(m));
         if (arr.length) oldestTs = arr[0].ts;
+        lastShownTs = arr.length ? arr[arr.length-1].ts : 0;
+      } else {
+        // empty DB — inject local ad block
+        injectLocalAdIfNeeded();
       }
       messagesLoaded = true;
-      // realtime subscribe to new child added (only for new ones)
-      onChildAdded(dbRef(db, "messages"), (sna)=> {
+
+      // subscribe to onChildAdded; display only new ones (ts > lastShownTs)
+      onChildAdded(dbRef(db, "messages"), (sna)=>{
         const m = sna.val();
-        // ignore if it's among already loaded older messages (we already have them), but onChildAdded is called for all initially fetched in many setups — guard:
-        if (!messagesLoaded) return;
-        // display if it's newer than last shown
-        if (!oldestTs || m.ts >= oldestTs) displayIfMatches(m);
+        if (!m || !m.ts) return;
+        if (m.ts <= lastShownTs) return; // already displayed
+        displayIfMatches(m);
+        lastShownTs = Math.max(lastShownTs, m.ts);
+        // autoscroll if at bottom
+        if (chatArea.scrollTop + chatArea.clientHeight >= chatArea.scrollHeight - 120) {
+          chatArea.scrollTop = chatArea.scrollHeight;
+        }
       });
-      // auto-scroll down
+
+      // scroll down
       chatArea.scrollTop = chatArea.scrollHeight;
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error("loadLatest err", err);
     }
   }
 
-  // load older messages (pagination) when scroll to top
   async function loadOlder(){
     if (!oldestTs) return;
-    // query messages with ts < oldestTs
-    const q = query(dbRef(db, "messages"), orderByChild("ts"), endAt(oldestTs - 1), limitToLast(PAGE));
     try {
-      const snap = await get(q);
-      const arr = [];
+      const q = query(dbRef(db, "messages"), orderByChild("ts"), dbEndAt(oldestTs - 1), limitToLast(PAGE));
+      const snap = await dbGet(q);
+      let arr = [];
       if (snap && snap.exists()) {
         snap.forEach(ch => arr.push(ch.val()));
         arr.sort((a,b)=>a.ts - b.ts);
-        // insert to top preserving order
-        for (let i=arr.length-1;i>=0;i--){
-          displayIfMatches(arr[i], true);
-        }
+        // preserve scroll position: measure before
+        const prevHeight = chatArea.scrollHeight;
+        arr.forEach(m => displayIfMatches(m, true)); // pushToTop
+        // adjust scroll to keep view
+        const newHeight = chatArea.scrollHeight;
+        chatArea.scrollTop = newHeight - prevHeight;
         if (arr.length) oldestTs = arr[0].ts;
       }
-    } catch(e){ console.error(e); }
+    } catch (err){ console.error("loadOlder err", err); }
   }
 
-  // filtering for DM: show only messages relevant to current view
-  function displayIfMatches(m, pushToTop=false){
-    if (!dmWith) {
-      // public chat: show only messages with no recipient (public) OR messages sent/received to current user? We'll show public only in main public room
-      if (!m.recipientUid) displayMessage(m, pushToTop);
-    } else {
-      // DM mode: show only messages where (sender==me && recipient==dmWith) OR (sender==dmWith && recipient==me) OR (both sender/recipient null? no)
-      const me = currentUser?.uid;
-      if (!me) return;
-      if ((m.uid === me && m.recipientUid === dmWith) || (m.uid === dmWith && m.recipientUid === me) ) {
-        displayMessage(m, pushToTop);
-      }
-    }
+  // inject local ad if DB empty (not saving to DB)
+  function injectLocalAdIfNeeded(){
+    if (adInjectedLocal) return;
+    const ad = {
+      isAd: true,
+      title: "Здесь будет ваша реклама / Фушка",
+      text: "Разместите объявление: ищу подработку, предлагаю услуги — нажмите, чтобы оставить.",
+      image: "https://i.ibb.co/7QpKsCX/camera-icon.png",
+      ts: Date.now(),
+      uid: "system"
+    };
+    createMessageElement(ad);
+    adInjectedLocal = true;
   }
 
-  // open DM with user
-  function openDM(uid, nick){
+  // open DM
+  async function openDM(uid, nick){
     if (!auth.currentUser) { alert("Войдите, чтобы начать личный диалог"); showAuthModal(); return; }
     if (uid === currentUser.uid) { alert("Это вы сами"); return; }
     dmWith = uid;
-    // show small notice and clear messages then load only relevant ones by reading recent messages and filtering
-    messagesEl.innerHTML = "";
-    const note = document.createElement("div");
-    note.className = "message";
-    note.innerHTML = `<div style="font-size:13px;color:#333;background:var(--glass);padding:8px;border-radius:10px">Личные сообщения с <b>${nick}</b>. Нажмите "Выйти из лички" чтобы вернуться в общий чат.</div>`;
-    messagesEl.appendChild(note);
-    // show last PAGE messages then rely on realtime to append
-    (async ()=> {
-      const q = query(dbRef(db, "messages"), orderByChild("ts"), limitToLast(250)); // fetch more and filter — RTDB queries are limited; this is simple approach
-      try {
-        const snap = await get(q);
-        const arr = [];
-        if (snap && snap.exists()) {
-          snap.forEach(ch => arr.push(ch.val()));
-          arr.sort((a,b)=>a.ts - b.ts);
-          arr.forEach(m => displayIfMatches(m));
-        }
-      } catch(e){ console.error(e); }
-    })();
-    // provide a quick way to exit DM
-    const exitBtn = document.createElement("button");
-    exitBtn.textContent = "Выйти из лички";
-    exitBtn.style.marginLeft = "10px";
-    exitBtn.onclick = ()=>{ dmWith = null; messagesEl.innerHTML = ""; loadLatest(); };
-    document.querySelector(".chat-input").appendChild(exitBtn);
+    // clear and show notice
+    clearMessages();
+    const note = { uid: "system", nick: "Система", text: `Личные сообщения с ${nick}. Нажмите кнопку "Выйти из лички"`, ts: Date.now() };
+    createMessageElement(note);
+    // fetch a chunk and filter client-side
+    try {
+      const q = query(dbRef(db, "messages"), orderByChild("ts"), limitToLast(500)); // get recent chunk
+      const snap = await dbGet(q);
+      let arr = [];
+      if (snap && snap.exists()) {
+        snap.forEach(ch => arr.push(ch.val()));
+        arr.sort((a,b)=>a.ts - b.ts);
+        arr.forEach(m => displayIfMatches(m));
+      }
+    } catch (e) { console.error(e); }
+    // add exit button if not exists
+    if (!document.getElementById("exitDMBtn")) {
+      const btn = document.createElement("button");
+      btn.id = "exitDMBtn";
+      btn.textContent = "Выйти из лички";
+      btn.style.marginLeft = "10px";
+      btn.style.padding = "8px 10px";
+      btn.style.borderRadius = "8px";
+      btn.style.border = "1px solid #ddd";
+      btn.onclick = ()=>{ dmWith = null; document.getElementById("exitDMBtn").remove(); clearMessages(); loadLatest(); };
+      document.querySelector(".chat-input").appendChild(btn);
+    }
   }
 
   // send message
@@ -519,7 +582,7 @@
     // if not logged in -> show auth
     if (!auth.currentUser) { showAuthModal(); return; }
     const ok = await canSendMessage();
-    if (!ok) { alert("Пожалуйста, подтвердите email — после 6 часов с момента регистрации доступ будет закрыт."); return; }
+    if (!ok) { alert("Пожалуйста, подтвердите email — у вас 6 часов без подтверждения."); return; }
 
     const text = messageInput.value.trim();
     const file = fileInput.files[0];
@@ -531,13 +594,18 @@
         const uid = auth.currentUser.uid;
         const sRef = storageRef(storage, `chat_images/${uid}/${Date.now()}_${file.name}`);
         const uploadTask = uploadBytesResumable(sRef, file);
+        // wait for finish
         await new Promise((res, rej)=>{
           uploadTask.on('state_changed', null, err => rej(err), async ()=>{
             imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
             res();
           });
         });
-      } catch(err){ console.error("Upload error", err); alert("Ошибка загрузки файла"); }
+      } catch (err) {
+        console.error("Upload error", err);
+        alert("Ошибка загрузки файла");
+        return;
+      }
     }
 
     const msg = {
@@ -547,38 +615,81 @@
       text: text || null,
       image: imageUrl || null,
       ts: Date.now(),
-      recipientUid: dmWith || null
+      recipientUid: dmWith || null,
+      isAd: false
     };
 
     try {
-      await push(dbRef(db, "messages"), msg);
+      await dbPush(dbRef(db, "messages"), msg);
       messageInput.value = "";
       fileInput.value = "";
-      // on success, scroll down (for public chat)
-      if (!dmWith) chatArea.scrollTop = chatArea.scrollHeight;
-    } catch(e){ console.error(e); alert("Ошибка отправки"); }
+      // if in public chat auto-scroll
+      if (!dmWith) setTimeout(()=>{ chatArea.scrollTop = chatArea.scrollHeight; }, 80);
+    } catch (err) {
+      console.error("send err", err);
+      alert("Ошибка отправки");
+    }
   });
 
-  // file input from camera icon already in DOM; clicking label opens file chooser
-  fileInput.addEventListener("change", ()=> { /* preview optional */ });
+  // pressing Enter sends message
+  messageInput.addEventListener("keydown", (e)=>{
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendButton.click(); }
+  });
 
-  // scroll up to load older messages
-  let isLoadingOlder = false;
+  // prevent label click from opening auth if not logged (we show modal instead)
+  document.querySelector('label[for="fileInput"]').addEventListener("click", (e)=>{
+    if (!auth.currentUser) { e.preventDefault(); showAuthModal(); return; }
+    // else allow file dialog
+  });
+
+  // load older on scroll top
+  let loadingOlder = false;
   chatArea.addEventListener("scroll", async ()=>{
-    if (chatArea.scrollTop < 120 && !isLoadingOlder && oldestTs) {
-      isLoadingOlder = true;
+    if (chatArea.scrollTop < 120 && !loadingOlder && oldestTs) {
+      loadingOlder = true;
       await loadOlder();
-      isLoadingOlder = false;
+      loadingOlder = false;
     }
   });
 
   // initial load
   loadLatest();
 
-  // -----------------------
-  // Map (Google Maps API script added below)
-  // -----------------------
-  // marker data (24 points)
+  // ----------------- Profile button: upload avatar / logout -----------------
+  profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
+  profileBtn.addEventListener("click", ()=>{
+    if (!auth.currentUser) { showAuthModal(); return; }
+    const choice = confirm("Загрузить новый аватар? Нажмите Отмена чтобы выйти из аккаунта.");
+    if (choice) {
+      const inpt = document.createElement("input");
+      inpt.type = "file"; inpt.accept = "image/*"; inpt.style.display = "none";
+      inpt.addEventListener("change", async ()=>{
+        const file = inpt.files[0]; if (!file) return;
+        try {
+          const sRef = storageRef(storage, `avatars/${auth.currentUser.uid}/${Date.now()}_${file.name}`);
+          const uploadTask = uploadBytesResumable(sRef, file);
+          await new Promise((res, rej)=>{
+            uploadTask.on('state_changed', null, err => rej(err), async ()=>{
+              const url = await getDownloadURL(uploadTask.snapshot.ref);
+              await updateProfile(auth.currentUser, { photoURL: url });
+              await dbSet(dbRef(db, `users/${auth.currentUser.uid}/avatar`), url);
+              profileBtn.style.background = `url(${url}) center/cover`;
+              alert("Аватар обновлён");
+              res();
+            });
+          });
+        } catch(e){ console.error(e); alert("Ошибка загрузки аватара"); }
+      });
+      document.body.appendChild(inpt); inpt.click();
+    } else {
+      auth.signOut();
+      profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
+      alert("Вы вышли");
+    }
+  });
+
+  // ----------------- Map -----------------
+  // marker icons and points
   const ICONS = {
     hospital: "https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp",
     lawyer: "https://i.ibb.co/0gWD5wW/images-5.jpg",
@@ -611,15 +722,8 @@
     { title: "Community Aid", pos:{lat:50.0835, lng:14.425}, cat:"help"},
     { title: "Pharmacy 1", pos:{lat:50.088, lng:14.420}, cat:"shop"}
   ];
-  let map, markers=[];
 
-  // called by Google Maps callback
-  window.initMap = function(){
-    const center = { lat: 50.0755, lng: 14.4378 };
-    map = new google.maps.Map(document.getElementById("map"), { center, zoom:13, gestureHandling:"greedy" });
-    renderMarkers("all");
-    attachFilterButtons();
-  };
+  let map, markers = [];
 
   function createIconFor(cat){
     const url = ICONS[cat] || ICONS.help;
@@ -631,18 +735,18 @@
 
   function renderMarkers(filterCat="all"){
     markers.forEach(m=>m.setMap(null));
-    markers=[];
+    markers = [];
     POINTS.forEach(p=>{
-      if (filterCat==="all" || p.cat===filterCat){
-        const mk = new google.maps.Marker({ position:p.pos, map, title:p.title, icon:createIconFor(p.cat) });
-        const inf = new google.maps.InfoWindow({ content:`<strong>${p.title}</strong><div>${p.cat}</div>` });
-        mk.addListener("click", ()=>inf.open(map, mk));
+      if (filterCat === "all" || p.cat === filterCat) {
+        const mk = new google.maps.Marker({ position: p.pos, map, title: p.title, icon: createIconFor(p.cat) });
+        const inf = new google.maps.InfoWindow({ content: `<strong>${p.title}</strong><div>${p.cat}</div>` });
+        mk.addListener("click", ()=> inf.open(map, mk));
         markers.push(mk);
       }
     });
   }
 
-  function attachFilterButtons(){
+  function attachMapFilterButtons(){
     document.querySelectorAll(".filter-btn").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
@@ -652,94 +756,24 @@
     });
   }
 
-  // -----------------------
-  // Map script injection with your API key
-  // -----------------------
-  // Replace key if needed; you already provided: AlzaSyBFrxVhpb6nHJ6rhiL15
+  // initMap must be global for callback param
+  window.initMap = function(){
+    const center = { lat: 50.0755, lng: 14.4378 };
+    map = new google.maps.Map(document.getElementById("map"), { center, zoom:13, gestureHandling:"greedy" });
+    renderMarkers("all");
+    attachMapFilterButtons();
+    window._mapReady = true;
+  };
+
+  // inject maps script dynamically
   (function loadMaps(){
-    const key = "AlzaSyBFrxVhpb6nHJ6rhiL15";
     const s = document.createElement("script");
-    s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&callback=initMap`;
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(MAP_KEY)}&callback=initMap`;
     s.defer = true; s.async = true;
     document.head.appendChild(s);
   })();
 
-  // -----------------------
-  // Small: ability to upload/change avatar after login
-  // -----------------------
-  // create a floating avatar button
-  const profileBtn = document.createElement("button");
-  profileBtn.style.position = "fixed";
-  profileBtn.style.right = "12px";
-  profileBtn.style.top = "12px";
-  profileBtn.style.zIndex = "70";
-  profileBtn.style.width = "44px";
-  profileBtn.style.height = "44px";
-  profileBtn.style.borderRadius = "50%";
-  profileBtn.style.border = "2px solid #fff";
-  profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
-  profileBtn.title = "Профиль (нажмите чтобы загрузить аватар / выйти)";
-  document.body.appendChild(profileBtn);
-
-  profileBtn.addEventListener("click", ()=>{
-    if (!auth.currentUser) { showAuthModal(); return; }
-    // show small prompt to upload avatar or logout
-    const choice = confirm("Загрузить новый аватар? Отмена — выйти из аккаунта.");
-    if (choice) {
-      // create hidden input
-      const inpt = document.createElement("input");
-      inpt.type = "file"; inpt.accept = "image/*"; inpt.style.display="none";
-      inpt.addEventListener("change", async ()=>{
-        const file = inpt.files[0]; if (!file) return;
-        try {
-          const sRef = storageRef(storage, `avatars/${auth.currentUser.uid}/${Date.now()}_${file.name}`);
-          const uploadTask = uploadBytesResumable(sRef, file);
-          await new Promise((res, rej)=> {
-            uploadTask.on('state_changed', null, err=>rej(err), async ()=>{
-              const url = await getDownloadURL(uploadTask.snapshot.ref);
-              await updateProfile(auth.currentUser, { photoURL: url });
-              await dbSet(dbRef(db, `users/${auth.currentUser.uid}/avatar`), url);
-              profileBtn.style.background = `url(${url}) center/cover`;
-              alert("Аватар обновлён");
-              res();
-            });
-          });
-        } catch(e){ console.error(e); alert("Ошибка загрузки аватара"); }
-      });
-      document.body.appendChild(inpt);
-      inpt.click();
-    } else {
-      // logout
-      auth.signOut();
-      profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
-      alert("Вы вышли");
-    }
-  });
-
-  // update profileBtn when user changes
-  onAuthStateChanged(auth, (user)=>{
-    if (user && user.photoURL) profileBtn.style.background = `url(${user.photoURL}) center/cover`;
-    else profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
-  });
-
-  // utility: if user tries to type Enter -> send
-  messageInput.addEventListener("keydown", (e)=>{
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendButton.click(); }
-  });
-
-  // If user clicks send but not logged -> show modal (we handle above),
-  // but also we want to show modal on "first attempt", so intercept fileInput too:
-  document.querySelector('label[for="fileInput"]').addEventListener("click", ()=>{
-    if (!auth.currentUser) { showAuthModal(); }
-  });
-
-  // initial: focus input
-  messageInput.focus();
-
-  // expose some helpers to window for debugging
-  window._chat = { loadLatest, loadOlder, openDM };
-
+  // ----------------- End of main script -----------------
   </script>
 </body>
 </html>
-
