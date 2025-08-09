@@ -1,203 +1,225 @@
 <!doctype html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ПРАГА ФУШКИ — Чат</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ПРАГА ФУШКИ — Чат</title>
 
-  <!-- Готический жирный шрифт -->
-  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --accent:#2ecc71;
-      --glass: rgba(255,255,255,0.96);
-      --muted:#64748b;
-      --max-width:980px;
-      --avatar-size:44px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;-webkit-font-smoothing:antialiased;background:#071126;color:#0b1220;overflow-x:hidden}
+<style>
+:root{
+  --accent:#2ecc71;
+  --glass: rgba(255,255,255,0.96);
+  --muted:#94a3b8;
+  --max-width:980px;
+  --avatar-size:44px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Poppins, Inter, Arial, sans-serif;-webkit-font-smoothing:antialiased;background:#071126;color:#fff}
 
-    /* ЧИСТЫЙ фон Праги — фиксированный, cover (без затемнения) */
-    body {
-      background-image: url('https://i.ibb.co/27hgtZfY/Prague.jpg');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-    }
+/* Background Prague (fixed) */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:url('https://i.ibb.co/27hgtZfY/Prague.jpg');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  filter:brightness(0.52);
+  z-index:-2;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg, rgba(3,7,18,0.10), rgba(3,7,18,0.25));
+  z-index:-1;
+}
 
-    /* header */
-    header{position:sticky;top:0;z-index:60;padding:18px 12px;text-align:center;color:#fff;backdrop-filter:blur(3px)}
-    header h1{margin:0;font-family: 'UnifrakturCook', Poppins, Inter, sans-serif;font-weight:700;font-size:32px;letter-spacing:1px;text-shadow:0 6px 20px rgba(0,0,0,0.6)}
-    header p{margin:8px 0 0;font-size:14px;color:#f1f7f5}
+/* Header / tabs */
+.header{
+  position:sticky; top:0; z-index:60;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;padding:14px 16px; background:rgba(2,6,23,0.32); backdrop-filter: blur(4px);
+}
+.title{
+  font-family:Poppins, Inter, sans-serif; font-weight:700; font-size:22px; letter-spacing:2px;
+  color:#fff; text-shadow:0 8px 30px rgba(2,6,23,0.6);
+}
+.subtitle{font-size:13px;color:#e8f5e9;opacity:0.95}
 
-    /* tabs */
-    nav.tabs{display:flex;gap:10px;justify-content:center;padding:10px 12px;position:sticky;top:86px;z-index:58}
-    .tab-button{background:transparent;border:none;color:#fff;padding:8px 16px;font-weight:700;border-radius:12px;cursor:pointer}
-    .tab-button.active{box-shadow: inset 0 -4px 0 var(--accent);background:rgba(255,255,255,0.03)}
+/* Tabs */
+.tabs{display:flex;gap:8px; margin-left:auto}
+.tab-button{
+  background:rgba(255,255,255,0.06);
+  color:#fff;border:0;padding:8px 14px;border-radius:10px;font-weight:700;cursor:pointer;
+}
+.tab-button.active{box-shadow: inset 0 -4px 0 var(--accent);background:rgba(255,255,255,0.08)}
 
-    main.container{max-width:var(--max-width);margin:0 auto;padding:12px}
-    .sys-msg{max-width:var(--max-width);margin:12px auto;padding:12px;border-radius:14px;background:rgba(255,255,255,0.06);color:#fff;font-size:15px;text-align:center}
+/* container */
+.container{max-width:var(--max-width);margin:12px auto;padding:8px}
 
-    .tab-content{display:none}
-    .tab-content.active{display:block}
+/* content panels */
+.panel{display:none}
+.panel.active{display:block}
 
-    /* chat */
-    .chat-area{height:calc(100vh - 330px);overflow:auto;padding:14px 8px;background:transparent}
-    .messages{display:flex;flex-direction:column;gap:12px;padding-bottom:160px}
-    .message{display:flex;gap:10px;align-items:flex-start;max-width:78%;word-break:break-word}
-    .message.self{margin-left:auto;flex-direction:row-reverse}
-    .avatar{width:var(--avatar-size);height:var(--avatar-size);border-radius:50%;object-fit:cover;flex:0 0 var(--avatar-size);box-shadow:0 3px 10px rgba(0,0,0,0.35);cursor:pointer}
-    .message-content{background:var(--glass);padding:10px 12px;border-radius:14px;box-shadow:0 6px 30px rgba(2,6,23,0.18);color:#0b1220}
-    .message.self .message-content{background:#E9FFF0}
-    .message-meta{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .chat-image{max-width:300px;border-radius:8px;margin-top:8px;display:block}
+/* system message */
+.sys-msg{max-width:var(--max-width);margin:10px auto;padding:12px;border-radius:12px;background:rgba(255,255,255,0.03);color:#fff;text-align:center}
 
-    /* chat text uses gotic font inside bubble */
-    .message-content .text { font-family: 'UnifrakturCook', cursive; font-weight:700; font-size:1rem; color:#0b1220; }
+/* Chat */
+.chat-area{height:calc(100vh - 320px);overflow:auto;padding:16px;background:transparent}
+.messages{display:flex;flex-direction:column;gap:12px;padding-bottom:160px}
+.message{display:flex;gap:10px;align-items:flex-start;max-width:78%;word-break:break-word}
+.message.self{margin-left:auto;flex-direction:row-reverse}
+.avatar{width:var(--avatar-size);height:var(--avatar-size);border-radius:50%;object-fit:cover;flex:0 0 var(--avatar-size);box-shadow:0 3px 10px rgba(0,0,0,0.35);cursor:pointer}
+.message-content{background:var(--glass);padding:10px 12px;border-radius:14px;box-shadow:0 6px 24px rgba(2,6,23,0.12);color:#0b1220}
+.message.self .message-content{background:#E9FFF0}
+.message-meta{font-size:12px;color:var(--muted);margin-bottom:6px}
+.chat-image{max-width:320px;border-radius:8px;margin-top:8px;display:block}
 
-    /* input bar */
-    .chat-input{position:fixed;left:0;right:0;bottom:0;padding:10px;background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.99));border-top:1px solid rgba(0,0,0,0.06);z-index:80;display:flex;gap:8px;align-items:center;max-width:var(--max-width);margin:0 auto}
-    .camera-btn{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;width:48px;height:48px;border-radius:50%;background:#fff;border:1px solid #e6e6e6}
-    .camera-btn svg{width:20px;height:20px}
-    .chat-input input[type="text"]{flex:1;padding:12px 14px;border-radius:24px;border:1px solid #d0d7de;font-size:16px;outline:none}
-    .send-btn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(46,204,113,0.18)}
-    .small-btn{padding:8px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer}
+/* input bar */
+.input-bar{position:fixed;left:0;right:0;bottom:0;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.98));border-top:1px solid rgba(0,0,0,0.06);z-index:70;display:flex;gap:8px;align-items:center;max-width:var(--max-width);margin:0 auto}
+.camera-btn{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;width:48px;height:48px;border-radius:50%;background:#fff;border:1px solid #e6e6e6}
+.camera-btn svg{width:20px;height:20px}
+.input-bar input[type="text"]{flex:1;padding:12px 14px;border-radius:24px;border:1px solid #d0d7de;font-size:16px;outline:none}
+.send-btn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(46,204,113,0.18)}
 
-    /* modal */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:95}
-    .modal.show{display:flex}
-    .modal-panel{background:#fff;border-radius:12px;padding:18px;width:92%;max-width:520px;position:relative;box-shadow:0 18px 80px rgba(2,6,23,0.4)}
-    .modal-close{position:absolute;right:10px;top:8px;background:transparent;border:none;font-size:16px;cursor:pointer}
-    .auth-form input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #dcdcdc}
-    .auth-actions{display:flex;gap:8px;justify-content:space-between}
-    .auth-actions button{flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
-    .error-line{color:#b91c1c;font-size:13px;margin-top:6px}
+/* profile button */
+.profile-btn{position:fixed;right:14px;top:14px;z-index:100;width:48px;height:48px;border-radius:50%;border:2px solid #fff;background-size:cover;background-position:center;cursor:pointer}
 
-    .profile-btn{position:fixed;right:12px;top:12px;z-index:100;width:48px;height:48px;border-radius:50%;border:2px solid #fff;background-size:cover;background-position:center;cursor:pointer}
+/* map */
+.map-panel{height:calc(100vh - 240px);background:rgba(255,255,255,0.03);border-radius:12px;padding:6px}
+.map-canvas{width:100%;height:100%;border-radius:10px}
 
-    /* map */
-    #map{width:100%;height:calc(60vh);border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+/* help cards */
+.help-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:12px}
+.help-card{background:#fff;padding:10px;border-radius:10px;box-shadow:0 6px 22px rgba(2,6,23,0.12)}
+.help-card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
 
-    @media (max-width:640px){
-      .chat-area{height:calc(100vh - 380px)}
-      .chat-image{max-width:180px}
-    }
-  </style>
+/* small screens */
+@media (max-width:640px){
+  .chat-area{height:calc(100vh - 420px)}
+  .chat-image{max-width:200px}
+  .title{font-size:18px}
+}
+</style>
 </head>
 <body>
-  <header>
-    <h1>ПРАГА ФУШКИ</h1>
-    <p>Вітаємо! Дорогі українці — цей чат створено, щоб допомагати нашим співвітчизникам.</p>
-  </header>
+  <div class="header">
+    <div>
+      <div class="title">ПРАГА ФУШКИ</div>
+      <div class="subtitle">Вітаємо! Дорогі українці — цей чат створено, щоб допомагати нашим співвітчизникам.</div>
+    </div>
 
-  <nav class="tabs" role="tablist" aria-label="Вкладки">
-    <button class="tab-button active" data-target="chatTab">💬 Чат</button>
-    <button class="tab-button" data-target="mapTab">🗺 Карта</button>
-    <button class="tab-button" data-target="helpTab">❓ Допомога</button>
-  </nav>
+    <div class="tabs" role="tablist" aria-label="Вкладки">
+      <button class="tab-button active" data-target="chatPanel" aria-selected="true">💬 Чат</button>
+      <button class="tab-button" data-target="mapPanel">🗺️ Карта</button>
+      <button class="tab-button" data-target="helpPanel">❓ Допомога</button>
+    </div>
+  </div>
 
   <main class="container" role="main">
-    <div class="sys-msg">Якщо ви вперше — натисніть "Відправити" — з'явиться реєстрація. 6 годин доступу без підтвердження email.</div>
+    <div class="sys-msg">Якщо ви вперше — натисніть «Відправити» — з'явиться реєстрація. У вас 6 годин доступу без підтвердження email.</div>
 
-    <!-- Chat tab -->
-    <section id="chatTab" class="tab-content active" role="region" aria-label="Чат">
+    <!-- CHAT PANEL -->
+    <section id="chatPanel" class="panel active" role="region" aria-label="Чат">
       <div class="chat-area" id="chatArea" aria-live="polite">
         <div id="messages" class="messages" role="log"></div>
       </div>
     </section>
 
-    <!-- Map tab -->
-    <section id="mapTab" class="tab-content" role="region" aria-label="Карта" style="display:none;">
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-        <div style="flex:1">
-          <input id="mapSearch" placeholder="Пошук (наприклад: волонтери, аптека)..." style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd">
-        </div>
-        <div>
-          <button id="centerBtn" class="small-btn">Центрувати</button>
-        </div>
+    <!-- MAP PANEL -->
+    <section id="mapPanel" class="panel" role="region" aria-label="Карта">
+      <div class="map-panel">
+        <div id="map" class="map-canvas"></div>
       </div>
-      <div id="map"></div>
     </section>
 
-    <!-- Help tab -->
-    <section id="helpTab" class="tab-content" role="region" aria-label="Допомога" style="display:none;">
+    <!-- HELP PANEL -->
+    <section id="helpPanel" class="panel" role="region" aria-label="Допомога">
       <h2 style="color:#fff">Термінова допомога у Празі</h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:12px">
-        <div style="background:white;padding:10px;border-radius:10px">
-          <img src="https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp" style="width:100%;height:130px;object-fit:cover;border-radius:8px">
-          <h3>Nemocnice Motol</h3><p>Адреса: V Uvalu 84</p>
-        </div>
-        <div style="background:white;padding:10px;border-radius:10px">
-          <img src="https://i.ibb.co/0gWD5wW/images-5.jpg" style="width:100%;height:130px;object-fit:cover;border-radius:8px">
-          <h3>Юридична допомога</h3><p>Документи та консультації</p>
-        </div>
+      <div class="help-grid" id="helpGrid">
+        <article class="help-card">
+          <img src="https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp" alt="Больница">
+          <h3>Nemocnice Motol</h3>
+          <p>Адреса: V Uvalu 84</p>
+        </article>
+        <article class="help-card">
+          <img src="https://i.ibb.co/0gWD5wW/images-5.jpg" alt="Юристи">
+          <h3>Юридична допомога</h3>
+          <p>Документи та консультації</p>
+        </article>
+        <article class="help-card">
+          <img src="https://i.ibb.co/R49shL6k/images-6.jpg" alt="Магазины">
+          <h3>Український магазин</h3>
+          <p>Товари та продукти</p>
+        </article>
       </div>
     </section>
   </main>
 
+  <!-- profile btn -->
   <button id="profileBtn" class="profile-btn" title="Профіль" aria-label="Профіль"></button>
 
-  <!-- hidden file for camera -->
-  <input id="fileInput" type="file" accept="image/*" style="display:none">
+  <!-- hidden file input -->
+  <input id="fileInput" type="file" accept="image/*" style="display:none" />
 
-  <!-- input area -->
-  <div class="chat-input" role="region" aria-label="Відправка повідомлення">
-    <label for="fileInput" class="camera-btn" title="Додати фото" id="cameraLabel" aria-hidden="true">
-      <!-- camera icon -->
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M4 7H6L7 5H17L18 7H20C21.1 7 22 7.9 22 9V19C22 20.1 21.1 21 20 21H4C2.9 21 2 20.1 2 19V9C2 7.9 2.9 7 4 7Z" fill="#111"/>
-        <circle cx="12" cy="13" r="3.5" fill="#fff"/>
-      </svg>
+  <!-- input bar -->
+  <div class="input-bar" role="region" aria-label="Відправка повідомлення">
+    <label for="fileInput" class="camera-btn" id="cameraLabel" title="Додати фото" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7H6L7 5H17L18 7H20C21.1 7 22 7.9 22 9V19C22 20.1 21.1 21 20 21H4C2.9 21 2 20.1 2 19V9C2 7.9 2.9 7 4 7Z" fill="#111"/><circle cx="12" cy="13" r="3.5" fill="#fff"/></svg>
     </label>
 
-    <input id="messageInput" type="text" inputmode="text" placeholder="Напишіть повідомлення..." aria-label="Текст" />
+    <input id="messageInput" type="text" inputmode="text" placeholder="Напишіть повідомлення..." aria-label="Текст повідомлення" />
     <button id="sendButton" class="send-btn">Відправити</button>
   </div>
 
   <!-- auth modal -->
-  <div id="authModal" class="modal" aria-hidden="true">
-    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-      <button class="modal-close" id="modalClose">✕</button>
+  <div id="authModal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:95" aria-hidden="true">
+    <div style="background:#fff;border-radius:12px;padding:18px;width:92%;max-width:420px;position:relative">
+      <button id="authClose" style="position:absolute;right:10px;top:8px;border:none;background:transparent;font-size:18px;cursor:pointer">✕</button>
       <h2 id="authTitle">Реєстрація / Вхід</h2>
 
-      <form id="registerForm" class="auth-form" onsubmit="return false;">
-        <input id="nickInput" type="text" placeholder="Псевдонім" required />
-        <input id="emailInput" type="email" placeholder="Email" required />
-        <input id="passwordInput" type="password" placeholder="Пароль (мінімум 6)" required />
-        <div class="auth-actions">
-          <button id="registerSubmit" type="button">Зареєструватися</button>
-          <button id="loginShow" type="button" style="background:#4b5563">Увійти</button>
+      <form id="registerForm" onsubmit="return false;">
+        <input id="nickInput" type="text" placeholder="Псевдонім" required style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #dcdcdc" />
+        <input id="emailInput" type="email" placeholder="Email" required style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #dcdcdc" />
+        <input id="passwordInput" type="password" placeholder="Пароль (мінімум 6)" required style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #dcdcdc" />
+        <div style="display:flex;gap:8px">
+          <button id="registerSubmit" type="button" style="flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer">Зареєструватися</button>
+          <button id="loginShow" type="button" style="flex:1;padding:10px;border-radius:8px;border:none;background:#4b5563;color:#fff;cursor:pointer">Увійти</button>
         </div>
-        <div id="regError" class="error-line"></div>
+        <div id="regError" style="color:#b91c1c;margin-top:8px"></div>
       </form>
 
-      <form id="loginForm" class="auth-form" style="display:none" onsubmit="return false;">
-        <input id="loginEmail" type="email" placeholder="Email" required />
-        <input id="loginPassword" type="password" placeholder="Пароль" required />
-        <div class="auth-actions">
-          <button id="loginSubmit" type="button">Увійти</button>
-          <button id="backToRegister" type="button" style="background:#4b5563">Назад</button>
+      <form id="loginForm" style="display:none" onsubmit="return false;">
+        <input id="loginEmail" type="email" placeholder="Email" required style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #dcdcdc" />
+        <input id="loginPassword" type="password" placeholder="Пароль" required style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #dcdcdc" />
+        <div style="display:flex;gap:8px">
+          <button id="loginSubmit" type="button" style="flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer">Увійти</button>
+          <button id="backToRegister" type="button" style="flex:1;padding:10px;border-radius:8px;border:none;background:#4b5563;color:#fff;cursor:pointer">Назад</button>
         </div>
-        <div id="loginError" class="error-line"></div>
+        <div id="loginError" style="color:#b91c1c;margin-top:8px"></div>
       </form>
     </div>
   </div>
 
-  <!-- Firebase + app script (modular) -->
+  <!-- Firebase modular SDK + app logic (module) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendEmailVerification, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import { getDatabase, ref as dbRef, push as dbPush, onChildAdded, query, orderByChild, limitToLast, get as dbGet, set as dbSet } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+    import { getStorage, ref as stRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 
-    // --------- Firebase config (use your project) ----------
+    // ---------- CONFIG (use your existing config) ----------
     const firebaseConfig = {
-      apiKey: "AIzaSyDw_bVibsVyZegH7OJyZ_yRjI3uLhroVBk",
+      apiKey: "AIzaSyBFrxVhpb6nHJ6rhiLl5Ho8t0jOb1iEQNc",
       authDomain: "praga-4baee.firebaseapp.com",
       databaseURL: "https://praga-4baee-default-rtdb.firebaseio.com",
       projectId: "praga-4baee",
-      storageBucket: "praga-4baee.firebasestorage.app",
+      storageBucket: "praga-4baee.appspot.com",
       messagingSenderId: "336023952536",
       appId: "1:336023952536:web:f7437feaa25b6eadcd04ed",
       measurementId: "G-BGDJD6R12N"
@@ -206,63 +228,63 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
+    const storage = getStorage(app);
 
     // DOM refs
-    const tabButtons = document.querySelectorAll(".tab-button");
-    const tabContents = document.querySelectorAll(".tab-content");
-    const messagesEl = document.getElementById("messages");
-    const messageInput = document.getElementById("messageInput");
-    const sendButton = document.getElementById("sendButton");
-    const fileInput = document.getElementById("fileInput");
-    const cameraLabel = document.getElementById("cameraLabel");
-    const authModal = document.getElementById("authModal");
-    const registerForm = document.getElementById("registerForm");
-    const loginForm = document.getElementById("loginForm");
-    const nickInput = document.getElementById("nickInput");
-    const emailInput = document.getElementById("emailInput");
-    const passwordInput = document.getElementById("passwordInput");
-    const registerSubmit = document.getElementById("registerSubmit");
-    const loginShow = document.getElementById("loginShow");
-    const loginSubmit = document.getElementById("loginSubmit");
-    const backToRegister = document.getElementById("backToRegister");
-    const loginEmail = document.getElementById("loginEmail");
-    const loginPassword = document.getElementById("loginPassword");
-    const modalClose = document.getElementById("modalClose");
-    const regError = document.getElementById("regError");
-    const loginError = document.getElementById("loginError");
-    const profileBtn = document.getElementById("profileBtn");
-    const mapSearch = document.getElementById("mapSearch");
-    const centerBtn = document.getElementById("centerBtn");
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const panels = document.querySelectorAll('.panel');
+    const messagesEl = document.getElementById('messages');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+    const fileInput = document.getElementById('fileInput');
+    const cameraLabel = document.getElementById('cameraLabel');
+    const authModal = document.getElementById('authModal');
+    const registerForm = document.getElementById('registerForm');
+    const loginForm = document.getElementById('loginForm');
+    const nickInput = document.getElementById('nickInput');
+    const emailInput = document.getElementById('emailInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const registerSubmit = document.getElementById('registerSubmit');
+    const loginShow = document.getElementById('loginShow');
+    const loginSubmit = document.getElementById('loginSubmit');
+    const backToRegister = document.getElementById('backToRegister');
+    const loginEmail = document.getElementById('loginEmail');
+    const loginPassword = document.getElementById('loginPassword');
+    const authClose = document.getElementById('authClose');
+    const regError = document.getElementById('regError');
+    const loginError = document.getElementById('loginError');
+    const profileBtn = document.getElementById('profileBtn');
 
-    // state
     const DEFAULT_AVATAR = "https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg";
     let currentUser = null;
-    const MSG_LIMIT = 100;
+    const MSG_LIMIT = 100; // last messages to load
 
-    // Tabs logic
+    // Tabs handling
     function setActiveTab(id) {
-      tabButtons.forEach(b => b.classList.toggle("active", b.dataset.target === id));
-      tabContents.forEach(c => c.style.display = (c.id === id) ? "block" : "none");
-      if (id === "chatTab") messageInput.focus();
+      tabButtons.forEach(b => b.classList.toggle('active', b.dataset.target === id));
+      panels.forEach(p => p.classList.toggle('active', p.id === id));
+      // focus chat input when opening chat
+      if (id === 'chatPanel') setTimeout(()=> messageInput.focus(), 100);
+      // if map panel - trigger resize
+      if (id === 'mapPanel' && window.map) {
+        setTimeout(()=> {
+          google.maps.event.trigger(window.map,'resize');
+          if (window.mapCenter) window.map.setCenter(window.mapCenter);
+        }, 200);
+      }
     }
-    tabButtons.forEach(btn => btn.addEventListener("click", ()=> setActiveTab(btn.dataset.target)));
-    // Hotkeys
-    document.addEventListener("keydown", (e)=> {
-      if (e.key.toLowerCase() === 'c') setActiveTab("chatTab");
-      if (e.key.toLowerCase() === 'm') setActiveTab("mapTab");
-      if (e.key.toLowerCase() === 'h') setActiveTab("helpTab");
-    });
+    tabButtons.forEach(btn => btn.addEventListener('click', ()=> setActiveTab(btn.dataset.target)));
 
-    // modal
-    function showAuthModal(){ authModal.classList.add("show"); authModal.setAttribute("aria-hidden","false"); regError.textContent=""; loginError.textContent=""; }
-    function hideAuthModal(){ authModal.classList.remove("show"); authModal.setAttribute("aria-hidden","true"); }
-    modalClose?.addEventListener("click", hideAuthModal);
-    loginShow?.addEventListener("click", ()=>{ registerForm.style.display="none"; loginForm.style.display="block"; });
-    backToRegister?.addEventListener("click", ()=>{ registerForm.style.display="block"; loginForm.style.display="none"; });
+    // Auth modal control
+    function showAuthModal(){ document.getElementById('authModal').style.display = 'flex'; document.getElementById('authModal').setAttribute('aria-hidden','false'); regError.textContent=''; loginError.textContent=''; }
+    function hideAuthModal(){ document.getElementById('authModal').style.display = 'none'; document.getElementById('authModal').setAttribute('aria-hidden','true'); }
+    loginShow?.addEventListener('click', ()=>{ registerForm.style.display='none'; loginForm.style.display='block'; });
+    backToRegister?.addEventListener('click', ()=>{ registerForm.style.display='block'; loginForm.style.display='none'; });
+    authClose?.addEventListener('click', hideAuthModal);
 
-    // Registration
-    registerSubmit?.addEventListener("click", async ()=> {
-      regError.textContent = "";
+    // register
+    registerSubmit?.addEventListener('click', async ()=>{
+      regError.textContent = '';
       const nick = nickInput.value.trim();
       const email = emailInput.value.trim();
       const pass = passwordInput.value.trim();
@@ -282,9 +304,9 @@
       }
     });
 
-    // Login
-    loginSubmit?.addEventListener("click", async ()=> {
-      loginError.textContent = "";
+    // login
+    loginSubmit?.addEventListener('click', async ()=>{
+      loginError.textContent = '';
       const email = loginEmail.value.trim();
       const pass = loginPassword.value.trim();
       if (!email || !pass) { loginError.textContent = "Заповніть email і пароль"; return; }
@@ -297,14 +319,14 @@
       }
     });
 
-    // Auth state
-    onAuthStateChanged(auth, (user)=> {
+    // auth state listener
+    onAuthStateChanged(auth, (user) => {
       currentUser = user;
       if (user) profileBtn.style.background = `url(${user.photoURL || DEFAULT_AVATAR}) center/cover`;
       else profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
     });
 
-    // canSendMessage: emailVerified OR within 6 hours since createdAt
+    // canSendMessage (emailVerified OR within 6 hours from createdAt)
     async function canSendMessage(){
       const user = auth.currentUser;
       if (!user) return false;
@@ -322,7 +344,7 @@
             return true;
           }
         }
-      } catch (e) { console.error("canSendMessage db get error", e); }
+      } catch (e){ console.error("canSendMessage db get error", e); }
       return false;
     }
 
@@ -330,36 +352,35 @@
     function timeStr(ts){ return new Date(ts).toLocaleString(); }
     function renderMessage(m){
       if (!m || !m.ts) return;
-      const wrap = document.createElement("div");
-      wrap.className = "message" + ((currentUser && m.uid === currentUser.uid) ? " self" : "");
-      const avatar = document.createElement("img");
-      avatar.className = "avatar";
+      const wrap = document.createElement('div');
+      wrap.className = 'message' + ((currentUser && m.uid === currentUser.uid) ? ' self' : '');
+      const avatar = document.createElement('img');
+      avatar.className = 'avatar';
       avatar.src = m.avatar || DEFAULT_AVATAR;
-      avatar.alt = m.nick || "avatar";
-      avatar.title = m.nick || "Особисті повідомлення";
-      avatar.addEventListener("click", ()=> {
+      avatar.alt = m.nick || 'avatar';
+      avatar.title = m.nick || 'Профіль';
+      avatar.addEventListener('click', ()=> {
         if (!currentUser) { showAuthModal(); return; }
-        if (m.uid === currentUser.uid) alert("Це ви"); else alert("Особисті повідомлення (функція поки проста).");
+        if (m.uid === currentUser.uid) alert('Це ви'); else alert('Особисті повідомлення поки що недоступні.');
       });
 
-      const txt = document.createElement("div");
-      txt.className = "message-content";
-      const meta = document.createElement("div");
-      meta.className = "message-meta";
-      meta.textContent = `${m.nick || "Анонім"} · ${timeStr(m.ts)}` + (m.recipientUid ? " · особисте" : "");
+      const txt = document.createElement('div');
+      txt.className = 'message-content';
+      const meta = document.createElement('div');
+      meta.className = 'message-meta';
+      meta.textContent = `${m.nick || 'Анонім'} · ${timeStr(m.ts)}` + (m.recipientUid ? ' · особисте' : '');
       txt.appendChild(meta);
 
       if (m.text) {
-        const p = document.createElement("div");
-        p.className = "text";
+        const p = document.createElement('div');
         p.innerText = m.text;
         txt.appendChild(p);
       }
       if (m.image) {
-        const im = document.createElement("img");
+        const im = document.createElement('img');
         im.src = m.image;
-        im.alt = "Фото";
-        im.className = "chat-image";
+        im.alt = 'Фото';
+        im.className = 'chat-image';
         txt.appendChild(im);
       }
 
@@ -367,10 +388,9 @@
       wrap.appendChild(txt);
       messagesEl.appendChild(wrap);
 
-      // autoscroll if near bottom
+      // autoscroll if user near bottom
       const chatArea = document.querySelector('.chat-area');
-      const nearBottom = chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight < 200;
-      if (nearBottom) chatArea.scrollTop = chatArea.scrollHeight;
+      chatArea.scrollTop = chatArea.scrollHeight;
     }
 
     // subscribe last messages and new ones
@@ -382,13 +402,13 @@
       console.error("onChildAdded error", err);
     });
 
-    // resize image by canvas -> dataURL
-    function resizeImageFile(file, maxWidth = 900, quality = 0.8) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
+    // image resize helper (client-side) -> returns dataURL (JPEG)
+    function resizeImageFile(file, maxWidth = 1200, quality = 0.8){
+      return new Promise((resolve,reject)=>{
         const reader = new FileReader();
-        reader.onload = (e) => {
-          img.onload = () => {
+        const img = new Image();
+        reader.onload = (e)=>{
+          img.onload = ()=>{
             const scale = Math.min(1, maxWidth / img.width);
             const w = Math.round(img.width * scale);
             const h = Math.round(img.height * scale);
@@ -396,52 +416,65 @@
             canvas.width = w;
             canvas.height = h;
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, w, h);
+            ctx.drawImage(img,0,0,w,h);
             const dataUrl = canvas.toDataURL('image/jpeg', quality);
             resolve(dataUrl);
           };
-          img.onerror = (err) => reject(err);
+          img.onerror = reject;
           img.src = e.target.result;
         };
-        reader.onerror = (err) => reject(err);
+        reader.onerror = reject;
         reader.readAsDataURL(file);
       });
     }
 
-    // send (text + optional image)
-    sendButton.addEventListener("click", async ()=>{
+    // send message (text + optional image upload to Storage)
+    sendButton.addEventListener('click', async ()=>{
       if (!auth.currentUser) { showAuthModal(); return; }
       if (!await canSendMessage()) { alert("Підтвердіть email або скористайтесь 6-годинним доступом після реєстрації."); return; }
 
       const text = messageInput.value.trim();
       const file = fileInput.files[0];
+
       if (!text && !file) return;
 
-      let imageData = null;
+      let imageUrl = null;
       if (file) {
         try {
-          imageData = await resizeImageFile(file, 900, 0.8);
-        } catch (e) {
-          console.error("resize error", e);
-          alert("Помилка обробки фото");
+          // resize to reduce upload size (optional)
+          const resizedDataUrl = await resizeImageFile(file, 1200, 0.8);
+          // convert dataURL to blob
+          const res = await fetch(resizedDataUrl);
+          const blob = await res.blob();
+          const storageReference = stRef(storage, `chat_images/${auth.currentUser.uid}/${Date.now()}_${file.name}`);
+          const uploadTask = uploadBytesResumable(storageReference, blob);
+          await new Promise((resol, rej)=>{
+            uploadTask.on('state_changed', null, (err)=> rej(err), async ()=> {
+              imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+              resol();
+            });
+          });
+        } catch (err) {
+          console.error("upload error", err);
+          alert("Помилка завантаження фото");
           return;
         }
       }
 
       const msg = {
         uid: auth.currentUser.uid,
-        nick: auth.currentUser.displayName || auth.currentUser.email || "Анонім",
+        nick: auth.currentUser.displayName || auth.currentUser.email || 'Анонім',
         avatar: auth.currentUser.photoURL || DEFAULT_AVATAR,
         text: text || null,
-        image: imageData || null,
+        image: imageUrl || null,
         ts: Date.now(),
         recipientUid: null
       };
 
       try {
-        await dbPush(dbRef(db, "messages"), msg);
-        messageInput.value = "";
-        fileInput.value = "";
+        await dbPush(dbRef(db,'messages'), msg);
+        messageInput.value = '';
+        fileInput.value = '';
       } catch (err) {
         console.error("dbPush error", err);
         alert("Помилка відправки повідомлення");
@@ -449,141 +482,98 @@
     });
 
     // Enter to send
-    messageInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendButton.click(); }
+    messageInput.addEventListener('keydown', (e)=>{
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendButton.click(); }
     });
 
-    // camera label: if not logged -> show modal
-    document.querySelector('.camera-btn')?.addEventListener("click", (e) => {
+    // Camera label click -> if not logged show auth
+    cameraLabel.addEventListener('click', (e)=>{
       if (!auth.currentUser) { e.preventDefault(); showAuthModal(); return; }
-      // otherwise native file input will open because label -> input
+      // else default file chooser opens
     });
 
     // profile button
     profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
-    profileBtn.addEventListener("click", () => {
+    profileBtn.addEventListener('click', ()=>{
       if (!auth.currentUser) { showAuthModal(); return; }
       if (confirm("Ви хочете вийти? OK — вийти; Cancel — залишитися.")) {
-        signOut(auth).then(() => {
-          profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
-          alert("Ви вийшли");
-        });
+        signOut(auth);
+        profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
+        alert("Ви вийшли");
       }
     });
 
-    // Preload background to avoid white flash
-    (function preloadBg(){
-      const img = new Image();
-      img.src = 'https://i.ibb.co/27hgtZfY/Prague.jpg';
-      img.onload = ()=> console.log("background loaded");
-      img.onerror = ()=> console.warn("background failed to load");
-    })();
+    // preload background image to avoid blank flash
+    (function preloadBg(){ const img = new Image(); img.src = 'https://i.ibb.co/27hgtZfY/Prague.jpg'; })();
 
-    /***********************
-     *  Google Maps part
-     ***********************/
-    // POINTS array — 25 sample points around Prague (hospital/shop/lawyer/help)
-    const POINTS = [
-      { title: "Nemocnice Motol", pos: {lat:50.058, lng:14.360}, cat:"hospital" },
-      { title: "Nemocnice Na Frantisku", pos: {lat:50.086, lng:14.418}, cat:"hospital" },
-      { title: "Klinika Praha", pos: {lat:50.078, lng:14.422}, cat:"hospital" },
+    // Expose initMap to window for Google Maps callback — define skeleton here, will be filled later
+    window.initMap = function(){ console.log('map not initialized yet'); };
 
-      { title: "Pravni pomoc центр A", pos: {lat:50.083, lng:14.412}, cat:"lawyer" },
-      { title: "Pravni pomoc центр B", pos: {lat:50.089, lng:14.430}, cat:"lawyer" },
-      { title: "Advokatni kancelar C", pos: {lat:50.071, lng:14.425}, cat:"lawyer" },
+    // END of module
+  </script>
 
-      { title: "Albert Supermarket", pos: {lat:50.084, lng:14.417}, cat:"shop" },
-      { title: "Billa City", pos: {lat:50.076, lng:14.437}, cat:"shop" },
-      { title: "Kaufland Praha", pos: {lat:50.085, lng:14.414}, cat:"shop" },
+  <!-- Google Maps JS: load AFTER module so window.initMap can be overridden below -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFrxVhpb6nHJ6rhiLl5Ho8t0jOb1iEQNc&callback=__initMap" async defer></script>
 
-      { title: "Pomoc Centrum 1", pos: {lat:50.082, lng:14.419}, cat:"help" },
-      { title: "Pomoc Centrum 2", pos: {lat:50.088, lng:14.427}, cat:"help" },
-      { title: "Shelter Point", pos: {lat:50.074, lng:14.432}, cat:"help" },
-
-      { title: "Clinic D", pos: {lat:50.090, lng:14.418}, cat:"hospital" },
-      { title: "Clinic E", pos: {lat:50.079, lng:14.404}, cat:"hospital" },
-      { title: "Law Office D", pos: {lat:50.081, lng:14.440}, cat:"lawyer" },
-
-      { title: "Shop D", pos: {lat:50.083, lng:14.445}, cat:"shop" },
-      { title: "Shop E", pos: {lat:50.0715, lng:14.421}, cat:"shop" },
-      { title: "Help Center 3", pos: {lat:50.086, lng:14.431}, cat:"help" },
-
-      { title: "Help Center 4", pos: {lat:50.072, lng:14.439}, cat:"help" },
-      { title: "Medical Aid 8", pos: {lat:50.0875, lng:14.435}, cat:"hospital" },
-      { title: "Legal Aid 9", pos: {lat:50.0785, lng:14.410}, cat:"lawyer" },
-
-      { title: "Shop F", pos: {lat:50.080, lng:14.408}, cat:"shop" },
-      { title: "Community Aid", pos: {lat:50.0835, lng:14.425}, cat:"help" },
-      { title: "Charity Hub", pos: {lat:50.079, lng:14.430}, cat:"help" }
-    ];
-
-    // map variables
-    let map;
-    let markers = [];
-
-    // expose initMap globally for Google callback
-    window.initMap = function() {
+  <script>
+    // Map code (separate script so google callback works)
+    // We'll create actual init and assign to window.__initMap called by callback
+    window.__initMap = function(){
       const center = { lat: 50.0755, lng: 14.4378 };
-      map = new google.maps.Map(document.getElementById("map"), {
+      window.mapCenter = center;
+      window.map = new google.maps.Map(document.getElementById('map'), {
         center,
         zoom: 13,
-        gestureHandling: "greedy",
+        gestureHandling: 'greedy'
       });
-      renderMarkers("all");
 
-      // center button
-      centerBtn?.addEventListener("click", ()=> map.panTo(center) );
+      // Icons (your images)
+      const ICONS = {
+        hospital: "https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp",
+        lawyer: "https://i.ibb.co/0gWD5wW/images-5.jpg",
+        shop: "https://i.ibb.co/R49shL6k/images-6.jpg",
+        avatar: "https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg"
+      };
 
-      // map search: basic filter by text
-      mapSearch?.addEventListener("input", (e)=> {
-        const q = e.target.value.trim().toLowerCase();
-        markers.forEach(mk => {
-          const show = !q || (mk.title && mk.title.toLowerCase().includes(q));
-          mk.setVisible(show);
+      const POINTS = [
+        { title: "Nemocnice Motol (Больница)", pos:{lat:50.057, lng:14.378}, img:ICONS.hospital, cat:'hospital' },
+        { title: "Юридична допомога / Law office", pos:{lat:50.083, lng:14.412}, img:ICONS.lawyer, cat:'lawyer' },
+        { title: "Український магазин", pos:{lat:50.084, lng:14.417}, img:ICONS.shop, cat:'shop' },
+        { title: "Пункт допомоги", pos:{lat:50.082, lng:14.419}, img:ICONS.avatar, cat:'avatar' },
+        // add more if needed...
+      ];
+
+      function createIcon(url){
+        return {
+          url,
+          scaledSize: new google.maps.Size(48,48)
+        };
+      }
+
+      POINTS.forEach(p=>{
+        const mk = new google.maps.Marker({
+          position: p.pos,
+          map: window.map,
+          title: p.title,
+          icon: createIcon(p.img)
+        });
+        const iw = new google.maps.InfoWindow({ content: `<div style="min-width:160px"><strong>${p.title}</strong><div style="margin-top:6px"><img src="${p.img}" style="width:100%;border-radius:6px"></div></div>` });
+        mk.addListener('click', ()=> iw.open(window.map, mk));
+      });
+
+      // when user switches to map tab, trigger resize
+      document.querySelectorAll('.tab-button').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          if (btn.dataset.target === 'mapPanel') {
+            setTimeout(()=>{ google.maps.event.trigger(window.map,'resize'); window.map.setCenter(window.mapCenter); }, 250);
+          }
         });
       });
     };
 
-    function createIconFor(cat){
-      // simple colored circle as svg data url
-      const color = (cat === "hospital") ? "#FF6B6B" : (cat === "lawyer") ? "#4D96FF" : (cat === "shop") ? "#FFD166" : "#8AF598";
-      const svg = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><circle cx="20" cy="20" r="14" fill="${color}" stroke="#fff" stroke-width="3"/></svg>`);
-      return { url: `data:image/svg+xml;utf8,${svg}`, scaledSize: new google.maps.Size(40,40) };
-    }
-
-    function renderMarkers(filterCat = "all"){
-      markers.forEach(m => m.setMap(null));
-      markers = [];
-      POINTS.forEach(p => {
-        if (filterCat === "all" || p.cat === filterCat) {
-          const mk = new google.maps.Marker({
-            position: p.pos,
-            map,
-            title: p.title,
-            icon: createIconFor(p.cat)
-          });
-          const inf = new google.maps.InfoWindow({ content: `<strong>${p.title}</strong><div style="margin-top:6px">${p.cat}</div>` });
-          mk.addListener("click", ()=> inf.open(map, mk));
-          mk.title = p.title;
-          markers.push(mk);
-        }
-      });
-    }
-
-    // Attach map tab activation to rendering markers (in case map not initialized yet)
-    document.querySelectorAll(".tab-button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (btn.dataset.target === "mapTab" && typeof google !== "undefined" && map) {
-          google.maps.event.trigger(map, "resize");
-          // re-center
-          map.setCenter({ lat:50.0755, lng:14.4378});
-        }
-      });
-    });
-
+    // Make maps callback call our wrapper
+    window.initMap = window.__initMap;
   </script>
 
-  <!-- Google Maps with provided API key -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFrxVhpb6nHJ6rhiLl5Ho8t0jOb1iEQNc&callback=initMap"></script>
 </body>
 </html>
