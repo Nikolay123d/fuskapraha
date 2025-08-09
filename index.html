@@ -42,7 +42,20 @@
 
     .tab-content{display:none}
     .tab-content.active{display:block}
-
+    /* Вкладки Чат, Карта, Інформація делаем жирными и заметными */
+.tab-button {
+    font-weight: bold;
+    font-size: 18px;
+    padding: 8px 14px;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    cursor: pointer;
+}
+.tab-button:hover {
+    background: rgba(255,255,255,0.3);
+}
     /* chat */
     .chat-area{height:calc(100vh - 330px);overflow:auto;padding:14px 8px;background:transparent}
     .messages{display:flex;flex-direction:column;gap:12px;padding-bottom:160px}
@@ -540,6 +553,13 @@
         markers.forEach(mk => {
           const show = !q || (mk.title && mk.title.toLowerCase().includes(q));
           mk.setVisible(show);
+          // Исправление бага с перерисовкой карты
+document.querySelector('[data-tab="map"]').addEventListener('click', () => {
+    setTimeout(() => {
+        if (typeof map !== 'undefined') {
+            map.invalidateSize();
+        }
+    }, 200)
         });
       });
     };
