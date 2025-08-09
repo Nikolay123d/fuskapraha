@@ -19,14 +19,18 @@
     html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;-webkit-font-smoothing:antialiased;background:#071126;color:#0b1220}
 
     /* Фон Праги — фиксированный, cover */
-   body {
-    margin: 0;
-    padding: 0;
-    background: url('https://i.ibb.co/27hgtZfY/Prague.jpg') no-repeat center center fixed;
-    background-size: cover;
-    font-family: Arial, sans-serif;
-    color: white;
-}
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:url('https://i.ibb.co/27hgtZfY/Prague.jpg');
+      background-size:cover;
+      background-position:center;
+      background-attachment:fixed;
+      filter:brightness(0.52);
+      z-index:-2;
+      will-change:transform;
+    }
     body::after{
       content:"";
       position:fixed;
