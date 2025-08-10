@@ -430,54 +430,61 @@
     loginShow?.addEventListener("click", ()=>{ registerForm.style.display="none"; loginForm.style.display="block"; });
     backToRegister?.addEventListener("click", ()=>{ registerForm.style.display="block"; loginForm.style.display="none"; });
 
-    /* ------------------ Registration & Login ------------------ */
-    registerSubmit?.addEventListener("click", async ()=> {
-      regError.textContent = "";
-      const nick = nickInput.value.trim();
-      const email = emailInput.value.trim();
-      const pass = passwordInput.value.trim();
-      if (!nick || !email || !pass) { regError.textContent = "Заповніть усі поля"; return; }
-      if (pass.length < 6) { regError.textContent = "Пароль мінімум 6 символів"; return; }
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, pass);
-        await updateProfile(cred.user, { displayName: nick, photoURL: DEFAULT_AVATAR });
-        await dbSet(dbRef(db, `users/${cred.user.uid}`), { nick, email, avatar: DEFAULT_AVATAR, createdAt: Date.now() });
-        localStorage.setItem("regTime_" + cred.user.uid, String(Date.now()));
-        // send verification email (uses Firebase email template set in console)
-        await sendEmailVerification(cred.user);
-        hideAuthModal();
-        alert("Ви зареєстровані. Лист для підтвердження надіслано. У вас 6 годин доступу без підтвердження.");
-      } catch (err) {
-        console.error("register err", err);
-        regError.textContent = err?.message || String(err);
-      }
-    });
+    // Регистрация
+registerSubmit?.addEventListener("click", async () => {
+  regError.textContent = "";
+  const nick = nickInput.value.trim();
+  const email = emailInput.value.trim();
+  const pass = passwordInput.value.trim();
+  if (!nick || !email || !pass) {
+    regError.textContent = "Заповніть усі поля";
+    return;
+  }
+  if (pass.length < 6) {
+    regError.textContent = "Пароль мінімум 6 символів";
+    return;
+  }
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(cred.user, { displayName: nick, photoURL: DEFAULT_AVATAR });
+    await dbSet(dbRef(db, `users/${cred.user.uid}`), { nick, email, avatar: DEFAULT_AVATAR, createdAt: Date.now() });
+    localStorage.setItem("regTime_" + cred.user.uid, String(Date.now()));
+    await sendEmailVerification(cred.user);
+    hideAuthModal();
+    alert("Ви зареєстровані. Лист для підтвердження надіслано. У вас 6 годин доступу без підтвердження.");
+  } catch (err) {
+    console.error("register err", err);
+    regError.textContent = err?.message || String(err);
+  }
+});
 
-    loginSubmit?.addEventListener("click", async ()=> {
-      loginError.textContent = "";
-      const email = loginEmail.value.trim();
-      const pass = loginPassword.value.trim();
-      if (!email || !pass) { loginError.textContent = "Заповніть email і пароль"; return; }
-      try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        hideAuthModal();
-      } catch (err) {
-        console.error("login err", err);
-        loginError.textContent = err?.message || String(err);
+// Вход
+loginSubmit?.addEventListener("click", async () => {
+  loginError.textContent = "";
+  const email = loginEmail.value.trim();
+  const pass = loginPassword.value.trim();
+  if (!email || !pass) {
+    loginError.textContent = "Заповніть email і пароль";
+    return;
+  }
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, pass);
+    const user = cred.user;
+    // Проверка времени регистрации для доступа без подтверждения
+    if (!user.emailVerified) {
+      const regTimeStr = localStorage.getItem("regTime_" + user.uid);
+      if (!regTimeStr || Date.now() - Number(regTimeStr) > 6 * 60 * 60 * 1000) {
+        alert("Термін дії тимчасового доступу закінчився. Підтвердіть email, щоб увійти.");
+        await signOut(auth);
+        return;
       }
-    });
-
-    onAuthStateChanged(auth, (user)=> {
-      currentUser = user;
-      if (user) {
-        profileBtn.style.background = `url(${user.photoURL || DEFAULT_AVATAR}) center/cover`;
-        // reduce welcome text for logged in users
-        welcomeMsg.textContent = `Привіт, ${user.displayName || user.email}! Пишіть та допомагайте.`;
-      } else {
-        profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
-        welcomeMsg.textContent = 'Якщо ви вперше — натисніть "Відправити" — з\'явиться реєстрація. 6 годин доступу без підтвердження email.';
-      }
-    });
+    }
+    hideAuthModal();
+  } catch (err) {
+    console.error("login err", err);
+    loginError.textContent = err?.message || String(err);
+  }
+});
 
     /* canSendMessage: emailVerified OR within 6 hours since createdAt */
     async function canSendMessage(){
