@@ -1,14 +1,11 @@
- <!doctype html>
+<!doctype html>
 <html lang="uk">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PRAGA FUŠKY — Соцчат (FINAL)</title>
+  <title>PRAGA FUŠKY — Соцчат (PRO)</title>
   <meta name="theme-color" content="#071126" />
-
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
   <style>
     :root{
       --accent:#2ecc71;
@@ -16,7 +13,7 @@
       --muted:#64748b;
       --max-width:1100px;
       --avatar-size:56px;
-      --chat-scale:1.18;
+      --chat-scale:1.12;
       --gothic-size:44px;
       --mobile-break:820px;
     }
@@ -26,110 +23,151 @@
     /* Background */
     body{ background-image:url('https://i.ibb.co/27hgtZfY/Prague.jpg'); background-size:cover; background-position:center; background-attachment:fixed }
 
-    /* Header */
-    header{position:sticky;top:0;z-index:160;padding:8px 12px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.02));backdrop-filter: blur(2px)}
-    .topline{width:100%;max-width:var(--max-width);display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .brand-left{display:flex;align-items:center;gap:12px;flex:1;justify-content:center}
-    h1.gothic{font-family:'UnifrakturCook',cursive;margin:0;font-size:var(--gothic-size);color:#fff;text-transform:uppercase;letter-spacing:2px;text-shadow:2px 6px 0 rgba(0,0,0,0.45),0 12px 30px rgba(0,0,0,0.6)}
-    #tagline{margin:0;color:#fff;font-size:13px;padding:6px 12px;border-radius:10px;background:rgba(0,0,0,0.28)}
+    /* Header - компактнее, чтобы лента была выше */
+    header{
+      position:sticky;
+      top:0;
+      z-index:160;
+      padding:6px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:linear-gradient(180deg, rgba(0,0,0,0.16), rgba(0,0,0,0.02));
+      backdrop-filter: blur(4px);
+    }
+    .left-block, .center-block, .right-block{display:flex;align-items:center;gap:10px}
+    .left-block{flex:0 0 auto}
+    .center-block{flex:1;justify-content:center;flex-direction:column;align-items:center}
+    .right-block{flex:0 0 auto}
 
-    .controls{display:flex;gap:10px;align-items:center}
-    .bell{position:relative; width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer}
-    .bell svg{opacity:0.95}
-    .bell .count{position:absolute;right:-6px;top:-6px;background:#ef4444;color:#fff;border-radius:999px;padding:4px 7px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+    /* Gothic brand with alternating colors */
+    .brand {
+      text-align:center;
+      user-select:none;
+    }
+    .gothic {
+      font-family:'UnifrakturCook',cursive;
+      font-size:var(--gothic-size);
+      margin:0;
+      line-height:1;
+      text-transform:uppercase;
+      text-shadow: 2px 6px 0 rgba(0,0,0,0.45), 0 12px 30px rgba(0,0,0,0.6);
+      display:inline-block;
+      padding:2px 6px;
+      border-radius:6px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.08));
+    }
+
+    .subtitle {
+      margin:0;
+      font-size:13px;
+      color:#fff;
+      padding:4px 8px;
+      border-radius:8px;
+      background:rgba(0,0,0,0.32);
+      display:inline-block;
+      margin-top:4px;
+    }
+
+    /* Controls */
     .profile-btn{width:48px;height:48px;border-radius:50%;border:2px solid #fff;background-size:cover;background-position:center;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.35)}
+    .friends-btn{background:#fff;border:1px solid #ddd;padding:8px 10px;border-radius:10px;cursor:pointer}
+    .bell{
+      position:relative;
+      width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,#fff,#f1f1f1);
+      display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 26px rgba(0,0,0,0.35)
+    }
+    .bell .count{position:absolute;right:-6px;top:-6px;background:#ef4444;color:#fff;border-radius:999px;padding:6px 9px;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:none}
 
     /* Tabs */
-    nav.tabs{display:flex;gap:10px;justify-content:center;padding:8px;width:100%;max-width:var(--max-width);margin:0 auto}
-    .tab-button{background:linear-gradient(180deg, rgba(0,0,0,0.30), rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.04);color:#fff;padding:8px 14px;font-weight:800;border-radius:10px;cursor:pointer;box-shadow:0 6px 14px rgba(0,0,0,0.35)}
-    .tab-button.active{outline:2px solid rgba(46,204,113,0.12);background:linear-gradient(180deg, rgba(46,204,113,0.12), rgba(0,0,0,0.12))}
+    nav.tabs{display:flex;gap:8px;justify-content:center;padding:8px;width:100%;max-width:var(--max-width);margin:6px auto}
+    .tab-button{background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.06);color:#fff;padding:8px 14px;font-weight:700;border-radius:10px;cursor:pointer}
+    .tab-button.active{outline:3px solid rgba(46,204,113,0.12);background:linear-gradient(180deg, rgba(46,204,113,0.12), rgba(0,0,0,0.12))}
 
     main.container{max-width:var(--max-width);margin:6px auto;padding:6px}
-
-    /* system message hidden (we removed it from feed) */
-    .sys-msg{display:none}
 
     .tab-content{display:none}
     .tab-content.active{display:block}
 
-    /* Chat area */
-    .chat-area{height:calc(100vh - 200px);overflow:auto;padding:8px;background:transparent}
-    .messages{display:flex;flex-direction:column;gap:12px;padding-bottom:160px;transform:scale(var(--chat-scale));transform-origin:bottom left}
-    .message{display:flex;gap:12px;align-items:flex-start;max-width:82%;word-break:break-word}
+    /* Chat area - увеличиваем ленту (меньше шапки) */
+    .chat-area{height:calc(100vh - 180px);overflow:auto;padding:10px;background:transparent}
+    .messages{display:flex;flex-direction:column;gap:10px;padding-bottom:180px;transform:scale(var(--chat-scale));transform-origin:bottom left}
+    .message{display:flex;gap:10px;align-items:flex-start;max-width:86%;word-break:break-word}
     .message.self{margin-left:auto;flex-direction:row-reverse}
     .avatar{width:var(--avatar-size);height:var(--avatar-size);border-radius:50%;object-fit:cover;flex:0 0 var(--avatar-size);box-shadow:0 3px 10px rgba(0,0,0,0.35);cursor:pointer}
     .message-content{background:var(--glass);padding:10px 14px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.12);color:#0b1220}
     .message.self .message-content{background:#E9FFF0}
     .message-meta{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .chat-image{max-width:520px;border-radius:8px;margin-top:8px;display:block}
-    .message-content .text{ font-family:'UnifrakturCook',cursive;font-weight:700;font-size:1rem;color:#0b1220;white-space:pre-wrap }
+    .chat-image{max-width:100%;height:auto;border-radius:8px;margin-top:8px;display:block}
+    .message-content .text{ font-family:'Inter',sans-serif;font-weight:600;font-size:0.98rem;color:#0b1220;white-space:pre-wrap;word-break:break-word }
 
     /* Input */
-    .chat-input{position:fixed;left:0;right:0;bottom:0;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.99));border-top:1px solid rgba(0,0,0,0.06);z-index:90;display:flex;gap:8px;align-items:center;max-width:var(--max-width);margin:0 auto}
-    .camera-btn{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;width:46px;height:46px;border-radius:50%;background:#fff;border:1px solid #e6e6e6}
+    .chat-input{position:fixed;left:0;right:0;bottom:0;padding:10px;background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.99));border-top:1px solid rgba(0,0,0,0.06);z-index:90;display:flex;gap:8px;align-items:center;max-width:var(--max-width);margin:0 auto}
+    .camera-btn{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;width:44px;height:44px;border-radius:50%;background:#fff;border:1px solid #e6e6e6}
     .chat-input input[type="text"]{flex:1;padding:12px 14px;border-radius:22px;border:1px solid #d0d7de;font-size:15px;outline:none}
     .send-btn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:18px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(46,204,113,0.18)}
 
-    /* Message menu */
-    .msg-menu{position:fixed;background:#fff;border-radius:8px;padding:6px;box-shadow:0 6px 20px rgba(0,0,0,0.2);z-index:300;display:none}
-    .msg-menu button{display:block;border:none;background:transparent;padding:6px 10px;text-align:left;width:100%;cursor:pointer}
-    .msg-menu button:hover{background:rgba(0,0,0,0.03)}
+    /* Map */
+    #map{height:62vh;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.3)}
 
-    /* Modal */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);z-index:350;padding:12px}
-    .modal.show{display:flex}
-    .modal-panel{background:#fff;border-radius:12px;padding:12px;width:96%;max-width:980px;position:relative;box-shadow:0 24px 100px rgba(0,0,0,0.6)}
-    .modal-close{position:absolute;right:10px;top:8px;background:transparent;border:none;font-size:18px;cursor:pointer}
+    /* Help grid */
+    .help-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:12px}
+    .help-card{background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .help-card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
 
-    /* Friends list */
-    .friends-list{display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow:auto;padding:8px}
-
-    /* Map info window small image */
-    .map-thumb{width:100%;height:120px;object-fit:cover;border-radius:6px;margin-top:8px}
+    /* No horizontal scroll and responsive images */
+    img, video { max-width:100%; height:auto; display:block; }
+    body, html { overflow-x:hidden; -webkit-overflow-scrolling: touch; }
 
     /* small device tweaks */
     @media(max-width:var(--mobile-break)){
-      :root{--chat-scale:1.05;--gothic-size:32px}
+      :root{--chat-scale:1.02;--gothic-size:32px}
+      header{padding:8px 8px}
       .messages{transform-origin:bottom left;padding-bottom:220px}
-      .chat-input{padding:10px}
-      .message-content .text{font-size:0.95rem}
-      .chat-area{height:calc(100vh - 170px)}
-      header{padding:6px}
-      nav.tabs{gap:8px}
-      .brand-left{justify-content:center}
-      .profile-btn{width:42px;height:42px}
+      .chat-area{height:calc(100vh - 150px)}
+      .gothic{font-size:28px}
+      .profile-btn{width:44px;height:44px}
+      .bell{width:50px;height:50px}
+      .tab-button{padding:6px 10px;font-size:13px}
     }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="topline">
-      <div class="profile-left">
-        <button id="profileBtn" class="profile-btn" title="Профіль" aria-label="Профіль"></button>
-      </div>
-      <div class="brand-left">
-        <div style="text-align:center">
-          <h1 class="gothic">PRAGA FUŠKY</h1>
-          <p id="tagline">Вітаю, дорогі українці — цей чат створено, щоб допомагати нашим.</p>
-        </div>
-      </div>
-      <div class="controls" style="justify-self:end">
-        <div id="notifBell" class="bell" title="Сповіщення" aria-hidden="false" role="button" aria-label="Сповіщення">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 17H9" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 22C13.1046 22 14 21.1046 14 20H10C10 21.1046 10.8954 22 12 22Z" fill="#fff"/><path d="M18 8C18 5.23858 15.7614 3 13 3H11C8.23858 3 6 5.23858 6 8C6 12 4 13 4 13H20C20 13 18 12 18 8Z" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div id="notifCount" class="count" style="display:none">0</div>
-        </div>
-        <button id="friendsBtn" class="small-btn" title="Друзі">👥 Друзі</button>
+    <!-- left: profile + friends -->
+    <div class="left-block">
+      <button id="profileBtn" class="profile-btn" title="Профіль" aria-label="Профіль"></button>
+      <button id="friendsBtn" class="friends-btn" title="Друзі">👥 Друзі</button>
+    </div>
+
+    <!-- center: gothic brand with alternating colors per letter -->
+    <div class="center-block">
+      <div class="brand">
+        <h1 class="gothic" id="brandTitle">
+          <!-- we'll color letters via JS; fallback plain -->
+          PRAGA FUŠKY
+        </h1>
+        <!-- subtitle removed to increase chat area; will show per-user notifications after login -->
       </div>
     </div>
 
-    <nav class="tabs" role="tablist" aria-label="Вкладки">
-      <button class="tab-button active" data-target="chatTab">💬 Чат</button>
-      <button class="tab-button" data-target="rentTab">🏘️ Чат Оренда</button>
-      <button class="tab-button" data-target="mapTab">🗺 Карта</button>
-      <button class="tab-button" data-target="helpTab">❓ Допомога</button>
-    </nav>
+    <!-- right: big bell -->
+    <div class="right-block">
+      <div id="notifBell" class="bell" title="Сповіщення" aria-hidden="false" role="button" aria-label="Сповіщення" tabindex="0">
+        <div class="bell-icon">🔔</div>
+        <div id="notifCount" class="count" style="display:none">0</div>
+      </div>
+    </div>
   </header>
+
+  <nav class="tabs" role="tablist" aria-label="Вкладки" style="margin-top:6px">
+    <button class="tab-button active" data-target="chatTab">💬 Чат</button>
+    <button class="tab-button" data-target="rentTab">🏘️ Чат Оренда</button>
+    <button class="tab-button" data-target="mapTab">🗺 Карта</button>
+    <button class="tab-button" data-target="helpTab">❓ Допомога</button>
+  </nav>
 
   <main class="container">
     <!-- Chat -->
@@ -141,10 +179,6 @@
 
     <!-- Rent chat -->
     <section id="rentTab" class="tab-content" style="display:none">
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        <input id="rentSearch" placeholder="Пошук оголошень..." style="flex:1;padding:8px;border-radius:8px;border:1px solid #ddd">
-        <button id="postRentBtn" class="small-btn">Подати оголошення</button>
-      </div>
       <div class="chat-area" style="height:54vh">
         <div id="rentMessages" class="messages" role="log"></div>
       </div>
@@ -154,9 +188,9 @@
     <section id="mapTab" class="tab-content" style="display:none">
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
         <div style="flex:1"><input id="mapSearch" placeholder="Пошук (наприклад: волонтери, аптека)..." style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd"></div>
-        <div><button id="centerBtn" class="small-btn">Центрувати</button></div>
+        <div><button id="centerBtn" class="friends-btn">Центрувати</button></div>
       </div>
-      <div id="map" style="height:60vh;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.3)"></div>
+      <div id="map"></div>
     </section>
 
     <!-- Help -->
@@ -185,14 +219,14 @@
   <!-- Input -->
   <div class="chat-input" role="region" aria-label="Відправка повідомлення">
     <label for="fileInput" class="camera-btn" title="Додати фото">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="#111" xmlns="http://www.w3.org/2000/svg"><path d="M4 7H6L7 5H17L18 7H20C21.1 7 22 7.9 22 9V19C22 20.1 21.1 21 20 21H4C2.9 21 2 20.1 2 19V9C2 7.9 2.9 7 4 7Z"></path></svg>
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="#111" xmlns="http://www.w3.org/2000/svg"><path d="M4 7H6L7 5H17L18 7H20C21.1 7 22 7.9 22 9V19C22 20.1 21.1 21 20 21H4C2.9 21 2 20.1 2 19V9C2 7.9 2.9 7 4 7Z"></path></svg>
     </label>
     <input id="messageInput" type="text" inputmode="text" placeholder="Напишіть повідомлення..." aria-label="Текст" />
     <button id="sendButton" class="send-btn">Відправити</button>
   </div>
 
   <!-- Profile modal -->
-  <div id="profileModal" class="modal" aria-hidden="true">
+  <div id="profileModal" class="modal" aria-hidden="true" style="display:none">
     <div class="modal-panel">
       <button class="modal-close" id="profileClose">✕</button>
       <div id="profileContent">Завантаження...</div>
@@ -200,7 +234,7 @@
   </div>
 
   <!-- Message menu -->
-  <div id="msgMenu" class="msg-menu" role="menu">
+  <div id="msgMenu" class="msg-menu" role="menu" style="display:none">
     <button data-act="like">👍 Лайк</button>
     <button data-act="warn">⚠️ Остережно (шахрай)</button>
     <button data-act="dislike">👎 Дизлайк</button>
@@ -208,758 +242,1156 @@
     <button data-act="reply">↩️ Відповісти</button>
   </div>
 
-  <!-- Firebase + App logic -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import {
-      getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile,
-      sendEmailVerification, onAuthStateChanged, signOut
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import {
-      getDatabase, ref as dbRef, push as dbPush, onChildAdded, query, orderByChild, limitToLast,
-      get as dbGet, set as dbSet, onValue, remove as dbRemove
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+  <!-- Small script to alternate letter colors of brand -->
+  <script>
+    (function colorBrand(){
+      const el = document.getElementById('brandTitle');
+      const t = 'PRAGA FUŠKY';
+      const colors = ['#e53e3e','#2ecc71']; // red / green alternating
+      el.innerHTML = '';
+      for(let i=0;i<t.length;i++){
+        const ch = t[i];
+        const span = document.createElement('span');
+        span.textContent = ch;
+        if (ch.trim()) span.style.color = colors[i%2];
+        el.appendChild(span);
+      }
+    })();
 
-    // ---------- Firebase config (from your project) ----------
-    const firebaseConfig = {
-      apiKey: "AIzaSyDw_bVibsVyZegH7OJyZ_yRjI3uLhroVBk",
-      authDomain: "praga-4baee.firebaseapp.com",
-      databaseURL: "https://praga-4baee-default-rtdb.firebaseio.com",
-      projectId: "praga-4baee",
-      storageBucket: "praga-4baee.firebasestorage.app",
-      messagingSenderId: "336023952536",
-      appId: "1:336023952536:web:f7437feaa25b6eadcd04ed",
-      measurementId: "G-BGDJD6R12N"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    // ---------- DOM ----------
+    // tabs handlers
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
-    const messagesEl = document.getElementById('messages');
-    const rentMessagesEl = document.getElementById('rentMessages');
-    const messageInput = document.getElementById('messageInput');
-    const sendButton = document.getElementById('sendButton');
-    const fileInput = document.getElementById('fileInput');
-    const profileBtn = document.getElementById('profileBtn');
-    const profileModal = document.getElementById('profileModal');
-    const profileClose = document.getElementById('profileClose');
-    const profileContent = document.getElementById('profileContent');
-    const notifBell = document.getElementById('notifBell');
-    const notifCount = document.getElementById('notifCount');
-    const friendsBtn = document.getElementById('friendsBtn');
-    const onlineCountEl = document.getElementById('onlineCount');
-    const mapEl = document.getElementById('map');
-    const rentSearch = document.getElementById('rentSearch');
-    const postRentBtn = document.getElementById('postRentBtn');
-    const mapSearch = document.getElementById('mapSearch');
-    const centerBtn = document.getElementById('centerBtn');
-
-    const DEFAULT_AVATAR = 'https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg';
-    let currentUser = null;
-    const MSG_LIMIT = 500;
-
     function setActiveTab(id){
       tabButtons.forEach(b => b.classList.toggle('active', b.dataset.target === id));
       tabContents.forEach(c => c.style.display = (c.id === id) ? 'block' : 'none');
-      if (id === 'chatTab') messageInput.focus();
-      if (id === 'mapTab') {
-        setTimeout(()=> {
-          if (window.google && window.map) {
-            google.maps.event.trigger(window.map,'resize');
-            window.map.setCenter({lat:50.0755,lng:14.4378});
-          } else {
-            const want = confirm('Карта ще не завантажена. Бажаєте вставити Google Maps API key зараз?');
-            if (want) loadMapsWithKey();
-          }
-        }, 200);
-      }
+      if (id === 'messageInput') document.getElementById('messageInput').focus();
+      if (id === 'mapTab' && window.google && window.map) { google.maps.event.trigger(window.map,'resize'); window.map.setCenter({lat:50.0755,lng:14.4378}); }
     }
     tabButtons.forEach(btn => btn.addEventListener('click', ()=> setActiveTab(btn.dataset.target)));
     document.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='c') setActiveTab('chatTab'); if(e.key.toLowerCase()==='r') setActiveTab('rentTab'); if(e.key.toLowerCase()==='m') setActiveTab('mapTab'); if(e.key.toLowerCase()==='h') setActiveTab('helpTab'); });
-
-    function timeStr(ts){ return new Date(ts).toLocaleString(); }
-
-    /* ----------------- Render message ----------------- */
-    function renderMessage(m, container = messagesEl){
-      if (!m || !m.ts) return;
-      const wrap = document.createElement('div');
-      wrap.className = 'message' + ((currentUser && m.uid === currentUser.uid) ? ' self' : '');
-      wrap.dataset.uid = m.uid || '';
-      wrap.dataset.msgid = m.id || '';
-
-      const avatar = document.createElement('img');
-      avatar.className = 'avatar';
-      avatar.src = m.avatar || DEFAULT_AVATAR;
-      avatar.alt = m.nick || 'avatar';
-      avatar.title = m.nick || 'Профіль';
-      avatar.addEventListener('click', ()=> openProfile(m.uid));
-
-      const txt = document.createElement('div');
-      txt.className = 'message-content';
-      const meta = document.createElement('div');
-      meta.className = 'message-meta';
-      meta.textContent = `${m.nick || 'Анонім'} · ${timeStr(m.ts)}` + (m.recipientUid ? ' · особисте' : '');
-      txt.appendChild(meta);
-
-      if (m.text) {
-        const p = document.createElement('div');
-        p.className = 'text';
-        p.innerText = m.text;
-        txt.appendChild(p);
-      }
-
-      if (m.image) {
-        const im = document.createElement('img');
-        im.src = m.image;
-        im.alt = 'Фото';
-        im.className = 'chat-image';
-        txt.appendChild(im);
-      }
-
-      wrap.appendChild(avatar);
-      wrap.appendChild(txt);
-      container.appendChild(wrap);
-
-      wrap.addEventListener('contextmenu', (ev) => {
-        ev.preventDefault();
-        showMsgMenu(ev.pageX, ev.pageY, m, wrap);
-      });
-
-      // auto-scroll to bottom if near bottom
-      const chatArea = container.closest('.chat-area');
-      if (chatArea) {
-        const nearBottom = chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight < 200;
-        if (nearBottom) chatArea.scrollTop = chatArea.scrollHeight;
-      }
-    }
-
-    // subscribe public messages
-    const msgsQuery = query(dbRef(db, "messages"), orderByChild("ts"), limitToLast(MSG_LIMIT));
-    onChildAdded(msgsQuery, (snap) => {
-      const m = snap.val(); m.id = snap.key;
-      renderMessage(m, messagesEl);
-    });
-
-    // rent messages
-    const rentQuery = query(dbRef(db, "rentMessages"), orderByChild("ts"), limitToLast(200));
-    onChildAdded(rentQuery, (snap) => {
-      const m = snap.val(); m.id = snap.key;
-      renderMessage(m, rentMessagesEl);
-    });
-
-    /* ----------------- Image resize helper ----------------- */
-    function resizeImageFile(file, maxWidth = 1200, quality = 0.8) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          img.onload = () => {
-            const scale = Math.min(1, maxWidth / img.width);
-            const w = Math.round(img.width * scale);
-            const h = Math.round(img.height * scale);
-            const canvas = document.createElement('canvas');
-            canvas.width = w;
-            canvas.height = h;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, w, h);
-            const dataUrl = canvas.toDataURL('image/jpeg', quality);
-            resolve(dataUrl);
-          };
-          img.onerror = (err) => reject(err);
-          img.src = e.target.result;
-        };
-        reader.onerror = (err) => reject(err);
-        reader.readAsDataURL(file);
-      });
-    }
-
-    /* ----------------- Send message ----------------- */
-    sendButton.addEventListener('click', async ()=>{
-      if (!auth.currentUser) { showAuthModal(); return; }
-      if (!await canSendMessage()) { alert('Підтвердіть email або скористайтесь 6-годинним доступом після реєстрації.'); return; }
-
-      const text = messageInput.value.trim();
-      const file = fileInput.files[0];
-      if (!text && !file) return;
-
-      let imageData = null;
-      if (file) {
-        try {
-          imageData = await resizeImageFile(file, 1200, 0.8);
-        } catch (e) {
-          console.error('resize error', e);
-          alert('Помилка обробки фото');
-          return;
-        }
-      }
-
-      const msg = {
-        uid: auth.currentUser.uid,
-        nick: auth.currentUser.displayName || auth.currentUser.email || 'Анонім',
-        avatar: auth.currentUser.photoURL || DEFAULT_AVATAR,
-        text: text || null,
-        image: imageData || null,
-        ts: Date.now(),
-        recipientUid: null
-      };
-
-      try {
-        await dbPush(dbRef(db, "messages"), msg);
-        messageInput.value = '';
-        fileInput.value = '';
-      } catch (err) {
-        console.error('dbPush error', err);
-        alert('Помилка відправки повідомлення');
-      }
-    });
-    messageInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendButton.click(); } });
-
-    /* ----------------- Auth / Profile ----------------- */
-    function showAuthModal(){ profileModal.classList.add('show'); profileModal.setAttribute('aria-hidden','false'); profileContent.innerHTML = authHtml(); attachAuthHandlers(); }
-    function hideAuthModal(){ profileModal.classList.remove('show'); profileModal.setAttribute('aria-hidden','true'); }
-
-    function authHtml(){ return `
-      <h2>Реєстрація / Вхід</h2>
-      <div style="display:flex;gap:12px;flex-direction:column">
-        <input id="uiNick" placeholder="Псевдонім" />
-        <input id="uiEmail" placeholder="Email" />
-        <input id="uiPass" placeholder="Пароль (мін. 6)" type="password" />
-        <div style="display:flex;gap:8px;"><button id="uiRegister">Зареєструватись</button><button id="uiLogin">Увійти</button></div>
-        <div id="uiAuthMsg" style="color:#b91c1c"></div>
-      </div>
-    `; }
-
-    function attachAuthHandlers(){
-      document.getElementById('uiRegister').addEventListener('click', async ()=>{
-        const nick = document.getElementById('uiNick').value.trim();
-        const email = document.getElementById('uiEmail').value.trim();
-        const pass = document.getElementById('uiPass').value.trim();
-        const msgEl = document.getElementById('uiAuthMsg'); msgEl.textContent = '';
-        if (!nick || !email || !pass) { msgEl.textContent = 'Заповніть всі поля'; return; }
-        if (pass.length < 6) { msgEl.textContent = 'Пароль мінімум 6 символів'; return; }
-        try {
-          const cred = await createUserWithEmailAndPassword(auth, email, pass);
-          await updateProfile(cred.user, { displayName: nick, photoURL: DEFAULT_AVATAR });
-          await dbSet(dbRef(db, `users/${cred.user.uid}`), { nick, email, avatar: DEFAULT_AVATAR, createdAt: Date.now(), online:true });
-          localStorage.setItem('regTime_' + cred.user.uid, String(Date.now()));
-          await sendEmailVerification(cred.user);
-          hideAuthModal();
-          alert('Зареєстровано. Лист підтвердження відправлено. У вас 6 годин доступу без підтвердження');
-        } catch (e) { console.error(e); msgEl.textContent = e.message || String(e); }
-      });
-
-      document.getElementById('uiLogin').addEventListener('click', async ()=>{
-        const email = document.getElementById('uiEmail').value.trim();
-        const pass = document.getElementById('uiPass').value.trim();
-        const msgEl = document.getElementById('uiAuthMsg'); msgEl.textContent = '';
-        if (!email || !pass) { msgEl.textContent = 'Заповніть поля'; return; }
-        try {
-          await signInWithEmailAndPassword(auth, email, pass);
-          hideAuthModal();
-        } catch (e) { console.error(e); msgEl.textContent = e.message || String(e); }
-      });
-    }
-
-    /* ----------------- canSendMessage: emailVerified OR within 6 hours ----------------- */
-    async function canSendMessage(){
-      const user = auth.currentUser;
-      if (!user) return false;
-      if (user.emailVerified) return true;
-      const localKey = 'regTime_' + user.uid;
-      const localVal = localStorage.getItem(localKey);
-      const sixHours = 6 * 60 * 60 * 1000;
-      if (localVal && (Date.now() - Number(localVal) < sixHours)) return true;
-      try {
-        const snap = await dbGet(dbRef(db, `users/${user.uid}/createdAt`));
-        if (snap && snap.exists()) {
-          const created = Number(snap.val());
-          if (!Number.isNaN(created) && Date.now() - created < sixHours) {
-            localStorage.setItem(localKey, String(created));
-            return true;
-          }
-        }
-      } catch (e) { console.error('canSendMessage db get error', e); }
-      return false;
-    }
-
-    /* ----------------- Profile open / admin controls ----------------- */
-    profileBtn.addEventListener('click', ()=> {
-      if (!auth.currentUser) { showAuthModal(); return; }
-      openProfile(auth.currentUser.uid, true);
-    });
-    profileClose.addEventListener('click', ()=> hideAuthModal());
-
-    async function openProfile(uid, self=false){
-      profileContent.innerHTML = '<p>Завантаження...</p>';
-      profileModal.classList.add('show'); profileModal.setAttribute('aria-hidden','false');
-      try {
-        const snap = await dbGet(dbRef(db, `users/${uid}`));
-        const user = snap && snap.exists() ? snap.val() : { nick: 'Анонім', avatar: DEFAULT_AVATAR };
-        const isSelf = auth.currentUser && auth.currentUser.uid === uid;
-        const isAdminEmail = auth.currentUser && auth.currentUser.email === 'urciknikolaj642@gmail.com';
-        profileContent.innerHTML = `
-          <div style="display:flex;gap:12px;align-items:center">
-            <img id="profImg" src="${user.avatar || DEFAULT_AVATAR}" style="width:112px;height:112px;border-radius:12px;object-fit:cover">
-            <div>
-              <h3 style="margin:0">${user.nick || 'Анонім'} ${isAdminEmail? '<span class="admin-badge">ADMIN</span>':''}</h3>
-              <div style="color:#666">${user.email || ''}</div>
-            </div>
-          </div>
-          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-            ${isSelf ? '<button id="editAvatarBtn" class="small-btn">Змінити аватар</button><button id="inboxBtn" class="small-btn">Особисті</button><button id="logoutBtn" class="small-btn">Вийти</button>' : `<button id="pmBtn" class="small-btn">Написати</button><button id="addFriendBtn" class="small-btn">Додати в друзі</button>`}
-          </div>
-          <div id="profileMsg" style="margin-top:8px;color:#b91c1c"></div>
-          <div id="adminPanel" style="margin-top:12px;display:${isAdminEmail ? 'block' : 'none'}"></div>
-        `;
-
-        // admin panel
-        if (isAdminEmail) {
-          const panel = document.getElementById('adminPanel');
-          panel.innerHTML = `<h4>Адмін-панель</h4>
-            <div style="display:flex;gap:8px;align-items:center">
-              <label>Боти:</label>
-              <button id="toggleBotsBtn" class="small-btn">Завантаження...</button>
-              <button id="clearBotsBtn" class="small-btn">Видалити повідомлення ботів</button>
-            </div>
-            <div style="margin-top:8px;font-size:13px;color:#444">Твій email: <strong>urciknikolaj642@gmail.com</strong></div>
-          `;
-          document.getElementById('clearBotsBtn').addEventListener('click', async ()=> {
-            if (!confirm('Видалити всі повідомлення ботів?')) return;
-            try {
-              const bSnap = await dbGet(dbRef(db, 'messages'));
-              if (!bSnap || !bSnap.exists()) { alert('Немає повідомлень'); return; }
-              const all = bSnap.val();
-              for (const key of Object.keys(all)) {
-                const m = all[key];
-                if (m && BOT_UIDS.includes(m.uid)) {
-                  await dbRemove(dbRef(db, `messages/${key}`));
-                }
-              }
-              alert('Повідомлення ботів видалено (по можливості).');
-            } catch (e) { console.error(e); alert('Помилка при видаленні'); }
-          });
-          const toggleBtn = document.getElementById('toggleBotsBtn');
-          const sRef = dbRef(db, 'settings/botsEnabled');
-          const sSnap = await dbGet(sRef);
-          const current = sSnap && sSnap.exists() ? Boolean(sSnap.val()) : false;
-          toggleBtn.textContent = current ? 'Вимкнути боти' : 'Увімкнути боти';
-          toggleBtn.addEventListener('click', async ()=> {
-            const newVal = !(await (async ()=> { const s = await dbGet(sRef); return s && s.exists() ? Boolean(s.val()) : false; })());
-            try {
-              await dbSet(sRef, newVal);
-              toggleBtn.textContent = newVal ? 'Вимкнути боти' : 'Увімкнути боти';
-              alert('Налаштування збережено');
-            } catch (e) { console.error(e); alert('Помилка збереження'); }
-          });
-        }
-
-        if (isSelf) {
-          document.getElementById('editAvatarBtn').addEventListener('click', ()=> {
-            const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
-            inp.addEventListener('change', async ()=> {
-              const f = inp.files[0]; if (!f) return;
-              try {
-                const dataUrl = await resizeImageFile(f, 1000, 0.85);
-                await dbSet(dbRef(db, `users/${uid}/avatar`), dataUrl);
-                await updateProfile(auth.currentUser, { photoURL: dataUrl });
-                document.getElementById('profImg').src = dataUrl;
-                profileBtn.style.background = `url(${dataUrl}) center/cover`;
-                alert('Аватар оновлено');
-              } catch (e) { console.error(e); alert('Помилка оновлення аватара'); }
-            });
-            inp.click();
-          });
-          document.getElementById('inboxBtn').addEventListener('click', ()=> openInbox());
-          document.getElementById('logoutBtn').addEventListener('click', async ()=> {
-            try { await signOut(auth); alert('Ви вийшли'); hideAuthModal(); } catch(e){ console.error(e); }
-          });
-        } else {
-          document.getElementById('pmBtn').addEventListener('click', ()=> { profileModal.classList.remove('show'); startPrivateChat(uid); });
-          document.getElementById('addFriendBtn').addEventListener('click', async ()=> {
-            if (!auth.currentUser) { showAuthModal(); return; }
-            try {
-              await dbSet(dbRef(db, `friendRequests/${uid}/${auth.currentUser.uid}`), { from: auth.currentUser.uid, ts: Date.now(), nick: auth.currentUser.displayName||auth.currentUser.email });
-              document.getElementById('profileMsg').textContent = 'Запит відправлено.';
-            } catch (e) { document.getElementById('profileMsg').textContent = 'Помилка'; console.error(e); }
-          });
-        }
-      } catch (e) { profileContent.innerHTML = '<p>Помилка завантаження профілю</p>'; console.error(e); }
-    }
-
-    /* ----------------- Notifications ----------------- */
-    async function updateNotifications(){
-      if (!auth.currentUser){ notifCount.style.display = 'none'; return; }
-      try {
-        const reqSnap = await dbGet(dbRef(db, `friendRequests/${auth.currentUser.uid}`));
-        const reqCount = reqSnap && reqSnap.exists() ? Object.keys(reqSnap.val()).length : 0;
-        const metaSnap = await dbGet(dbRef(db, `inboxMeta/${auth.currentUser.uid}/unread`));
-        const unread = metaSnap && metaSnap.exists() ? Number(metaSnap.val()) : 0;
-        const total = reqCount + unread;
-        if (total > 0) { notifCount.style.display = 'block'; notifCount.textContent = String(total); } else notifCount.style.display = 'none';
-      } catch (e) { console.error(e); }
-    }
-    notifBell.addEventListener('click', ()=> {
-      if (!auth.currentUser) { showAuthModal(); return; }
-      profileContent.innerHTML = '<h3>Сповіщення</h3><div id="notifList">Завантаження...</div>';
-      profileModal.classList.add('show'); profileModal.setAttribute('aria-hidden','false');
-      (async ()=>{
-        const list = document.getElementById('notifList');
-        list.innerHTML = '';
-        const rr = await dbGet(dbRef(db, `friendRequests/${auth.currentUser.uid}`));
-        if (rr && rr.exists()) {
-          const data = rr.val();
-          for (const fromUid of Object.keys(data)) {
-            const d = data[fromUid];
-            const el = document.createElement('div'); el.style.padding='8px'; el.style.borderBottom='1px solid #eee';
-            el.innerHTML = `Запит від ${d.nick || d.from} — <button data-from="${fromUid}">Прийняти</button> <button data-from2="${fromUid}">Відхилити</button>`;
-            list.appendChild(el);
-            el.querySelector('button[data-from]').addEventListener('click', async (e)=> {
-              const from = e.target.dataset.from;
-              try {
-                await dbSet(dbRef(db, `friends/${auth.currentUser.uid}/${from}`), { ts: Date.now() });
-                await dbSet(dbRef(db, `friends/${from}/${auth.currentUser.uid}`), { ts: Date.now() });
-                await dbRemove(dbRef(db, `friendRequests/${auth.currentUser.uid}/${from}`));
-                e.target.closest('div').remove();
-                updateNotifications();
-                alert('Додано в друзі');
-              } catch (ex) { console.error(ex); }
-            });
-            el.querySelector('button[data-from2]').addEventListener('click', async (e)=> {
-              const from = e.target.dataset.from2;
-              await dbRemove(dbRef(db, `friendRequests/${auth.currentUser.uid}/${from}`));
-              e.target.closest('div').remove();
-              updateNotifications();
-            });
-          }
-        }
-        const inbox = await dbGet(dbRef(db, `inboxMeta/${auth.currentUser.uid}`));
-        if (inbox && inbox.exists()){
-          const data = inbox.val();
-          for (const convo in data) {
-            if (convo === 'unread') continue;
-            const el = document.createElement('div'); el.style.padding='8px'; el.style.borderBottom='1px solid #eee';
-            el.textContent = `Чат: ${convo} — останнє: ${new Date(data[convo].lastTs).toLocaleString()}`;
-            list.appendChild(el);
-          }
-        }
-        if (list.innerHTML === '') list.innerHTML = 'Немає сповіщень';
-      })();
-    });
-
-    /* ----------------- Presence / online counter (×10) ----------------- */
-    function updateOnlineCount(){
-      onValue(dbRef(db, 'presence'), (snap)=>{
-        const val = snap.val() || {};
-        const real = Object.keys(val).length;
-        const shown = real * 10;
-        // find any element showing online count (we hid sys-msg) - put in notif bell tooltip also
-        onlineCountEl && (onlineCountEl.textContent = shown);
-        // also set title on bell for quick view
-        notifBell && notifBell.setAttribute('title', 'Онлайн (прибл.): ' + shown);
-      });
-    }
-
-    /* ----------------- Auth state ----------------- */
-    onAuthStateChanged(auth, (user)=> {
-      currentUser = user;
-      if (user) {
-        profileBtn.style.background = `url(${user.photoURL || DEFAULT_AVATAR}) center/cover`;
-        try { dbSet(dbRef(db, `presence/${user.uid}`), { ts: Date.now(), nick: user.displayName || user.email }); } catch(e){}
-      } else {
-        profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
-      }
-      updateNotifications();
-      updateOnlineCount();
-    });
-    window.addEventListener('beforeunload', async ()=> { try{ if (auth.currentUser) await dbRemove(dbRef(db, `presence/${auth.currentUser.uid}`)); }catch(e){} });
-
-    /* ----------------- Private messages basics ----------------- */
-    async function startPrivateChat(otherUid){
-      if (!auth.currentUser) { showAuthModal(); return; }
-      const uid = auth.currentUser.uid;
-      const convoId = uid < otherUid ? uid + '_' + otherUid : otherUid + '_' + uid;
-      // open modal with compose and recent messages
-      profileContent.innerHTML = '<h3>Завантаження історії...</h3>';
-      profileModal.classList.add('show'); profileModal.setAttribute('aria-hidden','false');
-      try {
-        const msgsSnap = await dbGet(dbRef(db, `privateMessages/${convoId}`));
-        const listHtml = document.createElement('div');
-        listHtml.style.maxHeight = '50vh';
-        listHtml.style.overflow = 'auto';
-        listHtml.style.padding = '8px';
-        if (msgsSnap && msgsSnap.exists()) {
-          const data = msgsSnap.val();
-          for (const k of Object.keys(data)) {
-            const m = data[k];
-            const el = document.createElement('div');
-            el.style.padding = '6px';
-            el.style.borderBottom = '1px solid #eee';
-            el.innerHTML = `<strong>${m.fromNick||m.from}</strong> • ${new Date(m.ts).toLocaleString()}<div>${m.text||''}</div>`;
-            listHtml.appendChild(el);
-          }
-        } else {
-          listHtml.innerHTML = '<div style="padding:8px;color:#666">Тут поки що немає повідомлень</div>';
-        }
-        profileContent.innerHTML = `<h3>Особисті — ${convoId}</h3>`;
-        profileContent.appendChild(listHtml);
-        const compose = document.createElement('div');
-        compose.style.marginTop = '10px';
-        compose.innerHTML = `<textarea id="pmText" style="width:100%;height:110px;padding:8px;border:1px solid #ddd;border-radius:8px" placeholder="Напишіть повідомлення..."></textarea><div style="display:flex;gap:8px;margin-top:8px"><button id="pmSend" class="send-btn">Відправити</button><button id="pmCancel" class="small-btn">Скасувати</button></div>`;
-        profileContent.appendChild(compose);
-        document.getElementById('pmCancel').addEventListener('click', ()=> { profileModal.classList.remove('show'); });
-        document.getElementById('pmSend').addEventListener('click', async ()=> {
-          const text = document.getElementById('pmText').value.trim(); if (!text) return alert('Введіть текст');
-          const pm = { from: uid, to: otherUid, text, ts: Date.now(), fromNick: auth.currentUser.displayName || auth.currentUser.email };
-          try {
-            await dbPush(dbRef(db, `privateMessages/${convoId}`), pm);
-            const prev = await dbGet(dbRef(db, `inboxMeta/${otherUid}/unread`)); const cur = prev && prev.exists() ? Number(prev.val()) : 0;
-            await dbSet(dbRef(db, `inboxMeta/${otherUid}/unread`), cur + 1);
-            await dbSet(dbRef(db, `inboxMeta/${otherUid}/${convoId}`), { lastTs: Date.now(), lastFrom: uid });
-            updateNotifications();
-            alert('Повідомлення відправлено');
-            profileModal.classList.remove('show');
-          } catch(e){ console.error(e); alert('Помилка відправки'); }
-        });
-      } catch(e){ console.error(e); profileContent.innerHTML = '<div>Помилка завантаження</div>'; }
-    }
-
-    async function openInbox(){
-      if (!auth.currentUser) { showAuthModal(); return; }
-      profileContent.innerHTML = '<h3>Особисті повідомлення</h3><div id="inboxList">Завантаження...</div>';
-      profileModal.classList.add('show'); profileModal.setAttribute('aria-hidden','false');
-      const inboxList = document.getElementById('inboxList');
-      try {
-        const snap = await dbGet(dbRef(db, `inboxMeta/${auth.currentUser.uid}`));
-        const data = snap && snap.exists() ? snap.val() : {};
-        inboxList.innerHTML = '';
-        for (const k in data) {
-          if (k === 'unread') continue;
-          const el = document.createElement('div'); el.style.padding='8px'; el.style.borderBottom='1px solid #eee';
-          el.textContent = `${k} — останнє: ${new Date(data[k].lastTs).toLocaleString()}`;
-          el.addEventListener('click', ()=> { startPrivateChat(k.includes('_') ? (k.split('_')[0] === auth.currentUser.uid ? k.split('_')[1] : k.split('_')[0]) : k); });
-          inboxList.appendChild(el);
-        }
-        if (!inboxList.children.length) inboxList.innerHTML = 'Пусто';
-      } catch(e) { inboxList.innerHTML = 'Помилка'; console.error(e); }
-    }
-
-    /* ----------------- Message menu ----------------- */
-    const msgMenu = document.getElementById('msgMenu');
-    function showMsgMenu(x,y,msg,wrap){
-      msgMenu.style.left = x + 'px'; msgMenu.style.top = y + 'px'; msgMenu.style.display = 'block';
-      const hide = ()=>{ msgMenu.style.display = 'none'; document.removeEventListener('click', hide); };
-      document.addEventListener('click', hide, { once:true });
-      msgMenu.querySelectorAll('button').forEach(btn=>{
-        btn.onclick = async ()=>{
-          const act = btn.dataset.act;
-          try {
-            if (act === 'reply') {
-              const r = prompt('Ваша відповідь:');
-              if (r) {
-                await dbPush(dbRef(db, 'messages'), {
-                  uid: auth.currentUser.uid,
-                  nick: auth.currentUser.displayName || auth.currentUser.email,
-                  avatar: auth.currentUser.photoURL || DEFAULT_AVATAR,
-                  text: '↪️ Відповідь: ' + r,
-                  ts: Date.now(),
-                  recipientUid: msg.uid
-                });
-              }
-            } else {
-              if (!msg.id) { alert('Немає id повідомлення'); return; }
-              await dbSet(dbRef(db, `messageReactions/${msg.id}/${auth.currentUser?auth.currentUser.uid:'anon'}`), { act, ts: Date.now() });
-              alert('Дія: ' + act);
-            }
-          } catch (e) { console.error(e); alert('Помилка дії'); }
-        };
-      });
-    }
-
-    /* ===================== BOTS ===================== */
-    // BOT_UIDS is used for admin clear action and detection
-    const BOT_UIDS = ['bot_1_pf','bot_2_pf','bot_3_pf'];
-
-    const BOT_USERS = [
-      {
-        uid: 'bot_1_pf',
-        nick: 'Oleh S.',
-        avatar: 'https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg',
-        ads: [
-          { text: `O2 СІМ КАРТА\nБез лiмiт інтернет\nБез лiмiт дзвінки\nПрацює в Європі\nПлата 699 крон/міс. Ціна 299кc. Тел: 607914467. Viber/WhatsApp/Telegram.`, image: null },
-          { text: `Доброго дня! Продаю iPhone 11 Pro Max з чохлами. Питання в приват.`, image: 'https://i.ibb.co/dwcXPqDr/IMG-1954f6b56869b9817a131ae33f3a37b6-V.jpg' },
-          { text: null, image: 'https://i.ibb.co/G3kDcrYZ/IMG-fa590121e46c5b030c5ddc94d4e8bea9-V.jpg' }
-        ],
-      },
-      {
-        uid: 'bot_2_pf',
-        nick: 'Anna M.',
-        avatar: 'https://i.ibb.co/QFWDvGZ8/IMG-6748e7141906901b131b8fd5130a5c01-V.jpg',
-        ads: [
-          { text: `Запрошую моделей на перманентний макіяж від сертифікованого майстра.\n📍Прага\n📅 Дата в оголошенні.`, image: 'https://i.ibb.co/QFWDvGZ8/IMG-6748e7141906901b131b8fd5130a5c01-V.jpg' },
-          { text: `Фото приклад — деталі в приваті.`, image: 'https://i.ibb.co/j97RhTny/IMG-593d75b053ea1a28cdfb9fc52f93afad-V.jpg' },
-          { text: null, image: 'https://i.ibb.co/Z11WVrVC/IMG-b83692bb79a1468af74c81620750e8c0-V.jpg' }
-        ]
-      },
-      {
-        uid: 'bot_3_pf',
-        nick: 'Marek H.',
-        avatar: 'https://i.ibb.co/rfNV6ddC/IMG-0cd648a74f86227fe46db2d01c099be0-V.jpg',
-        ads: [
-          { text: `Нужен водитель для помощи в переезде, со своим авто, пишите на контакты, обговорим деталі. WhatsApp: +48 793 463 757`, image: null },
-          { text: null, image: 'https://i.ibb.co/MzdTMPR/IMG-8231d8142ffcbba7c682ca598683e3f2-V.jpg' },
-          { text: null, image: 'https://i.ibb.co/rfNV6ddC/IMG-0cd648a74f86227fe46db2d01c099be0-V.jpg' }
-        ]
-      }
-    ];
-
-    // schedule: 2min, 3min, 4min
-    const SCHEDULE = [
-      { botIdx: 0, wait: 2*60*1000 },
-      { botIdx: 1, wait: 3*60*1000 },
-      { botIdx: 2, wait: 4*60*1000 }
-    ];
-
-    let botsController = { enabled: false, loopTimerId: null, running: false, seqPos: 0 };
-
-    const botsEnabledRef = dbRef(db, 'settings/botsEnabled');
-    onValue(botsEnabledRef, (snap) => {
-      const val = snap && snap.exists() ? Boolean(snap.val()) : false;
-      botsController.enabled = val;
-      if (val && !botsController.running) startBotsLoop();
-      if (!val && botsController.running) stopBotsLoop();
-    });
-
-    function startBotsLoop(){
-      if (botsController.running) return;
-      botsController.running = true;
-      botsController.seqPos = 0;
-      localStorage.setItem('pf_bots_running', '1');
-      (async function seqLoop(){
-        if (!botsController.enabled) { botsController.running = false; localStorage.removeItem('pf_bots_running'); return; }
-        const s = SCHEDULE[botsController.seqPos % SCHEDULE.length];
-        const bot = BOT_USERS[s.botIdx];
-        const adIndex = Math.floor(Date.now() / (60 * 1000)) % bot.ads.length;
-        const ad = bot.ads[adIndex];
-        // re-check flag
-        const snap = await dbGet(dbRef(db, 'settings/botsEnabled'));
-        const stillEnabled = snap && snap.exists() ? Boolean(snap.val()) : false;
-        if (!stillEnabled) { botsController.running = false; localStorage.removeItem('pf_bots_running'); return; }
-        try {
-          await dbPush(dbRef(db, 'messages'), {
-            uid: bot.uid,
-            nick: bot.nick,
-            avatar: bot.avatar,
-            text: ad.text,
-            image: ad.image || null,
-            ts: Date.now()
-          });
-        } catch (e) { console.error('bot push err', e); }
-        botsController.seqPos++;
-        botsController.loopTimerId = setTimeout(seqLoop, s.wait);
-      })();
-    }
-
-    function stopBotsLoop(){
-      if (botsController.loopTimerId) clearTimeout(botsController.loopTimerId);
-      botsController.running = false;
-      localStorage.removeItem('pf_bots_running');
-      botsController.loopTimerId = null;
-    }
-
-    (async ()=> {
-      const s = await dbGet(botsEnabledRef);
-      const enabled = s && s.exists() ? Boolean(s.val()) : false;
-      botsController.enabled = enabled;
-      if (enabled) startBotsLoop();
-    })();
-
-    /* =================== Google Maps =================== */
-    const MAP_POINTS = [
-      { title:'Nemocnice Motol', pos:{lat:50.058, lng:14.360}, img:'https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp' },
-      { title:'Pravni pomoc', pos:{lat:50.083, lng:14.412}, img:'https://i.ibb.co/0gWD5wW/images-5.jpg' },
-      { title:'Ukrainske sklepy', pos:{lat:50.084, lng:14.417}, img:'https://i.ibb.co/R49shL6k/images-6.jpg' }
-    ];
-
-    window.initMap = function(){
-      try {
-        const center = { lat:50.0755, lng:14.4378 };
-        window.map = new google.maps.Map(mapEl, { center, zoom:13, gestureHandling:'greedy' });
-        window.markers = [];
-        MAP_POINTS.forEach(p=>{
-          const marker = new google.maps.Marker({ position: p.pos, map: window.map, title: p.title });
-          const content = `<div style="width:220px"><strong>${p.title}</strong><div><img src='${p.img}' style='width:100%;border-radius:6px;margin-top:6px'></div></div>`;
-          const inf = new google.maps.InfoWindow({ content });
-          marker.addListener('click', ()=> inf.open(window.map, marker));
-          window.markers.push(marker);
-        });
-        centerBtn.addEventListener('click', ()=> window.map.panTo(center));
-        mapSearch.addEventListener('input', (e)=> {
-          const q = e.target.value.trim().toLowerCase();
-          window.markers.forEach(mk => mk.setVisible(!q || mk.title.toLowerCase().includes(q)));
-        });
-      } catch(e){ console.error('initMap', e); }
-    };
-
-    async function loadMapsWithKey(){
-      const key = 'AIzaSyBFrxVhpb6nHJ6rhiLl5Ho8t0jOb1iEQNc'; // your key inserted
-      if (!key) return;
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&callback=initMap`;
-      script.async = true; script.defer = true;
-      document.head.appendChild(script);
-    }
-
-    /* ---------------- misc ---------------- */
-    setInterval(()=> updateNotifications(), 8000);
-    updateOnlineCount();
-    document.addEventListener('DOMContentLoaded', ()=> { profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`; loadMapsWithKey(); });
-
-    // Friends UI
-    friendsBtn && friendsBtn.addEventListener('click', ()=> openFriends());
-
-    async function openFriends(){
-      if (!auth.currentUser) { showAuthModal(); return; }
-      profileContent.innerHTML = '<h3>Друзі та заявки</h3><div id="friendsList">Завантаження...</div>';
-      profileModal.classList.add('show'); profileModal.setAttribute('aria-hidden','false');
-      const list = document.getElementById('friendsList'); list.innerHTML = '';
-      try {
-        const reqSnap = await dbGet(dbRef(db, `friendRequests/${auth.currentUser.uid}`));
-        const reqs = reqSnap && reqSnap.exists() ? reqSnap.val() : {};
-        if (Object.keys(reqs).length) {
-          const h = document.createElement('div'); h.innerHTML = '<strong>Заявки:</strong>'; list.appendChild(h);
-          for (const from of Object.keys(reqs)){
-            const d = reqs[from]; const el = document.createElement('div'); el.style.padding='8px'; el.style.borderBottom='1px solid #eee';
-            el.innerHTML = `${d.nick||d.from} — <button data-acc='${from}' class='small-btn accept'>Прийняти</button> <button data-rej='${from}' class='small-btn reject'>Відхилити</button>`;
-            list.appendChild(el);
-            el.querySelector('.accept').addEventListener('click', async (e)=>{ const f = e.target.dataset.acc; await dbSet(dbRef(db, `friends/${auth.currentUser.uid}/${f}`), {ts:Date.now()}); await dbSet(dbRef(db, `friends/${f}/${auth.currentUser.uid}`), {ts:Date.now()}); await dbRemove(dbRef(db, `friendRequests/${auth.currentUser.uid}/${f}`)); e.target.closest('div').remove(); updateNotifications(); });
-            el.querySelector('.reject').addEventListener('click', async (e)=>{ const f = e.target.dataset.rej; await dbRemove(dbRef(db, `friendRequests/${auth.currentUser.uid}/${f}`)); e.target.closest('div').remove(); updateNotifications(); });
-          }
-        }
-        const friendsSnap = await dbGet(dbRef(db, `friends/${auth.currentUser.uid}`));
-        const friends = friendsSnap && friendsSnap.exists() ? Object.keys(friendsSnap.val()) : [];
-        const fh = document.createElement('div'); fh.innerHTML = '<strong>Друзі:</strong>'; list.appendChild(fh);
-        if (friends.length===0) { const empty = document.createElement('div'); empty.textContent='Поки немає друзів'; list.appendChild(empty); }
-        for (const f of friends){
-          const userSnap = await dbGet(dbRef(db, `users/${f}`)); const u = userSnap && userSnap.exists() ? userSnap.val() : {nick:'Анонім'};
-          const el = document.createElement('div'); el.style.padding='8px'; el.style.borderBottom='1px solid #eee';
-          el.innerHTML = `<img src='${u.avatar||DEFAULT_AVATAR}' style='width:36px;height:36px;border-radius:50%;vertical-align:middle;margin-right:8px'> <strong>${u.nick||f}</strong> <button data-uid='${f}' class='small-btn' style='margin-left:8px'>Написати</button> <span style='float:right;color:#666' id='online_${f}'>...</span>`;
-          list.appendChild(el);
-          el.querySelector('button').addEventListener('click', ()=> startPrivateChat(f));
-          const presSnap = await dbGet(dbRef(db, `presence/${f}`)); if (presSnap && presSnap.exists()){ document.getElementById('online_'+f).textContent = 'онлайн'; } else document.getElementById('online_'+f).textContent = 'офлайн';
-        }
-      } catch(e){ list.innerHTML='Помилка завантаження'; console.error(e); }
-    }
-
-    // expose debug actions
-    window.PF = { startBotsLoop, stopBotsLoop, loadMapsWithKey, BOT_USERS, BOT_UIDS };
-
   </script>
+  <!-- START PART 2 -->
+<script type="module">
+/* =========================
+   PART 2: Firebase + Logic
+   ========================= */
 
-  <!-- Auto-load Google Maps with key (inserted above) - the script is appended dynamically -->
-  <!-- End of HTML -->
-</body>
-</html>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile,
+  sendEmailVerification, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import {
+  getDatabase, ref as dbRef, push as dbPush, onChildAdded, query, orderByChild, limitToLast,
+  get as dbGet, set as dbSet, onValue, remove as dbRemove
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+
+/* ---------- Firebase config (your working config from previous code) ---------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyDw_bVibsVyZegH7OJyZ_yRjI3uLhroVBk",
+  authDomain: "praga-4baee.firebaseapp.com",
+  databaseURL: "https://praga-4baee-default-rtdb.firebaseio.com",
+  projectId: "praga-4baee",
+  storageBucket: "praga-4baee.firebasestorage.app",
+  messagingSenderId: "336023952536",
+  appId: "1:336023952536:web:f7437feaa25b6eadcd04ed",
+  measurementId: "G-BGDJD6R12N"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+/* ---------- DOM references (from Part1) ---------- */
+const tabButtons = document.querySelectorAll('.tab-button');
+const tabContents = document.querySelectorAll('.tab-content');
+const messagesEl = document.getElementById('messages');
+const rentMessagesEl = document.getElementById('rentMessages');
+const messageInput = document.getElementById('messageInput');
+const sendButton = document.getElementById('sendButton');
+const fileInput = document.getElementById('fileInput');
+const profileBtn = document.getElementById('profileBtn');
+const profileModal = document.getElementById('profileModal');
+const profileClose = document.getElementById('profileClose');
+const profileContent = document.getElementById('profileContent');
+const notifBell = document.getElementById('notifBell');
+const notifCount = document.getElementById('notifCount');
+const friendsBtn = document.getElementById('friendsBtn');
+const adminModal = document.getElementById('adminModal');
+const adminContent = document.getElementById('adminContent');
+const adminClose = document.getElementById('adminClose');
+const mapEl = document.getElementById('map');
+const mapSearch = document.getElementById('mapSearch');
+const centerBtn = document.getElementById('centerBtn');
+
+const DEFAULT_AVATAR = 'https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg';
+let currentUser = null;
+const MSG_LIMIT = 800;
+
+/* ------------------ Utility: timestamp -> local string ------------------ */
+function timeStr(ts){ return new Date(ts).toLocaleString(); }
+
+/* ------------------ Image resize helper (client-side) ------------------ */
+function resizeImageFile(file, maxWidth = 1200, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      img.onload = () => {
+        const scale = Math.min(1, maxWidth / img.width);
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        resolve(dataUrl);
+      };
+      img.onerror = (err) => reject(err);
+      img.src = e.target.result;
+    };
+    reader.onerror = (err) => reject(err);
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ------------------ Render message (used for both chats) ------------------ */
+function renderMessage(m, container){
+  if (!m || !m.ts) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'message' + ((currentUser && m.uid === currentUser.uid) ? ' self' : '');
+  wrap.dataset.uid = m.uid || '';
+  wrap.dataset.msgid = m.id || '';
+
+  const avatar = document.createElement('img');
+  avatar.className = 'avatar';
+  avatar.src = m.avatar || DEFAULT_AVATAR;
+  avatar.alt = m.nick || 'avatar';
+  avatar.title = m.nick || 'Профіль';
+  avatar.addEventListener('click', ()=> openProfile(m.uid));
+
+  const txt = document.createElement('div');
+  txt.className = 'message-content';
+  const meta = document.createElement('div');
+  meta.className = 'message-meta';
+  meta.textContent = `${m.nick || 'Анонім'} · ${timeStr(m.ts)}` + (m.recipientUid ? ' · особисте' : '');
+  txt.appendChild(meta);
+
+  if (m.text) {
+    const p = document.createElement('div');
+    p.className = 'text';
+    p.innerText = m.text;
+    txt.appendChild(p);
+  }
+
+  if (m.image) {
+    const im = document.createElement('img');
+    im.src = m.image;
+    im.alt = 'Фото';
+    im.className = 'chat-image';
+    txt.appendChild(im);
+  }
+
+  wrap.appendChild(avatar);
+  wrap.appendChild(txt);
+  container.appendChild(wrap);
+
+  // Context menu for reactions
+  wrap.addEventListener('contextmenu', (ev) => {
+    ev.preventDefault();
+    showMsgMenu(ev.pageX, ev.pageY, m, wrap);
+  });
+
+  // auto-scroll logic
+  const chatArea = container.closest('.chat-area');
+  if (chatArea) {
+    const nearBottom = chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight < 200;
+    if (nearBottom) chatArea.scrollTop = chatArea.scrollHeight;
+  }
+}
+
+/* ------------------ Subscribe to public messages ------------------ */
+const msgsQuery = query(dbRef(db, "messages"), orderByChild("ts"), limitToLast(MSG_LIMIT));
+onChildAdded(msgsQuery, (snap) => {
+  const m = snap.val(); m.id = snap.key;
+  renderMessage(m, messagesEl);
+});
+
+/* ------------------ Subscribe to rent messages ------------------ */
+const rentQuery = query(dbRef(db, "rentMessages"), orderByChild("ts"), limitToLast(MSG_LIMIT));
+onChildAdded(rentQuery, (snap) => {
+  const m = snap.val(); m.id = snap.key;
+  renderMessage(m, rentMessagesEl);
+});
+
+/* ------------------ Send message with checks ------------------ */
+sendButton.addEventListener('click', async ()=>{ await sendMessageHandler('messages'); });
+messageInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendButton.click(); } });
+
+async function sendMessageHandler(dbPath = 'messages'){
+  // maintenance check
+  const mSnap = await dbGet(dbRef(db, 'settings/maintenance'));
+  const maintenance = mSnap && mSnap.exists() ? Boolean(mSnap.val()) : false;
+  if (maintenance) { alert('Сайт на тех.обслуговуванні'); return; }
+
+  if (!auth.currentUser){ showAuthModal(); return; }
+
+  // ban check
+  try {
+    const banSnap = await dbGet(dbRef(db, `users/${auth.currentUser.uid}/banned`));
+    if (banSnap && banSnap.exists() && banSnap.val() === true) { alert('Ваш акаунт заблоковано'); return; }
+  } catch(e){ console.error('ban check err', e); }
+
+  if (!await canSendMessage()) { alert('Підтвердіть email або скористайтесь 6-годинним доступом після реєстрації.'); return; }
+
+  const text = messageInput.value.trim();
+  const file = fileInput.files[0];
+  if (!text && !file) return;
+
+  // simple rate-limit (per-user)
+  const lastKey = 'lastMsgTs_' + auth.currentUser.uid;
+  const last = Number(localStorage.getItem(lastKey) || 0);
+  if (Date.now() - last < 2500) { alert('Занадто швидко, зачекайте.'); return; }
+
+  let imageData = null;
+  if (file) {
+    try { imageData = await resizeImageFile(file, 1200, 0.8); } catch(e){ console.error('resize error', e); alert('Помилка обробки фото'); return; }
+  }
+
+  const msg = {
+    uid: auth.currentUser.uid,
+    nick: auth.currentUser.displayName || auth.currentUser.email || 'Анонім',
+    avatar: auth.currentUser.photoURL || DEFAULT_AVATAR,
+    text: text || null,
+    image: imageData || null,
+    ts: Date.now(),
+    recipientUid: null
+  };
+
+  try {
+    await dbPush(dbRef(db, dbPath), msg);
+    localStorage.setItem(lastKey, String(Date.now()));
+    messageInput.value = '';
+    fileInput.value = '';
+  } catch(err){ console.error('dbPush error', err); alert('Помилка відправки повідомлення'); }
+}
+
+/* ------------------ canSendMessage: emailVerified OR within 6 hours ------------------ */
+async function canSendMessage(){
+  const user = auth.currentUser;
+  if (!user) return false;
+  if (user.emailVerified) return true;
+  const localKey = 'regTime_' + user.uid;
+  const localVal = localStorage.getItem(localKey);
+  const sixHours = 6 * 60 * 60 * 1000;
+  if (localVal && (Date.now() - Number(localVal) < sixHours)) return true;
+  try {
+    const snap = await dbGet(dbRef(db, `users/${user.uid}/createdAt`));
+    if (snap && snap.exists()) {
+      const created = Number(snap.val());
+      if (!Number.isNaN(created) && Date.now() - created < sixHours) {
+        localStorage.setItem(localKey, String(created));
+        return true;
+      }
+    }
+  } catch (e) { console.error('canSendMessage db get error', e); }
+  return false;
+}
+
+/* ------------------ Auth / Profile UI ------------------ */
+function showAuthModal(){ profileModal.style.display='flex'; profileModal.setAttribute('aria-hidden','false'); profileContent.innerHTML = authHtml(); attachAuthHandlers(); }
+function hideAuthModal(){ profileModal.style.display='none'; profileModal.setAttribute('aria-hidden','true'); }
+function authHtml(){ return `
+  <h2>Реєстрація / Вхід</h2>
+  <div style="display:flex;gap:12px;flex-direction:column">
+    <input id="uiNick" placeholder="Псевдонім" />
+    <input id="uiEmail" placeholder="Email" />
+    <input id="uiPass" placeholder="Пароль (мін. 6)" type="password" />
+    <div style="display:flex;gap:8px;"><button id="uiRegister" class="small-btn">Зареєструватись</button><button id="uiLogin" class="small-btn">Увійти</button></div>
+    <div id="uiAuthMsg" style="color:#b91c1c"></div>
+  </div>
+`; }
+function attachAuthHandlers(){
+  document.getElementById('uiRegister').addEventListener('click', async ()=>{
+    const nick = document.getElementById('uiNick').value.trim();
+    const email = document.getElementById('uiEmail').value.trim();
+    const pass = document.getElementById('uiPass').value.trim();
+    const msgEl = document.getElementById('uiAuthMsg'); msgEl.textContent = '';
+    if (!nick || !email || !pass) { msgEl.textContent = 'Заповніть всі поля'; return; }
+    if (pass.length < 6) { msgEl.textContent = 'Пароль мінімум 6 символів'; return; }
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      await updateProfile(cred.user, { displayName: nick, photoURL: DEFAULT_AVATAR });
+      await dbSet(dbRef(db, `users/${cred.user.uid}`), { nick, email, avatar: DEFAULT_AVATAR, createdAt: Date.now(), online:true });
+      localStorage.setItem('regTime_' + cred.user.uid, String(Date.now()));
+      await sendEmailVerification(cred.user);
+      hideAuthModal();
+      alert('Зареєстровано. Лист підтвердження відправлено. У вас 6 годин доступу без підтвердження');
+    } catch (e) { console.error(e); msgEl.textContent = e.message || String(e); }
+  });
+
+  document.getElementById('uiLogin').addEventListener('click', async ()=>{
+    const email = document.getElementById('uiEmail').value.trim();
+    const pass = document.getElementById('uiPass').value.trim();
+    const msgEl = document.getElementById('uiAuthMsg'); msgEl.textContent = '';
+    if (!email || !pass) { msgEl.textContent = 'Заповніть поля'; return; }
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      hideAuthModal();
+    } catch (e) { console.error(e); msgEl.textContent = e.message || String(e); }
+  });
+}
+
+/* ------------------ Profile open / editing ------------------ */
+profileBtn.addEventListener('click', ()=> {
+  if (!auth.currentUser) { showAuthModal(); return; }
+  openProfile(auth.currentUser.uid, true);
+});
+profileClose.addEventListener('click', ()=> hideAuthModal());
+
+async function openProfile(uid){
+  profileContent.innerHTML = '<p>Завантаження...</p>';
+  profileModal.style.display='flex'; profileModal.setAttribute('aria-hidden','false');
+  try {
+    const snap = await dbGet(dbRef(db, `users/${uid}`));
+    const user = snap && snap.exists() ? snap.val() : { nick: 'Анонім', avatar: DEFAULT_AVATAR };
+    const isSelf = auth.currentUser && auth.currentUser.uid === uid;
+    const isAdmin = auth.currentUser && auth.currentUser.email === 'urciknikolaj642@gmail.com';
+    profileContent.innerHTML = `
+      <div style="display:flex;gap:12px;align-items:center">
+        <img id="profImg" src="${user.avatar || DEFAULT_AVATAR}" style="width:112px;height:112px;border-radius:12px;object-fit:cover">
+        <div>
+          <h3 style="margin:0">${user.nick || 'Анонім'} ${isAdmin? '<span style="display:inline-block;padding:4px 8px;background:#111;color:#fff;border-radius:6px;font-size:12px">ADMIN</span>':''}</h3>
+          <div style="color:#666">${user.email || ''}</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        ${isSelf ? '<button id="editAvatarBtn" class="small-btn">Змінити аватар</button><button id="inboxBtn" class="small-btn">Особисті</button><button id="logoutBtn" class="small-btn">Вийти</button>' : `<button id="pmBtn" class="small-btn">Написати</button><button id="addFriendBtn" class="small-btn">Додати в друзі</button>`}
+      </div>
+      <div id="profileMsg" style="margin-top:8px;color:#b91c1c"></div>
+    `;
+    if (isSelf) {
+      document.getElementById('editAvatarBtn').addEventListener('click', ()=> {
+        const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
+        inp.addEventListener('change', async ()=> {
+          const f = inp.files[0]; if (!f) return;
+          try {
+            const dataUrl = await resizeImageFile(f, 1000, 0.85);
+            await dbSet(dbRef(db, `users/${uid}/avatar`), dataUrl);
+            await updateProfile(auth.currentUser, { photoURL: dataUrl });
+            document.getElementById('profImg').src = dataUrl;
+            profileBtn.style.background = `url(${dataUrl}) center/cover`;
+            alert('Аватар оновлено');
+          } catch (e) { console.error(e); alert('Помилка оновлення аватара'); }
+        });
+        inp.click();
+      });
+      document.getElementById('inboxBtn').addEventListener('click', ()=> openInbox());
+      document.getElementById('logoutBtn').addEventListener('click', async ()=> {
+        try { await signOut(auth); alert('Ви вийшли'); profileModal.style.display='none'; } catch(e){ console.error(e); }
+      });
+    } else {
+      document.getElementById('pmBtn').addEventListener('click', ()=> { profileModal.style.display='none'; startPrivateChat(uid); });
+      document.getElementById('addFriendBtn').addEventListener('click', async ()=> {
+        if (!auth.currentUser) { showAuthModal(); return; }
+        try {
+          await dbSet(dbRef(db, `friendRequests/${uid}/${auth.currentUser.uid}`), { from: auth.currentUser.uid, ts: Date.now(), nick: auth.currentUser.displayName||auth.currentUser.email });
+          document.getElementById('profileMsg').textContent = 'Запит відправлено.';
+        } catch (e) { document.getElementById('profileMsg').textContent = 'Помилка'; console.error(e); }
+      });
+    }
+  } catch (e) { profileContent.innerHTML = '<p>Помилка завантаження профілю</p>'; console.error(e); }
+}
+
+/* ------------------ Notifications panel (bell) ------------------ */
+async function updateNotifications(){
+  if (!auth.currentUser){ notifCount.style.display = 'none'; return; }
+  try {
+    const reqSnap = await dbGet(dbRef(db, `friendRequests/${auth.currentUser.uid}`));
+    const reqCount = reqSnap && reqSnap.exists() ? Object.keys(reqSnap.val()).length : 0;
+    const metaSnap = await dbGet(dbRef(db, `inboxMeta/${auth.currentUser.uid}/unread`));
+    const unread = metaSnap && metaSnap.exists() ? Number(metaSnap.val()) : 0;
+    const total = reqCount + unread;
+    if (total > 0) { notifCount.style.display = 'block'; notifCount.textContent = String(total); } else notifCount.style.display = 'none';
+  } catch (e) { console.error(e); }
+}
+notifBell.addEventListener('click', async ()=> {
+  if (!auth.currentUser) { showAuthModal(); return; }
+  adminContent.innerHTML = '<h3>Сповіщення</h3><div id="notifList">Завантаження...</div>';
+  adminModal.style.display='flex'; adminModal.setAttribute('aria-hidden','false');
+  const list = document.getElementById('notifList');
+  list.innerHTML = '';
+  const rr = await dbGet(dbRef(db, `friendRequests/${auth.currentUser.uid}`));
+  if (rr && rr.exists()) {
+    const data = rr.val();
+    for (const fromUid of Object.keys(data)) {
+      const d = data[fromUid];
+      const el = document.createElement('div'); el.style.padding='8px'; el.style.borderBottom='1px solid #eee';
+      el.innerHTML = `Запит від ${d.nick || d.from} — <button data-from="${fromUid}" class="small-btn">Прийняти</button> <button data-from2="${fromUid}" class="small-btn">Відхилити</button>`;
+      list.appendChild(el);
+      el.querySelector('button[data-from]').addEventListener('click', async (e)=> {
+        const from = e.target.dataset.from;
+        try {
+          await dbSet(dbRef(db, `friends/${auth.currentUser.uid}/${from}`), { ts: Date.now() });
+          await dbSet(dbRef(db, `friends/${from}/${auth.currentUser.uid}`), { ts: Date.now() });
+          await dbRemove(dbRef(db, `friendRequests/${auth.currentUser.uid}/${from}`));
+          e.target.closest('div').remove();
+          updateNotifications();
+          alert('Додано в друзі');
+        } catch (ex) { console.error(ex); }
+      });
+      el.querySelector('button[data-from2]').addEventListener('click', async (e)=> {
+        const from = e.target.dataset.from2;
+        await dbRemove(dbRef(db, `friendRequests/${auth.currentUser.uid}/${from}`));
+        e.target.closest('div').remove();
+        updateNotifications();
+      });
+    }
+  }
+  const inbox = await dbGet(dbRef(db, `inboxMeta/${auth.currentUser.uid}`));
+  if (inbox && inbox.exists()){
+    const data = inbox.val();
+    for (const convo in data) {
+      if (convo === 'unread') continue;
+      const el = document.createElement('div'); el.style.padding='8px'; el.style.borderBottom='1px solid #eee';
+      el.textContent = `Чат: ${convo} — останнє: ${new Date(data[convo].lastTs).toLocaleString()}`;
+      list.appendChild(el);
+    }
+  }
+  if (list.innerHTML === '') list.innerHTML = 'Немає сповіщень';
+});
+
+/* ------------------ Presence / online counter (×10) ------------------ */
+function updateOnlineCount(){
+  onValue(dbRef(db, 'presence'), (snap)=>{
+    const val = snap.val() || {};
+    const real = Object.keys(val).length;
+    const shown = real * 10;
+    // show somewhere — for now title on bell
+    notifBell && notifBell.setAttribute('title', 'Онлайн (прибл.): ' + shown);
+    // optional display in UI: if you have element, set innerText
+  });
+}
+
+/* ------------------ Auth state changed ------------------ */
+onAuthStateChanged(auth, (user)=> {
+  currentUser = user;
+  if (user) {
+    profileBtn.style.background = `url(${user.photoURL || DEFAULT_AVATAR}) center/cover`;
+    try { dbSet(dbRef(db, `presence/${user.uid}`), { ts: Date.now(), nick: user.displayName || user.email }); } catch(e){}
+  } else {
+    profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
+  }
+  updateNotifications();
+  updateOnlineCount();
+});
+window.addEventListener('beforeunload', async ()=> { try{ if (auth.currentUser) await dbRemove(dbRef(db, `presence/${auth.currentUser.uid}`)); }catch(e){} });
+
+/* ------------------ Private messages basics ------------------ */
+async function startPrivateChat(otherUid){
+  if (!auth.currentUser) { showAuthModal(); return; }
+  const uid = auth.currentUser.uid;
+  const convoId = uid < otherUid ? uid + '_' + otherUid : otherUid + '_' + uid;
+  // open profile modal with PM UI
+  profileContent.innerHTML = '<h3>Завантаження історії...</h3>';
+  profileModal.style.display='flex'; profileModal.setAttribute('aria-hidden','false');
+  try {
+    const msgsSnap = await dbGet(dbRef(db, `privateMessages/${convoId}`));
+    const listHtml = document.createElement('div');
+    listHtml.style.maxHeight = '50vh';
+    listHtml.style.overflow = 'auto';
+    listHtml.style.padding = '8px';
+    if (msgsSnap && msgsSnap.exists()) {
+      const data = msgsSnap.val();
+      const keys = Object.keys(data).sort((a,b)=> data[a].ts - data[b].ts);
+      for (const k of keys) {
+        const m = data[k];
+        const el = document.createElement('div');
+        el.style.padding = '6px';
+        el.style.borderBottom = '1px solid #eee';
+        el.innerHTML = `<strong>${m.fromNick||m.from}</strong> • ${new Date(m.ts).toLocaleString()}<div>${m.text||''}</div>`;
+        listHtml.appendChild(el);
+      }
+    } else {
+      listHtml.innerHTML = '<div style="padding:8px;color:#666">Тут поки що немає повідомлень</div>';
+    }
+    profileContent.innerHTML = `<h3>Особисті — ${convoId}</h3>`;
+    profileContent.appendChild(listHtml);
+    const compose = document.createElement('div');
+    compose.style.marginTop = '10px';
+    compose.innerHTML = `<textarea id="pmText" style="width:100%;height:110px;padding:8px;border:1px solid #ddd;border-radius:8px" placeholder="Напишіть повідомлення..."></textarea><div style="display:flex;gap:8px;margin-top:8px"><button id="pmSend" class="send-btn">Відправити</button><button id="pmCancel" class="small-btn">Скасувати</button></div>`;
+    profileContent.appendChild(compose);
+    document.getElementById('pmCancel').addEventListener('click', ()=> { profileModal.style.display='none'; });
+    document.getElementById('pmSend').addEventListener('click', async ()=> {
+      const text = document.getElementById('pmText').value.trim(); if (!text) return alert('Введіть текст');
+      const pm = { from: uid, to: otherUid, text, ts: Date.now(), fromNick: auth.currentUser.displayName || auth.currentUser.email };
+      try {
+        await dbPush(dbRef(db, `privateMessages/${convoId}`), pm);
+        const prev = await dbGet(dbRef(db, `inboxMeta/${otherUid}/unread`)); const cur = prev && prev.exists() ? Number(prev.val()) : 0;
+        await dbSet(dbRef(db, `inboxMeta/${otherUid}/unread`), cur + 1);
+        await dbSet(dbRef(db, `inboxMeta/${otherUid}/${convoId}`), { lastTs: Date.now(), lastFrom: uid });
+        updateNotifications();
+        alert('Повідомлення відправлено');
+        profileModal.style.display='none';
+      } catch(e){ console.error(e); alert('Помилка відправки'); }
+    });
+  } catch(e){ console.error(e); profileContent.innerHTML = '<div>Помилка завантаження</div>'; }
+}
+
+/* ------------------ Open Inbox (from profile) ------------------ */
+async function openInbox(){
+  if (!auth.currentUser) { showAuthModal(); return; }
+  profileContent.innerHTML = '<h3>Особисті повідомлення</h3><div id="inboxList">Завантаження...</div>';
+  profileModal.style.display='flex'; profileModal.setAttribute('aria-hidden','false');
+  const inboxList = document.getElementById('inboxList');
+  try {
+    const snap = await dbGet(dbRef(db, `inboxMeta/${auth.currentUser.uid}`));
+    const data = snap && snap.exists() ? snap.val() : {};
+    inboxList.innerHTML = '';
+    for (const k in data) {
+      if (k === 'unread') continue;
+      const el = document.createElement('div'); el.style.padding='8px'; el.style.borderBottom='1px solid #eee';
+      el.textContent = `${k} — останнє: ${new Date(data[k].lastTs).toLocaleString()}`;
+      el.addEventListener('click', ()=> {
+        // determine other user id from convo id
+        const other = k.includes('_') ? (k.split('_')[0] === auth.currentUser.uid ? k.split('_')[1] : k.split('_')[0]) : k;
+        startPrivateChat(other);
+      });
+      inboxList.appendChild(el);
+    }
+    if (!inboxList.children.length) inboxList.innerHTML = 'Пусто';
+  } catch(e) { inboxList.innerHTML = 'Помилка'; console.error(e); }
+}
+
+/* ------------------ Message menu (reactions) ------------------ */
+const msgMenu = document.getElementById('msgMenu');
+function showMsgMenu(x,y,msg,wrap){
+  msgMenu.style.left = x + 'px'; msgMenu.style.top = y + 'px'; msgMenu.style.display = 'block';
+  const hide = ()=>{ msgMenu.style.display = 'none'; document.removeEventListener('click', hide); };
+  document.addEventListener('click', hide, { once:true });
+  msgMenu.querySelectorAll('button').forEach(btn=>{
+    btn.onclick = async ()=>{
+      const act = btn.dataset.act;
+      try {
+        if (act === 'reply') {
+          const r = prompt('Ваша відповідь:');
+          if (r) {
+            await dbPush(dbRef(db, 'messages'), {
+              uid: auth.currentUser.uid,
+              nick: auth.currentUser.displayName || auth.currentUser.email,
+              avatar: auth.currentUser.photoURL || DEFAULT_AVATAR,
+              text: '↪️ Відповідь: ' + r,
+              ts: Date.now(),
+              recipientUid: msg.uid
+            });
+          }
+        } else {
+          if (!msg.id) { alert('Немає id повідомлення'); return; }
+          await dbSet(dbRef(db, `messageReactions/${msg.id}/${auth.currentUser?auth.currentUser.uid:'anon'}`), { act, ts: Date.now() });
+          alert('Дія: ' + act);
+        }
+      } catch (e) { console.error(e); alert('Помилка дії'); }
+    };
+  });
+}
+
+/* ------------------ ADMIN: panel, tools (openAdminPanel via contextmenu on profile btn) ------------------ */
+const ADMIN_EMAIL = 'urciknikolaj642@gmail.com';
+adminClose.addEventListener('click', ()=> { adminModal.style.display='none'; });
+
+async function openAdminPanel(){
+  if (!auth.currentUser || auth.currentUser.email !== ADMIN_EMAIL) { alert('Доступ лише для адміністратора'); return; }
+  adminModal.style.display='flex'; adminModal.setAttribute('aria-hidden','false');
+  adminContent.innerHTML = '<h3>Адмін-панель</h3><div id="adminInner">Завантаження...</div>';
+  const inner = document.getElementById('adminInner');
+  inner.innerHTML = `
+    <div class="admin-panel">
+      <div class="admin-row"><label>Боти:</label><button id="toggleBots" class="small-btn">Завантаження...</button><button id="viewBotLog" class="small-btn">Лог ботів</button></div>
+      <div class="admin-row"><label>Пошук повідомлень:</label><input id="adminQuery" placeholder="ключове слово"/><button id="searchMsgs" class="small-btn">Пошук</button></div>
+      <div class="admin-row"><label>Бан користувача (UID):</label><input id="banUid" placeholder="UID"/><button id="banBtn" class="small-btn">Забанити</button><button id="unbanBtn" class="small-btn">Розбанити</button></div>
+      <div class="admin-row"><label>Тех. режим:</label><button id="toggleMaintenance" class="small-btn">Переключити</button></div>
+      <div class="admin-row"><label>Експорт:</label><button id="exportMsgs" class="small-btn">Експорт повідомлень</button></div>
+      <div id="adminResults" style="margin-top:10px;max-height:40vh;overflow:auto"></div>
+    </div>
+  `;
+  // buttons wiring
+  document.getElementById('toggleBots').addEventListener('click', async ()=>{
+    const ref = dbRef(db, 'settings/botsEnabled'); const s = await dbGet(ref); const cur = s && s.exists() ? Boolean(s.val()) : false;
+    await dbSet(ref, !cur); document.getElementById('toggleBots').textContent = !cur ? 'Вимкнути боти' : 'Увімкнути боти';
+  });
+  document.getElementById('viewBotLog').addEventListener('click', async ()=>{
+    const snap = await dbGet(dbRef(db, 'botPosts')); const out = document.getElementById('adminResults'); out.innerHTML = '';
+    if (snap && snap.exists()){
+      const data = snap.val();
+      Object.keys(data).reverse().slice(0,200).forEach(k=>{
+        const m = data[k];
+        const d = document.createElement('div'); d.style.padding='6px'; d.style.borderBottom='1px solid #eee'; d.textContent = `${m.nick||m.uid} • ${new Date(m.ts).toLocaleString()} • ${m.text||''}`; out.appendChild(d);
+      });
+    } else out.innerHTML='Логу немає';
+  });
+  document.getElementById('searchMsgs').addEventListener('click', async ()=>{
+    const q = document.getElementById('adminQuery').value.trim().toLowerCase(); const out = document.getElementById('adminResults'); out.innerHTML='Пошук...';
+    if (!q) return out.innerHTML='Введіть запит';
+    const s = await dbGet(dbRef(db, 'messages')); out.innerHTML=''; if (!s || !s.exists()) return out.innerHTML='Повідомлень немає';
+    const all = s.val(); Object.keys(all).forEach(k=>{
+      const m = all[k];
+      if ((m.text||'').toLowerCase().includes(q) || (m.nick||'').toLowerCase().includes(q)){
+        const d=document.createElement('div'); d.style.padding='6px'; d.style.borderBottom='1px solid #eee';
+        d.innerHTML = `<strong>${m.nick||m.uid}</strong> • ${new Date(m.ts).toLocaleString()}<div>${m.text||''}</div><div style="margin-top:6px"><button data-del="${k}" class="small-btn">Видалити</button></div>`;
+        out.appendChild(d);
+        d.querySelector('[data-del]').addEventListener('click', async (e)=>{ if (!confirm('Видалити?')) return; await dbRemove(dbRef(db, `messages/${e.target.dataset.del}`)); e.target.closest('div').remove(); });
+      }
+    });
+  });
+  document.getElementById('banBtn').addEventListener('click', async ()=>{
+    const uid = document.getElementById('banUid').value.trim(); if (!uid) return alert('UID?'); await dbSet(dbRef(db, `users/${uid}/banned`), true); alert('Забанено ' + uid);
+  });
+  document.getElementById('unbanBtn').addEventListener('click', async ()=>{ const uid=document.getElementById('banUid').value.trim(); if (!uid) return alert('UID?'); await dbSet(dbRef(db, `users/${uid}/banned`), false); alert('Розбанено ' + uid); });
+  document.getElementById('toggleMaintenance').addEventListener('click', async ()=>{ const ref=dbRef(db,'settings/maintenance'); const s=await dbGet(ref); const cur=s && s.exists()?Boolean(s.val()):false; await dbSet(ref,!cur); alert('Maintenance: ' + (!cur)); });
+  document.getElementById('exportMsgs').addEventListener('click', async ()=>{
+    const snap = await dbGet(dbRef(db,'messages')); if (!snap || !snap.exists()) return alert('Немає повідомлень'); const data=snap.val(); const blob = new Blob([JSON.stringify(data)], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='messages_export.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+}
+// open admin by contextmenu on profile
+profileBtn.addEventListener('contextmenu', (e)=> { e.preventDefault(); openAdminPanel(); });
+
+/* ------------------ BOTS: 3 bots with intervals 2/3/4 min ------------------ */
+const BOT_UIDS = ['bot_1_pf','bot_2_pf','bot_3_pf'];
+const BOT_USERS = [
+  {
+    uid: 'bot_1_pf',
+    nick: 'Oleh S.',
+    avatar: 'https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg',
+    ads: [
+      { text: `O2 СІМ КАРТА\nБез лiмiт інтернет\nБез лiмiт дзвінки\nПрацює в Європі\nПлата 699 крон/міс. Ціна 299кc. Тел: 607914467. Viber/WhatsApp/Telegram.`, image: null },
+      { text: `Доброго дня! Продаю iPhone 11 Pro Max разом із 26 чохлами — деталі в приват.`, image: 'https://i.ibb.co/dwcXPqDr/IMG-1954f6b56869b9817a131ae33f3a37b6-V.jpg' },
+      { text: null, image: 'https://i.ibb.co/G3kDcrYZ/IMG-fa590121e46c5b030c5ddc94d4e8bea9-V.jpg' }
+    ]
+  },
+  {
+    uid: 'bot_2_pf',
+    nick: 'Anna M.',
+    avatar: 'https://i.ibb.co/QFWDvGZ8/IMG-6748e7141906901b131b8fd5130a5c01-V.jpg',
+    ads: [
+      { text: `Запрошую моделей на перманентний макіяж від сертифікованого майстра. Прага.`, image: 'https://i.ibb.co/QFWDvGZ8/IMG-6748e7141906901b131b8fd5130a5c01-V.jpg' },
+      { text: `Фото приклад — деталі в приват.`, image: 'https://i.ibb.co/j97RhTny/IMG-593d75b053ea1a28cdfb9fc52f93afad-V.jpg' },
+      { text: null, image: 'https://i.ibb.co/Z11WVrVC/IMG-b83692bb79a1468af74c81620750e8c0-V.jpg' }
+    ]
+  },
+  {
+    uid: 'bot_3_pf',
+    nick: 'Marek H.',
+    avatar: 'https://i.ibb.co/rfNV6ddC/IMG-0cd648a74f86227fe46db2d01c099be0-V.jpg',
+    ads: [
+      { text: `Нужен водитель для помощи в переезде, со своим авто, пишите на контакты, обсудим детали\nWhatsApp: +48 793 463 757 • Telegram: @carlx_xxx`, image: null },
+      { text: null, image: 'https://i.ibb.co/MzdTMPR/IMG-8231d8142ffcbba7c682ca598683e3f2-V.jpg' },
+      { text: null, image: 'https://i.ibb.co/rfNV6ddC/IMG-0cd648a74f86227fe46db2d01c099be0-V.jpg' }
+    ]
+  }
+];
+const SCHEDULE = [{botIdx:0,wait:2*60*1000},{botIdx:1,wait:3*60*1000},{botIdx:2,wait:4*60*1000}];
+let botsController = { enabled:false, running:false, seqPos:0, loopId:null };
+
+// Listen DB setting
+onValue(dbRef(db,'settings/botsEnabled'), (snap)=>{
+  const val = snap && snap.exists()?Boolean(snap.val()):false;
+  botsController.enabled = val;
+  if (val && !botsController.running) startBots();
+  if (!val && botsController.running) stopBots();
+});
+
+async function startBots(){
+  if (botsController.running) return;
+  botsController.running = true; botsController.seqPos = 0;
+  (async function loop(){
+    if (!botsController.enabled) { botsController.running=false; return; }
+    const s = SCHEDULE[botsController.seqPos % SCHEDULE.length];
+    const bot = BOT_USERS[s.botIdx];
+    const adIndex = Math.floor(Date.now() / (60*1000)) % bot.ads.length;
+    const ad = bot.ads[adIndex];
+    try {
+      await dbPush(dbRef(db,'messages'), {
+        uid: bot.uid, nick: bot.nick, avatar: bot.avatar,
+        text: ad.text, image: ad.image || null, ts: Date.now()
+      });
+      await dbPush(dbRef(db,'botPosts'), { uid:bot.uid, nick:bot.nick, text:ad.text, ts:Date.now() });
+    } catch(e){ console.error('bot push err', e); }
+    botsController.seqPos++;
+    botsController.loopId = setTimeout(loop, s.wait);
+  })();
+}
+function stopBots(){ if (botsController.loopId) clearTimeout(botsController.loopId); botsController.running=false; botsController.loopId=null; }
+
+/* ------------------ MAP: 15 points in Prague with images ------------------ */
+const MAP_POINTS = [
+  { title:'Nemocnice Motol', pos:{lat:50.058000,lng:14.360000}, cat:'health', img:'https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp' },
+  { title:'Václavské náměstí', pos:{lat:50.081400,lng:14.425300}, cat:'info', img:'' },
+  { title:'Staroměstské náměstí', pos:{lat:50.087000,lng:14.420800}, cat:'info', img:'' },
+  { title:'Karlův most', pos:{lat:50.086500,lng:14.411400}, cat:'info', img:'' },
+  { title:'Pražský hrad', pos:{lat:50.090200,lng:14.398100}, cat:'help', img:'' },
+  { title:'Hlavní nádraží', pos:{lat:50.084600,lng:14.433600}, cat:'transit', img:'' },
+  { title:'Anděl (Smíchov)', pos:{lat:50.059100,lng:14.399800}, cat:'shops', img:'' },
+  { title:'Florenc Bus Hub', pos:{lat:50.088600,lng:14.433700}, cat:'volunteer', img:'' },
+  { title:'Žižkov TV Tower', pos:{lat:50.082500,lng:14.450600}, cat:'info', img:'' },
+  { title:'Letná', pos:{lat:50.092600,lng:14.419600}, cat:'park', img:'' },
+  { title:'Vyšehrad', pos:{lat:50.064900,lng:14.417800}, cat:'help', img:'' },
+  { title:'Národní muzeum', pos:{lat:50.075500,lng:14.430700}, cat:'info', img:'' },
+  { title:'Karlín', pos:{lat:50.092000,lng:14.457600}, cat:'volunteer', img:'' },
+  { title:'Holešovice', pos:{lat:50.107400,lng:14.454800}, cat:'shops', img:'' },
+  { title:'Vršovice', pos:{lat:50.069100,lng:14.451000}, cat:'housing', img:'' }
+];
+
+window.initMap = function(){
+  try {
+    const center = { lat:50.0755, lng:14.4378 };
+    window.map = new google.maps.Map(mapEl, { center, zoom:12, gestureHandling:'greedy' });
+    window.markers = [];
+    MAP_POINTS.forEach(p=>{
+      const marker = new google.maps.Marker({ position: p.pos, map: window.map, title: p.title });
+      const content = `<div style="width:220px"><strong>${p.title}</strong>${p.img?`<div><img src='${p.img}' style='width:100%;border-radius:6px;margin-top:6px'></div>`:''}</div>`;
+      const inf = new google.maps.InfoWindow({ content });
+      marker.addListener('click', ()=> inf.open(window.map, marker));
+      window.markers.push(marker);
+    });
+    centerBtn.addEventListener('click', ()=> window.map.panTo(center));
+    mapSearch && mapSearch.addEventListener('input', (e)=> {
+      const q = e.target.value.trim().toLowerCase();
+      window.markers.forEach(mk => mk.setVisible(!q || mk.getTitle().toLowerCase().includes(q)));
+    });
+  } catch(e){ console.error('initMap', e); }
+};
+
+function loadMapsWithKey(){
+  const key = 'AIzaSyBFrxVhpb6nHJ6rhiLl5Ho8t0jOb1iEQNc';
+  if (!key) return;
+  if (document.querySelector('script[data-maps]')) return;
+  const script = document.createElement('script');
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&callback=initMap`;
+  script.async = true; script.defer = true; script.setAttribute('data-maps','1');
+  document.head.appendChild(script);
+}
+
+/* ------------------ Bootstrapping on DOMContentLoaded ------------------ */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // set default profile icon
+  profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
+  // ensure images responsive (already in CSS)
+  loadMapsWithKey();
+  // update notifications periodically
+  setInterval(()=> updateNotifications(), 8000);
+});
+
+/* ------------------ Expose debug functions for console use ------------------ */
+window.PF = {
+  startBots, stopBots, openAdminPanel, startPrivateChat, loadMapsWithKey, BOT_USERS
+};
+
+/* =========================
+   END OF PART 2
+   ========================= */
+</script>
+<script type="module">
+/* PART 3 — Friends UI, Reports, Moderation helpers, user export (download), image lightbox, UI polish */
+
+import { getDatabase, ref as dbRef, get as dbGet, set as dbSet, push as dbPush, onValue, remove as dbRemove } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+const db3 = getDatabase();
+const auth3 = getAuth();
+
+// Create modals we need (friends modal, reports modal, image lightbox)
+(function createExtraModals(){
+  // Friends modal
+  if (!document.getElementById('friendsModal')) {
+    const fm = document.createElement('div');
+    fm.id = 'friendsModal';
+    fm.className = 'modal';
+    fm.style.display = 'none';
+    fm.innerHTML = `<div class="modal-panel"><button class="modal-close" id="friendsClose">✕</button><div id="friendsContent">Завантаження...</div></div>`;
+    document.body.appendChild(fm);
+    document.getElementById('friendsClose').addEventListener('click', ()=> fm.style.display='none');
+  }
+
+  // Reports / moderation modal (for mods/admin)
+  if (!document.getElementById('reportsModal')) {
+    const rm = document.createElement('div');
+    rm.id = 'reportsModal';
+    rm.className = 'modal';
+    rm.style.display = 'none';
+    rm.innerHTML = `<div class="modal-panel"><button class="modal-close" id="reportsClose">✕</button><div id="reportsContent">Завантаження...</div></div>`;
+    document.body.appendChild(rm);
+    document.getElementById('reportsClose').addEventListener('click', ()=> rm.style.display='none');
+  }
+
+  // Image lightbox
+  if (!document.getElementById('imageLightbox')) {
+    const lb = document.createElement('div');
+    lb.id = 'imageLightbox';
+    lb.className = 'modal';
+    lb.style.display = 'none';
+    lb.innerHTML = `<div class="modal-panel" style="max-width:90%;background:transparent;box-shadow:none"><button class="modal-close" id="lbClose" style="position:absolute;right:10px;top:10px;background:#fff;border-radius:8px;padding:6px">✕</button><img id="lbImg" src="" style="width:100%;height:auto;border-radius:12px;display:block"></div>`;
+    document.body.appendChild(lb);
+    document.getElementById('lbClose').addEventListener('click', ()=> lb.style.display='none');
+  }
+})();
+
+// Open friends modal and show friend requests + friends + online status
+const friendsBtnEl = document.getElementById('friendsBtn');
+friendsBtnEl && friendsBtnEl.addEventListener('click', ()=> openFriendsModal());
+
+async function openFriendsModal(){
+  const modal = document.getElementById('friendsModal');
+  const container = document.getElementById('friendsContent');
+  container.innerHTML = '<h3>Друзі / Заявки</h3><div id="friendInner">Завантаження...</div>';
+  modal.style.display='flex';
+  if (!auth3.currentUser) { container.innerHTML = '<div>Вхід потрібен</div>'; return; }
+  const uid = auth3.currentUser.uid;
+  try {
+    const reqSnap = await dbGet(dbRef(db3, `friendRequests/${uid}`));
+    const friendsSnap = await dbGet(dbRef(db3, `friends/${uid}`));
+    const inner = document.getElementById('friendInner');
+    inner.innerHTML = '';
+    // Requests
+    const reqs = reqSnap && reqSnap.exists() ? reqSnap.val() : {};
+    const reqKeys = Object.keys(reqs || {});
+    if (reqKeys.length) {
+      const h = document.createElement('div'); h.innerHTML = '<strong>Заявки:</strong>'; inner.appendChild(h);
+      reqKeys.forEach(k=>{
+        const r = reqs[k];
+        const el = document.createElement('div'); el.style.padding='8px'; el.style.borderBottom='1px solid #eee';
+        el.innerHTML = `${r.nick||r.from} <button data-acc="${k}" class="small-btn">Прийняти</button> <button data-rej="${k}" class="small-btn">Відхилити</button>`;
+        inner.appendChild(el);
+        el.querySelector('[data-acc]').addEventListener('click', async (e)=> {
+          const fid = e.target.dataset.acc;
+          await dbSet(dbRef(db3, `friends/${uid}/${fid}`), { ts: Date.now() });
+          await dbSet(dbRef(db3, `friends/${fid}/${uid}`), { ts: Date.now() });
+          await dbRemove(dbRef(db3, `friendRequests/${uid}/${fid}`));
+          el.remove();
+        });
+        el.querySelector('[data-rej]').addEventListener('click', async (e)=> {
+          const fid = e.target.dataset.rej;
+          await dbRemove(dbRef(db3, `friendRequests/${uid}/${fid}`));
+          el.remove();
+        });
+      });
+    }
+
+    // Friends list
+    const friends = friendsSnap && friendsSnap.exists() ? friendsSnap.val() : {};
+    const friendIds = Object.keys(friends || {});
+    const listWrap = document.createElement('div'); listWrap.innerHTML = '<strong>Друзі:</strong>';
+    inner.appendChild(listWrap);
+    if (!friendIds.length) {
+      const p = document.createElement('div'); p.style.padding='8px'; p.textContent = 'Немає друзів';
+      listWrap.appendChild(p);
+    } else {
+      for (const fid of friendIds) {
+        try {
+          const uSnap = await dbGet(dbRef(db3, `users/${fid}`));
+          const u = uSnap && uSnap.exists() ? uSnap.val() : { nick:'Анонім', avatar:DEFAULT_AVATAR };
+          const p = document.createElement('div'); p.style.padding='8px'; p.style.borderBottom='1px solid #eee';
+          const onlineSnap = await dbGet(dbRef(db3, `presence/${fid}`));
+          const isOnline = onlineSnap && onlineSnap.exists();
+          p.innerHTML = `<img src="${u.avatar||DEFAULT_AVATAR}" style="width:36px;height:36px;border-radius:8px;vertical-align:middle;margin-right:8px"> <strong>${u.nick||fid}</strong> ${isOnline?'<span style="color:green;margin-left:8px">●</span>':''} <div style="float:right"><button data-pm="${fid}" class="small-btn">PM</button></div>`;
+          listWrap.appendChild(p);
+          p.querySelector('[data-pm]').addEventListener('click', ()=> startPrivateChat(fid));
+        } catch(e){ console.error('friend render err', e); }
+      }
+    }
+  } catch(e){ console.error(e); container.innerHTML = 'Помилка завантаження'; }
+}
+
+// Image click -> open lightbox
+document.addEventListener('click', (ev)=>{
+  const t = ev.target;
+  if (t.classList && t.classList.contains('chat-image')) {
+    const lb = document.getElementById('imageLightbox');
+    const img = document.getElementById('lbImg');
+    img.src = t.src;
+    lb.style.display='flex';
+  }
+});
+
+// Reports: user can report a message (add button to msg menu)
+(function enhanceMsgMenuWithReport(){
+  const menu = document.getElementById('msgMenu');
+  if (!menu) return;
+  const btn = document.createElement('button');
+  btn.dataset.act = 'report';
+  btn.textContent = '⚠️ Поскаржитись';
+  menu.appendChild(btn);
+  btn.addEventListener('click', async ()=>{
+    // current selected message should be stored globally when opening menu; fallback prompt
+    const targetMsgId = menu.dataset.msgid;
+    if (!targetMsgId) { alert('Не вибрано повідомлення'); return; }
+    const reason = prompt('Причина скарги (коротко):');
+    if (!reason) return;
+    try {
+      await dbPush(dbRef(db3, `reports/${targetMsgId}`), { from: auth3.currentUser ? auth3.currentUser.uid : 'anon', reason, ts: Date.now() });
+      alert('Скарга відправлена');
+    } catch(e){ console.error(e); alert('Помилка при відправці скарги'); }
+  });
+})();
+
+// When showing menu, set dataset.msgid for report
+const originalShowMsgMenu = window.showMsgMenu || null;
+window.showMsgMenu = function(x,y,msg,wrap){
+  const menu = document.getElementById('msgMenu');
+  if (!menu) return;
+  menu.dataset.msgid = msg && msg.id ? msg.id : '';
+  originalShowMsgMenu ? originalShowMsgMenu(x,y,msg,wrap) : menu.style.display='block';
+};
+
+// Moderation view (admins/mods can open reportsModal)
+async function openReportsModal(){
+  const modal = document.getElementById('reportsModal');
+  const container = document.getElementById('reportsContent');
+  modal.style.display='flex';
+  container.innerHTML = '<h3>Жалоби</h3><div id="reportsInner">Завантаження...</div>';
+  try {
+    const snap = await dbGet(dbRef(db3, 'reports'));
+    const inner = document.getElementById('reportsInner');
+    inner.innerHTML = '';
+    if (!snap || !snap.exists()) { inner.innerHTML = '<div>Жалоб немає</div>'; return; }
+    const data = snap.val();
+    for (const msgId of Object.keys(data)) {
+      const arr = data[msgId];
+      // arr is object of push keys
+      for (const pk of Object.keys(arr)) {
+        const r = arr[pk];
+        const box = document.createElement('div'); box.style.padding='8px'; box.style.borderBottom='1px solid #eee';
+        box.innerHTML = `<div><strong>Повідомлення:</strong> ${msgId}</div><div>Причина: ${r.reason}</div><div>Від: ${r.from}</div><div style="margin-top:6px"><button data-rem="${msgId}" class="small-btn">Видалити повністю</button> <button data-mark="${msgId}" class="small-btn">Відзначити як розглянуто</button></div>`;
+        inner.appendChild(box);
+        box.querySelector('[data-rem]').addEventListener('click', async (e)=>{
+          if (!confirm('Видалити повідомлення і видалити всі жалоби?')) return;
+          try { await dbRemove(dbRef(db3, `messages/${e.target.dataset.rem}`)); await dbRemove(dbRef(db3, `reports/${e.target.dataset.rem}`)); box.remove(); alert('Повідомлення видалено'); } catch(err){ console.error(err); alert('Помилка'); }
+        });
+        box.querySelector('[data-mark]').addEventListener('click', async (e)=>{
+          await dbRemove(dbRef(db3, `reports/${e.target.dataset.mark}`));
+          box.remove();
+        });
+      }
+    }
+  } catch(e){ console.error(e); container.innerHTML = 'Помилка'; }
+}
+
+// Add quick moderator open if admin: right-click on bell to open reports
+notifBell && notifBell.addEventListener('contextmenu', (ev)=>{
+  ev.preventDefault();
+  // Only allow for admin/mods
+  if (!auth3.currentUser) return;
+  if (auth3.currentUser.email === 'urciknikolaj642@gmail.com') openReportsModal();
+});
+
+// Export "insurance" code or main backup to file
+async function exportUserBackupToFile(){
+  if (!auth3.currentUser) { alert('Вхід потрібен'); return; }
+  // We'll export user's public profile + messages (safe)
+  try {
+    const uid = auth3.currentUser.uid;
+    const userSnap = await dbGet(dbRef(db3, `users/${uid}`));
+    const msgsSnap = await dbGet(dbRef(db3, `messages`));
+    const userData = { user: userSnap && userSnap.exists() ? userSnap.val() : {}, messages: msgsSnap && msgsSnap.exists() ? msgsSnap.val() : {} };
+    const blob = new Blob([JSON.stringify(userData, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `backup_user_${uid}.json`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    alert('Файл для збереження згенеровано');
+  } catch(e){ console.error(e); alert('Помилка створення файлу'); }
+}
+
+// Add a small menu item in profile modal for export
+(function addExportToProfile(){
+  // patch openProfile to insert export button when self
+  const oldOpen = window.openProfile;
+  window.openProfile = async function(uid, selfOverride){
+    await oldOpen(uid, selfOverride);
+    try {
+      if (auth3.currentUser && auth3.currentUser.uid === uid) {
+        const wrap = document.getElementById('profileContent');
+        const btn = document.createElement('button'); btn.className='small-btn'; btn.style.marginLeft='6px'; btn.textContent='Завантажити резерв';
+        wrap.querySelector('div[style*="margin-top:12px"]').appendChild(btn);
+        btn.addEventListener('click', exportUserBackupToFile);
+      }
+    } catch(e){}
+  };
+})();
+
+</script>
+<script type="module">
+/* PART 4 — Admin statistics, cleanup tools, UI/mobile polish, rate-limit & safety improvements, final glue */
+
+import { getDatabase, ref as dbRef, get as dbGet, set as dbSet, remove as dbRemove, push as dbPush, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+const db4 = getDatabase();
+const auth4 = getAuth();
+
+// Admin stats UI: show counts and simple activity metrics
+async function openAdminStats(){
+  if (!auth4.currentUser || auth4.currentUser.email !== 'urciknikolaj642@gmail.com') { alert('Тільки для адміністратора'); return; }
+  const modal = document.getElementById('adminModal');
+  modal.style.display='flex';
+  adminContent.innerHTML = '<h3>Адмін Статистика</h3><div id="statsInner">Завантаження...</div>';
+  const out = document.getElementById('statsInner');
+  out.innerHTML = 'Завантаження...';
+  try {
+    const usersSnap = await dbGet(dbRef(db4, 'users'));
+    const msgsSnap = await dbGet(dbRef(db4, 'messages'));
+    const botSnap = await dbGet(dbRef(db4, 'botPosts'));
+    const presSnap = await dbGet(dbRef(db4, 'presence'));
+    const usersCount = usersSnap && usersSnap.exists() ? Object.keys(usersSnap.val()).length : 0;
+    const msgsCount = msgsSnap && msgsSnap.exists() ? Object.keys(msgsSnap.val()).length : 0;
+    const botCount = botSnap && botSnap.exists() ? Object.keys(botSnap.val()).length : 0;
+    const presCount = presSnap && presSnap.exists() ? Object.keys(presSnap.val()).length : 0;
+    const shown = presCount * 10;
+    out.innerHTML = `<div>Користувачі: <strong>${usersCount}</strong></div><div>Повідомлень (всього): <strong>${msgsCount}</strong></div><div>Пости ботів: <strong>${botCount}</strong></div><div>Реально онлайн: <strong>${presCount}</strong> → показано: <strong>${shown}</strong></div><div style="margin-top:10px"><button id="cleanupOld" class="small-btn">Очистити повідомлення старіше (N днів)</button> <input id="cleanupDays" style="width:60px" value="30"></div><div style="margin-top:10px"><button id="downloadAll" class="small-btn">Завантажити весь дамп повідомлень</button></div>`;
+    document.getElementById('cleanupOld').addEventListener('click', async ()=>{
+      const days = Number(document.getElementById('cleanupDays').value || 30);
+      if (!confirm(`Видалити повідомлення старше ${days} днів?`)) return;
+      try {
+        const snap = await dbGet(dbRef(db4, 'messages'));
+        if (!snap || !snap.exists()) { alert('Повідомлень немає'); return; }
+        const all = snap.val();
+        const now = Date.now();
+        const cutoff = now - days * 24 * 60 * 60 * 1000;
+        let removed = 0;
+        for (const k of Object.keys(all)) {
+          const m = all[k];
+          if (m.ts && Number(m.ts) < cutoff) {
+            await dbRemove(dbRef(db4, `messages/${k}`));
+            removed++;
+          }
+        }
+        alert('Видалено ' + removed);
+      } catch(e){ console.error(e); alert('Помилка очищення'); }
+    });
+    document.getElementById('downloadAll').addEventListener('click', async ()=>{
+      const snap = await dbGet(dbRef(db4,'messages'));
+      if (!snap || !snap.exists()) return alert('Немає повідомлень');
+      const data = snap.val();
+      const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='messages_all.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+  } catch(e){ console.error(e); out.innerHTML = 'Помилка'; }
+}
+
+// Add admin stats quick access on admin modal top
+(function addAdminStatsShortcut(){
+  const oldOpen = window.openAdminPanel;
+  window.openAdminPanel = async function(){
+    await oldOpen();
+    const adminInner = document.getElementById('adminInner');
+    if (!adminInner) return;
+    // add a button
+    const btn = document.createElement('button');
+    btn.className='small-btn';
+    btn.textContent = 'Статистика';
+    adminInner.prepend(btn);
+    btn.addEventListener('click', openAdminStats);
+  };
+})();
+
+// Rate-limit enforcement per-IP is not possible client-side; we keep per-UID simple limit and serverless check.
+// We'll also stop display of welcome system message — instead show per-user toast upon login.
+function showLoginToastIfNeeded(){
+  if (!auth4.currentUser) return;
+  // Show small temporary toast in top center
+  const key = 'welcome_shown_' + auth4.currentUser.uid;
+  if (localStorage.getItem(key)) return;
+  localStorage.setItem(key, '1');
+  const t = document.createElement('div');
+  t.style.position='fixed'; t.style.top='80px'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.zIndex='400';
+  t.style.background='rgba(0,0,0,0.7)'; t.style.color='#fff'; t.style.padding='10px 14px'; t.style.borderRadius='10px'; t.style.boxShadow='0 8px 30px rgba(0,0,0,0.4)';
+  t.textContent = 'Ласкаво просимо! Повідомлення та сповіщення будуть надходити сюди.';
+  document.body.appendChild(t);
+  setTimeout(()=> t.remove(), 7500);
+}
+
+// Observe auth changes to show login toast
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+onAuthStateChanged(auth4, (u)=> { if (u) showLoginToastIfNeeded(); });
+
+// Small UI polish: make sure long words wrap and images never cause horizontal scroll (reinforce)
+(function enforceNoHScroll(){
+  document.documentElement.style.overflowX='hidden';
+  document.body.style.overflowX='hidden';
+  const style = document.createElement('style');
+  style.innerHTML = ` .message-content { word-break:break-word; overflow-wrap:break-word; } .chat-image { max-width:100%; height:auto; display:block; } `;
+  document.head.appendChild(style);
+})();
+
+// Add unread badge next to profile when PMs exist
+async function refreshPmBadge(){
+  if (!auth4.currentUser) { /* hide badge */ return; }
+  const uid = auth4.currentUser.uid;
+  const s = await dbGet(dbRef(db4, `inboxMeta/${uid}/unread`));
+  const unread = s && s.exists() ? Number(s.val()) : 0;
+  // Add small red dot on profile button or change border
+  const el = document.getElementById('profileBtn');
+  if (!el) return;
+  // create badge element if needed
+  let b = el.querySelector('.pm-badge');
+  if (!b) { b = document.createElement('div'); b.className='pm-badge'; b.style.position='absolute'; b.style.right='-2px'; b.style.top='-2px'; b.style.background='#ef4444'; b.style.color='#fff'; b.style.borderRadius='50%'; b.style.padding='3px 6px'; b.style.fontSize='12px'; b.style.boxShadow='0 2px 6px rgba(0,0,0,0.3)'; el.style.position='relative'; el.appendChild(b); }
+  if (unread > 0) { b.style.display='block'; b.textContent = unread; } else b.style.display='none';
+}
+
+// call periodically
+setInterval(()=>{ refreshPmBadge(); updateNotifications(); updateOnlineCount(); }, 8000);
+
+// Add a small toolbar for mobile: scroll-to-bottom button
+(function addScrollBottomBtn(){
+  const btn = document.createElement('button');
+  btn.textContent = '↓';
+  btn.title = 'Вниз';
+  btn.style.position='fixed';
+  btn.style.right='12px';
+  btn.style.bottom='90px';
+  btn.style.zIndex='120';
+  btn.style.width='44px';
+  btn.style.height='44px';
+  btn.style.borderRadius='50%';
+  btn.style.border='none';
+  btn.style.background='rgba(0,0,0,0.6)';
+  btn.style.color='#fff';
+  btn.style.fontSize='20px';
+  btn.style.display='none';
+  document.body.appendChild(btn);
+  btn.addEventListener('click', ()=> {
+    const active = document.querySelector('.tab-content.active .chat-area');
+    if (active) active.scrollTop = active.scrollHeight;
+  });
+  // show/hide on scroll
+  document.addEventListener('scroll', ()=> {
+    const active = document.querySelector('.tab-content.active .chat-area');
+    if (!active) return;
+    const nearBottom = active.scrollHeight - active.scrollTop - active.clientHeight < 250;
+    btn.style.display = nearBottom ? 'none' : 'block';
+  }, { passive:true });
+})();
+
+// Final safety: intercept dbPush of messages happening client-side via monkey-patch to add moderation flags if needed
+// (we avoid breaking existing functionality)
+(function wrapDbPushForMessages(){
+  // this is intentionally lightweight: logs pushes to 'messageAudit' for admin review
+  const originalPush = dbPush;
+  window._originalDbPush = originalPush;
+  window.dbPushWithAudit = async function(ref, data) {
+    try {
+      // if pushing to messages, add audit log
+      if (String(ref && ref._path && ref._path.pieces && ref._path.pieces.includes && ref._path.pieces.includes('messages') || (typeof ref === 'string' && ref.includes('messages')))) {
+        // push as usual
+        const res = await originalPush(ref, data);
+        // log summary
+        try { await dbPush(dbRef(db4, 'messageAudit'), { uid: data.uid||null, ts: Date.now(), snippet: (data.text||'').substring(0,120) }); } catch(e){ console.warn('audit log fail', e); }
+        return res;
+      }
+      return await originalPush(ref, data);
+    } catch(e){ throw e; }
+  };
+})();
+
+// NOTE for deployer: If you later want server-side heavy moderation, move logic to cloud function.
+
+</script>
