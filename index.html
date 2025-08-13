@@ -4,234 +4,191 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ПРАГА ФУШКИ — Соцчат</title>
+
+  <!-- Шрифты -->
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root{
       --accent:#2ecc71;
-      --muted:#64748b;
       --glass: rgba(255,255,255,0.96);
-      --maxw: 980px;
-      --avatar: 44px;
-      --chatScale: 1.12; /* ~+12% візуально більша стрічка */
-      --tabH: 52px;
+      --muted:#64748b;
+      --max-width:980px;
+      --avatar-size:44px;
+      --chat-scale:1.12;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:#071126;color:#0b1220;overflow-x:hidden}
-    body{
-      background-image:url('https://i.ibb.co/27hgtZfY/Prague.jpg');
-      background-size:cover;background-position:center;background-attachment:fixed;
+    html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;-webkit-font-smoothing:antialiased;background:#071126;color:#0b1220;overflow-x:hidden}
+
+    body {
+      background-image: url('https://i.ibb.co/27hgtZfY/Prague.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
     }
 
-    /* компактна шапка */
-    header{
-      position:sticky;top:0;z-index:70;padding:6px 8px 8px;
-      display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;
-      backdrop-filter:blur(4px)
-    }
-    .title{
-      display:flex;align-items:baseline;gap:10px;
-    }
-    .brand{
-      margin:0;line-height:1;font-family:'UnifrakturCook', cursive;font-weight:700;
-      font-size:30px;letter-spacing:1px;text-transform:uppercase;
-      text-shadow:0 3px 0 rgba(0,0,0,.5),0 6px 18px rgba(0,0,0,.6);
-      white-space:nowrap
-    }
-    /* червоно-зелений по буквах */
-    .brand span:nth-child(odd){color:#e11d48}
-    .brand span:nth-child(even){color:#10b981}
-    /* м’яка «пульсація» літер */
-    @keyframes wave{0%{transform:translateY(0)}50%{transform:translateY(-1px)}100%{transform:translateY(0)}}
-    .brand span{display:inline-block;animation:wave 2.4s ease-in-out infinite}
-    .brand span:nth-child(3n){animation-delay:.2s}
-    .brand span:nth-child(3n+1){animation-delay:.4s}
-    .brand span:nth-child(3n+2){animation-delay:.6s}
+    header{position:sticky;top:0;z-index:60;padding:12px 8px;text-align:center;color:#fff;backdrop-filter:blur(3px)}
+    header h1{margin:0;font-family:'UnifrakturCook', Inter, sans-serif;font-weight:700;font-size:36px;letter-spacing:1px;
+      text-shadow:0 3px 0 rgba(0,0,0,.5),0 6px 18px rgba(0,0,0,.6);color:#fff;text-transform:uppercase;}
+    header p{margin:8px 0 0;font-size:14px;color:#e6f7ee;background:rgba(0,0,0,.25);display:inline-block;padding:6px 12px;border-radius:10px}
 
-    .online-pill{
-      margin-left:auto;margin-right:8px;
-      background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.25);
-      padding:4px 10px;border-radius:999px;font-size:13px
-    }
+    nav.tabs{display:flex;gap:10px;justify-content:center;padding:10px 12px;position:sticky;top:86px;z-index:58}
+    .tab-button{background:rgba(255,255,255,.06);border:none;color:#fff;padding:8px 16px;font-weight:700;border-radius:12px;cursor:pointer}
+    .tab-button.active{box-shadow: inset 0 -4px 0 var(--accent);background:rgba(0,0,0,.22)}
 
-    /* верхні дії: друзі, дзвінок, профіль */
-    .top-actions{
-      position:fixed;top:6px;left:8px;right:8px;z-index:90;
-      display:flex;justify-content:space-between;align-items:center;pointer-events:none;
-    }
-    .left-actions,.right-actions{display:flex;gap:8px;pointer-events:auto}
-    .icon-btn{
-      width:44px;height:44px;border-radius:50%;border:2px solid #fff;background:rgba(0,0,0,.25);
-      display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(2px)
-    }
-    .icon-btn svg{width:22px;height:22px;fill:#fff}
-    #bellBtn{width:50px;height:50px;border-width:3px} /* більший дзвіночок */
-    #profileBtn{background-size:cover;background-position:center}
-
-    /* вкладки */
-    nav.tabs{
-      position:sticky;top:54px;z-index:60;height:var(--tabH);
-      display:flex;gap:10px;justify-content:center;align-items:center;padding:6px 10px
-    }
-    .tab-button{
-      position:relative;border:none;border-radius:12px;padding:10px 16px;
-      font-weight:800;color:#fff;background:rgba(0,0,0,.22);cursor:pointer;outline:none
-    }
-    .tab-button.active{box-shadow: inset 0 -4px 0 var(--accent)}
-    /* райдуга підсвітка вкладок */
-    @keyframes rainbow{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
-    .tab-button i{display:inline-block;width:10px;height:10px;border-radius:50%;background:linear-gradient(90deg,#f00,#0f0);margin-right:8px;animation:rainbow 6s linear infinite}
-
-    main{max-width:var(--maxw);margin:0 auto;padding:10px}
-    /* прибрали велике привітання — стрічка вища */
+    main.container{max-width:var(--max-width);margin:0 auto;padding:12px}
+    .sys-msg{max-width:var(--max-width);margin:12px auto;padding:12px;border-radius:14px;background:linear-gradient(180deg, rgba(0,0,0,.38), rgba(0,0,0,.18));color:#fff;font-size:15px;text-align:center;backdrop-filter: blur(2px)}
 
     .tab-content{display:none}
     .tab-content.active{display:block}
 
-    /* чат */
-    .chat-area{height:calc(100vh - 180px);overflow:auto;padding:8px;background:transparent}
-    .messages{display:flex;flex-direction:column;gap:12px;padding:8px 4px 220px;transform:scale(var(--chatScale));transform-origin:bottom left}
-    .message{display:flex;gap:10px;align-items:flex-start;max-width:86%;word-break:break-word}
+    .chat-area{height:calc(100vh - 330px);overflow:auto;padding:14px 8px;background:transparent}
+    .messages{display:flex;flex-direction:column;gap:12px;padding-bottom:220px;transform:scale(var(--chat-scale));transform-origin:bottom left}
+    .message{display:flex;gap:10px;align-items:flex-start;max-width:78%;word-break:break-word}
     .message.self{margin-left:auto;flex-direction:row-reverse}
-    .avatar{width:var(--avatar);height:var(--avatar);border-radius:50%;object-fit:cover;flex:0 0 var(--avatar);box-shadow:0 3px 10px rgba(0,0,0,.35);cursor:pointer}
-    .bubble{background:var(--glass);padding:10px 12px;border-radius:14px;box-shadow:0 6px 30px rgba(2,6,23,.18);color:#0b1220}
-    .message.self .bubble{background:#E9FFF0}
-    .meta{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .bubble .txt{font-weight:600}
-    .bubble img{max-width:100%;height:auto;border-radius:10px;margin-top:8px;display:block} /* вписати у екран */
+    .avatar{width:var(--avatar-size);height:var(--avatar-size);border-radius:50%;object-fit:cover;flex:0 0 var(--avatar-size);box-shadow:0 3px 10px rgba(0,0,0,.35);cursor:pointer}
+    .message-content{background:var(--glass);padding:10px 12px;border-radius:14px;box-shadow:0 6px 30px rgba(2,6,23,.18);color:#0b1220}
+    .message.self .message-content{background:#E9FFF0}
+    .message-meta{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .chat-image{max-width:300px;border-radius:8px;margin-top:8px;display:block}
+    .message-content .text { font-family:'UnifrakturCook',cursive;font-weight:700;font-size:1rem;color:#0b1220; }
 
-    /* нижня панель */
-    .chat-input{
-      position:fixed;left:0;right:0;bottom:0;z-index:80;display:flex;gap:8px;align-items:center;
-      padding:10px;background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.99));border-top:1px solid rgba(0,0,0,.06);
-      max-width:var(--maxw);margin:0 auto
-    }
+    .chat-input{position:fixed;left:0;right:0;bottom:0;padding:10px;background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.99));border-top:1px solid rgba(0,0,0,.06);z-index:80;display:flex;gap:8px;align-items:center;max-width:var(--max-width);margin:0 auto}
     .camera-btn{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;width:48px;height:48px;border-radius:50%;background:#fff;border:1px solid #e6e6e6}
     .camera-btn svg{width:20px;height:20px}
-    #messageInput{flex:1;padding:12px 14px;border-radius:24px;border:1px solid #d0d7de;font-size:16px;outline:none}
-    .send-btn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(46,204,113,.18)}
+    .chat-input input[type="text"]{flex:1;padding:12px 14px;border-radius:24px;border:1px solid #d0d7de;font-size:16px;outline:none}
+    .send-btn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(46,204,113,.18)}
     .small-btn{padding:8px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer}
 
-    /* модалки */
     .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:95}
     .modal.show{display:flex}
-    .panel{background:#fff;border-radius:12px;padding:18px;width:92%;max-width:560px;position:relative;box-shadow:0 18px 80px rgba(2,6,23,.4)}
-    .close{position:absolute;right:10px;top:8px;background:transparent;border:none;font-size:18px;cursor:pointer}
+    .modal-panel{background:#fff;border-radius:12px;padding:18px;width:92%;max-width:520px;position:relative;box-shadow:0 18px 80px rgba(2,6,23,.4)}
+    .modal-close{position:absolute;right:10px;top:8px;background:transparent;border:none;font-size:16px;cursor:pointer}
     .auth-form input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #dcdcdc}
     .auth-actions{display:flex;gap:8px;justify-content:space-between}
     .auth-actions button{flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
-    .err{color:#b91c1c;font-size:13px;margin-top:6px}
+    .error-line{color:#b91c1c;font-size:13px;margin-top:6px}
 
-    /* карта */
-    #map{width:100%;height:60vh;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+    .profile-btn{position:fixed;left:12px;top:12px;z-index:100;width:48px;height:48px;border-radius:50%;border:2px solid #fff;background-size:cover;background-position:center;cursor:pointer}
 
-    /* контекстне меню для повідомлень */
+    #map{width:100%;height:60vh;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+
     .msg-menu{position:absolute;background:#fff;border-radius:8px;padding:6px;box-shadow:0 6px 20px rgba(0,0,0,.2);z-index:200;display:none}
     .msg-menu button{display:block;border:none;background:transparent;padding:6px 10px;text-align:left;width:100%;cursor:pointer}
-    .msg-menu button:hover{background:rgba(0,0,0,.04)}
+    .msg-menu button:hover{background:rgba(0,0,0,.03)}
 
-    /* допомога */
     .help-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:12px}
     .help-card{background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
     .help-card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
 
     @media (max-width:640px){
-      .brand{font-size:26px}
-      nav.tabs{top:50px}
-      .chat-area{height:calc(100vh - 170px)}
+      body{font-size:15px}
+      .chat-area{height:calc(100vh - 380px)}
+      .chat-image{max-width:180px}
       .messages{transform:scale(1.06)}
-      #bellBtn{width:52px;height:52px}
+      .profile-btn{left:8px;top:8px}
     }
   </style>
 </head>
 <body>
 
-  <!-- верхние «плавающие» кнопки -->
-  <div class="top-actions">
-    <div class="left-actions">
-      <button id="friendsBtn" class="icon-btn" title="Друзі" aria-label="Друзі">
-        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-      </button>
-    </div>
-    <div class="right-actions">
-      <button id="bellBtn" class="icon-btn" title="Сповіщення" aria-label="Сповіщення">
-        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.89 2-1.99h-4A2 2 0 0012 22zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 10-3 0v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-      </button>
-      <button id="profileBtn" class="icon-btn" title="Профіль" aria-label="Профіль"></button>
-    </div>
-  </div>
-
   <header>
-    <div class="title">
-      <h1 class="brand" id="brandText"></h1>
-    </div>
-    <div class="online-pill" id="onlinePill">Онлайн: …</div>
+    <h1>ПРАГА ФУШКИ</h1>
+    <p>Вітаємо! Дорогі українці — цей чат створено, щоб допомагати нашим співвітчизникам.</p>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Вкладки">
-    <button class="tab-button active" data-target="chatTab"><i></i> Чат</button>
-    <button class="tab-button" data-target="rentTab"><i></i> Чат Оренда</button>
-    <button class="tab-button" data-target="mapTab"><i></i> Карта</button>
-    <button class="tab-button" data-target="helpTab"><i></i> Допомога</button>
+    <button class="tab-button active" data-target="chatTab">💬 Чат</button>
+    <button class="tab-button" data-target="rentTab">🏠 Чат Оренда</button>
+    <button class="tab-button" data-target="mapTab">🗺️ Карта</button>
+    <button class="tab-button" data-target="helpTab">🤝 Допомога</button>
   </nav>
 
-  <main role="main">
-    <!-- Чат -->
-    <section id="chatTab" class="tab-content active" aria-label="Чат">
-      <div class="chat-area" id="chatArea"><div id="messages" class="messages" role="log"></div></div>
+  <main class="container" role="main">
+    <div class="sys-msg">Якщо ви вперше — натисніть "Відправити" — з'явиться реєстрація. 6 годин доступу без підтвердження email.</div>
+
+    <!-- Chat tab -->
+    <section id="chatTab" class="tab-content active" role="region" aria-label="Чат">
+      <div class="chat-area" id="chatArea" aria-live="polite">
+        <div id="messages" class="messages" role="log"></div>
+      </div>
     </section>
 
-    <!-- Чат Оренда -->
-    <section id="rentTab" class="tab-content" aria-label="Чат Оренда">
-      <div class="chat-area" id="rentArea" style="height:55vh"><div id="rentMessages" class="messages" role="log"></div></div>
+    <!-- Rent chat tab (как обычный чат) -->
+    <section id="rentTab" class="tab-content" role="region" aria-label="Чат Оренда">
+      <div class="chat-area" style="height:50vh">
+        <div id="rentMessages" class="messages" role="log"></div>
+      </div>
     </section>
 
-    <!-- Карта -->
-    <section id="mapTab" class="tab-content" aria-label="Карта">
+    <!-- Map tab -->
+    <section id="mapTab" class="tab-content" role="region" aria-label="Карта">
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-        <input id="mapSearch" placeholder="Пошук (волонтери, аптека…)" style="flex:1;padding:8px;border-radius:8px;border:1px solid #ddd">
-        <button id="centerBtn" class="small-btn">Центрувати</button>
+        <div style="flex:1">
+          <input id="mapSearch" placeholder="Пошук (наприклад: волонтери, аптека)..." style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd">
+        </div>
+        <div>
+          <button id="centerBtn" class="small-btn">Центрувати</button>
+        </div>
       </div>
       <div id="map"></div>
     </section>
 
-    <!-- Допомога -->
-    <section id="helpTab" class="tab-content" aria-label="Допомога">
+    <!-- Help tab -->
+    <section id="helpTab" class="tab-content" role="region" aria-label="Допомога">
       <h2 style="color:#fff">Термінова допомога у Празі</h2>
       <div class="help-grid" id="helpGrid">
-        <div class="help-card"><img src="https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp"><h3>Nemocnice Motol</h3><p>V Úvalu 84</p></div>
-        <div class="help-card"><img src="https://i.ibb.co/0gWD5wW/images-5.jpg"><h3>Юридична допомога</h3><p>Документи та консультації</p></div>
-        <div class="help-card"><img src="https://i.ibb.co/R49shL6k/images-6.jpg"><h3>Українські магазини</h3><p>Продукти та товари</p></div>
+        <div class="help-card">
+          <img src="https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp" alt="Больница">
+          <h3>Nemocnice Motol</h3><p>Адреса: V Uvalu 84</p>
+        </div>
+        <div class="help-card">
+          <img src="https://i.ibb.co/0gWD5wW/images-5.jpg" alt="Юристы">
+          <h3>Юридична допомога</h3><p>Документи та консультації</p>
+        </div>
+        <div class="help-card">
+          <img src="https://i.ibb.co/R49shL6k/images-6.jpg" alt="Магазины">
+          <h3>Українські магазини</h3><p>Продукти та товари</p>
+        </div>
       </div>
     </section>
   </main>
 
-  <!-- прихований інпут фото -->
+  <!-- Profile button top-left -->
+  <button id="profileBtn" class="profile-btn" title="Профіль" aria-label="Профіль"></button>
+
+  <!-- hidden file for camera -->
   <input id="fileInput" type="file" accept="image/*" style="display:none">
 
-  <!-- панель відправки -->
-  <div class="chat-input" aria-label="Відправка повідомлення">
-    <label for="fileInput" class="camera-btn" id="cameraLabel" title="Додати фото">
-      <svg viewBox="0 0 24 24"><path d="M4 7H6L7 5H17L18 7H20C21.1 7 22 7.9 22 9V19C22 20.1 21.1 21 20 21H4C2.9 21 2 20.1 2 19V9C2 7.9 2.9 7 4 7Z"/><circle cx="12" cy="13" r="3.5"/></svg>
+  <!-- input area (единая панель для обоих чатов) -->
+  <div class="chat-input" role="region" aria-label="Відправка повідомлення">
+    <label for="fileInput" class="camera-btn" title="Додати фото" id="cameraLabel" aria-hidden="true">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M4 7H6L7 5H17L18 7H20C21.1 7 22 7.9 22 9V19C22 20.1 21.1 21 20 21H4C2.9 21 2 20.1 2 19V9C2 7.9 2.9 7 4 7Z" fill="#111"/>
+        <circle cx="12" cy="13" r="3.5" fill="#fff"/>
+      </svg>
     </label>
-    <input id="messageInput" type="text" placeholder="Напишіть повідомлення…">
+    <input id="messageInput" type="text" inputmode="text" placeholder="Напишіть повідомлення..." aria-label="Текст" />
     <button id="sendButton" class="send-btn">Відправити</button>
   </div>
 
-  <!-- Модалка авторизації -->
+  <!-- auth modal -->
   <div id="authModal" class="modal" aria-hidden="true">
-    <div class="panel" role="dialog" aria-modal="true">
-      <button class="close" id="authClose">×</button>
-      <h3>Реєстрація / Вхід</h3>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="modal-close" id="modalClose">✕</button>
+      <h2 id="authTitle">Реєстрація / Вхід</h2>
+
       <form id="registerForm" class="auth-form" onsubmit="return false;">
         <input id="nickInput" type="text" placeholder="Псевдонім" required />
         <input id="emailInput" type="email" placeholder="Email" required />
-        <input id="passwordInput" type="password" placeholder="Пароль (мін. 6)" required />
+        <input id="passwordInput" type="password" placeholder="Пароль (мінімум 6)" required />
         <div class="auth-actions">
           <button id="registerSubmit" type="button">Зареєструватися</button>
           <button id="loginShow" type="button" style="background:#4b5563">Увійти</button>
         </div>
-        <div id="regError" class="err"></div>
+        <div id="regError" class="error-line"></div>
       </form>
+
       <form id="loginForm" class="auth-form" style="display:none" onsubmit="return false;">
         <input id="loginEmail" type="email" placeholder="Email" required />
         <input id="loginPassword" type="password" placeholder="Пароль" required />
@@ -239,48 +196,29 @@
           <button id="loginSubmit" type="button">Увійти</button>
           <button id="backToRegister" type="button" style="background:#4b5563">Назад</button>
         </div>
-        <div id="loginError" class="err"></div>
+        <div id="loginError" class="error-line"></div>
       </form>
     </div>
   </div>
 
-  <!-- Профіль -->
+  <!-- profile modal -->
   <div id="profileModal" class="modal" aria-hidden="true">
-    <div class="panel"><button class="close" id="profileClose">×</button><div id="profileContent"></div></div>
-  </div>
-
-  <!-- Друзі -->
-  <div id="friendsModal" class="modal" aria-hidden="true">
-    <div class="panel">
-      <button class="close" id="friendsClose">×</button>
-      <h3>Друзі</h3>
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <button id="friendsTabList" class="small-btn">Список</button>
-        <button id="friendsTabRequests" class="small-btn">Заявки</button>
-        <button id="friendsTabOnline" class="small-btn">Онлайн</button>
-      </div>
-      <div id="friendsContent" style="max-height:60vh;overflow:auto"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true">
+      <button class="modal-close" id="profileClose">✕</button>
+      <div id="profileContent"></div>
     </div>
   </div>
 
-  <!-- Інбокс ПМ -->
-  <div id="inboxModal" class="modal" aria-hidden="true">
-    <div class="panel">
-      <button class="close" id="inboxClose">×</button>
-      <h3>Особисті повідомлення</h3>
-      <div id="inboxList" style="max-height:60vh;overflow:auto"></div>
-    </div>
-  </div>
-
-  <!-- Меню дій над повідомленням -->
+  <!-- message actions menu -->
   <div id="msgMenu" class="msg-menu" role="menu">
     <button data-act="like">👍 Лайк</button>
-    <button data-act="warn">⚠️ Обережно (шахрай)</button>
+    <button data-act="warn">⚠️ Остережно (шахрай)</button>
     <button data-act="dislike">👎 Дизлайк</button>
     <button data-act="spam">🚫 Спам</button>
-    <button data-act="reply">💬 Відповісти</button>
+    <button data-act="reply">↩️ Відповісти</button>
   </div>
-    <!-- Firebase + логіка -->
+
+  <!-- Firebase + app logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import {
@@ -289,10 +227,10 @@
     } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import {
       getDatabase, ref as dbRef, push as dbPush, onChildAdded, query, orderByChild, limitToLast,
-      get as dbGet, set as dbSet, onValue, remove as dbRemove, update as dbUpdate
+      get as dbGet, set as dbSet, onValue, remove as dbRemove
     } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
-    /* ---- Firebase (твій робочий конфіг) ---- */
+    // ---------- Firebase config ----------
     const firebaseConfig = {
       apiKey: "AIzaSyDw_bVibsVyZegH7OJyZ_yRjI3uLhroVBk",
       authDomain: "praga-4baee.firebaseapp.com",
@@ -303,12 +241,12 @@
       appId: "1:336023952536:web:f7437feaa25b6eadcd04ed",
       measurementId: "G-BGDJD6R12N"
     };
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    /* ---- DOM ---- */
-    const brandText = document.getElementById('brandText');
+    // ---------- DOM refs ----------
     const tabButtons = document.querySelectorAll(".tab-button");
     const tabContents = document.querySelectorAll(".tab-content");
     const messagesEl = document.getElementById("messages");
@@ -316,8 +254,8 @@
     const messageInput = document.getElementById("messageInput");
     const sendButton = document.getElementById("sendButton");
     const fileInput = document.getElementById("fileInput");
+    const cameraLabel = document.getElementById("cameraLabel");
     const authModal = document.getElementById("authModal");
-    const authClose = document.getElementById("authClose");
     const registerForm = document.getElementById("registerForm");
     const loginForm = document.getElementById("loginForm");
     const nickInput = document.getElementById("nickInput");
@@ -329,392 +267,439 @@
     const backToRegister = document.getElementById("backToRegister");
     const loginEmail = document.getElementById("loginEmail");
     const loginPassword = document.getElementById("loginPassword");
+    const modalClose = document.getElementById("modalClose");
     const regError = document.getElementById("regError");
     const loginError = document.getElementById("loginError");
     const profileBtn = document.getElementById("profileBtn");
     const profileModal = document.getElementById("profileModal");
     const profileContent = document.getElementById("profileContent");
     const profileClose = document.getElementById("profileClose");
-    const friendsBtn = document.getElementById("friendsBtn");
-    const friendsModal = document.getElementById("friendsModal");
-    const friendsClose = document.getElementById("friendsClose");
-    const friendsContent = document.getElementById("friendsContent");
-    const inboxModal = document.getElementById("inboxModal");
-    const inboxClose = document.getElementById("inboxClose");
-    const inboxList = document.getElementById("inboxList");
     const msgMenu = document.getElementById("msgMenu");
-    const onlinePill = document.getElementById("onlinePill");
     const mapSearch = document.getElementById("mapSearch");
     const centerBtn = document.getElementById("centerBtn");
 
-    /* ---- Заголовок «ПРАГА ФУШКИ» по літерах ---- */
-    (function paintBrand(txt="ПРАГА ФУШКИ"){
-      brandText.innerHTML = txt.split('').map(ch=>`<span>${ch}</span>`).join('');
-    })();
-
-    /* ---- стан ---- */
+    // ---------- State ----------
     const DEFAULT_AVATAR = "https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg";
     let currentUser = null;
     const MSG_LIMIT = 200;
 
-    /* ---- вкладки / гарячі клавіші ---- */
-    function setActiveTab(id){
-      tabButtons.forEach(b=>b.classList.toggle('active', b.dataset.target===id));
-      tabContents.forEach(c=>c.classList.toggle('active', c.id===id));
-      if (id==="mapTab" && typeof google!=='undefined' && window.map){
-        google.maps.event.trigger(window.map,'resize');
+    // ---------- Tabs + hotkeys ----------
+    function setActiveTab(id) {
+      tabButtons.forEach(b => b.classList.toggle("active", b.dataset.target === id));
+      tabContents.forEach(c => c.classList.toggle("active", c.id === id));
+      if (id === "chatTab" || id === "rentTab") messageInput.focus();
+      if (id === "mapTab") {
+        // триггер корректного ресайза карты при показе вкладки
+        if (window.map && typeof google !== 'undefined') {
+          google.maps.event.trigger(window.map,'resize');
+          // восстановим центр/зум после ресайза
+          const saved = JSON.parse(localStorage.getItem('map_state') || '{}');
+          if (saved.center && saved.zoom) {
+            window.map.setCenter(saved.center);
+            window.map.setZoom(saved.zoom);
+          }
+        } else {
+          // если скрипт ещё не прогрузился — инициируем
+          maybeInitMap();
+        }
       }
     }
-    tabButtons.forEach(btn=>btn.addEventListener('click', ()=>setActiveTab(btn.dataset.target)));
-    document.addEventListener('keydown', e=>{
+    tabButtons.forEach(btn => btn.addEventListener("click", ()=> setActiveTab(btn.dataset.target)));
+    document.addEventListener("keydown", (e)=> {
       const k = e.key.toLowerCase();
-      if (k==='c') setActiveTab('chatTab');
-      if (k==='r') setActiveTab('rentTab');
-      if (k==='m') setActiveTab('mapTab');
-      if (k==='h') setActiveTab('helpTab');
+      if (k === 'c') setActiveTab("chatTab");
+      if (k === 'r') setActiveTab("rentTab");
+      if (k === 'm') setActiveTab("mapTab");
+      if (k === 'h') setActiveTab("helpTab");
     });
 
-    /* ---- модалка авторизації ---- */
-    function showAuth(){ authModal.classList.add('show'); authModal.setAttribute('aria-hidden','false'); regError.textContent=''; loginError.textContent=''; }
-    function hideAuth(){ authModal.classList.remove('show'); authModal.setAttribute('aria-hidden','true'); }
-    authClose.addEventListener('click', hideAuth);
-    loginShow.addEventListener('click', ()=>{ registerForm.style.display='none'; loginForm.style.display='block'; });
-    backToRegister.addEventListener('click', ()=>{ registerForm.style.display='block'; loginForm.style.display='none'; });
+    // ---------- Auth ----------
+    function showAuthModal(){ authModal.classList.add("show"); authModal.setAttribute("aria-hidden","false"); regError.textContent=""; loginError.textContent=""; }
+    function hideAuthModal(){ authModal.classList.remove("show"); authModal.setAttribute("aria-hidden","true"); }
+    modalClose?.addEventListener("click", hideAuthModal);
+    loginShow?.addEventListener("click", ()=>{ registerForm.style.display="none"; loginForm.style.display="block"; });
+    backToRegister?.addEventListener("click", ()=>{ registerForm.style.display="block"; loginForm.style.display="none"; });
 
-    registerSubmit.addEventListener('click', async ()=>{
-      regError.textContent='';
-      const nick=nickInput.value.trim(), email=emailInput.value.trim(), pass=passwordInput.value.trim();
-      if (!nick||!email||!pass) { regError.textContent="Заповніть усі поля"; return; }
-      if (pass.length<6){ regError.textContent="Пароль мінімум 6 символів"; return; }
-      try{
+    registerSubmit?.addEventListener("click", async ()=> {
+      regError.textContent = "";
+      const nick = nickInput.value.trim();
+      const email = emailInput.value.trim();
+      const pass = passwordInput.value.trim();
+      if (!nick || !email || !pass) { regError.textContent = "Заповніть усі поля"; return; }
+      if (pass.length < 6) { regError.textContent = "Пароль мінімум 6 символів"; return; }
+      try {
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
-        await updateProfile(cred.user, { displayName:nick, photoURL:DEFAULT_AVATAR });
-        await dbSet(dbRef(db, `users/${cred.user.uid}`), { nick, email, avatar:DEFAULT_AVATAR, createdAt:Date.now(), online:true });
+        await updateProfile(cred.user, { displayName: nick, photoURL: DEFAULT_AVATAR });
+        await dbSet(dbRef(db, `users/${cred.user.uid}`), { nick, email, avatar: DEFAULT_AVATAR, createdAt: Date.now(), online: true });
+        localStorage.setItem("regTime_" + cred.user.uid, String(Date.now()));
         await sendEmailVerification(cred.user);
-        /* для статистики реєстрацій */
-        const dayKey = new Date().toISOString().slice(0,10);
-        await dbUpdate(dbRef(db, `stats/registrations/${dayKey}`), { count: (await dbGet(dbRef(db, `stats/registrations/${dayKey}/count`))).val() ? ( (await dbGet(dbRef(db, `stats/registrations/${dayKey}/count`))).val()+1 ) : 1 }).catch(()=>{});
-        hideAuth();
-        alert("Реєстрація успішна. 6 годин доступу без підтвердження email.");
-      }catch(err){ regError.textContent = err?.message || String(err); }
-    });
-
-    loginSubmit.addEventListener('click', async ()=>{
-      loginError.textContent='';
-      const email=loginEmail.value.trim(), pass=loginPassword.value.trim();
-      if (!email||!pass){ loginError.textContent="Заповніть email і пароль"; return; }
-      try{ await signInWithEmailAndPassword(auth, email, pass); hideAuth(); }catch(err){ loginError.textContent=err?.message||String(err); }
-    });
-
-    onAuthStateChanged(auth, async (user)=>{
-      currentUser = user;
-      profileBtn.style.backgroundImage = `url(${user?.photoURL || DEFAULT_AVATAR})`;
-      if (user){
-        await dbSet(dbRef(db, `presence/${user.uid}`), { ts: Date.now(), nick: user.displayName || user.email });
+        hideAuthModal();
+        alert("Ви зареєстровані. Лист для підтвердження надіслано. У вас 6 годин доступу без підтвердження.");
+      } catch (err) {
+        console.error("register err", err);
+        regError.textContent = err?.message || String(err);
       }
-      updateOnline(); /* оновити лічильник */
-      loadInbox();    /* підвантажити інбокс ПМ */
     });
 
-    /* ---- 6 годин без верифікації ---- */
+    loginSubmit?.addEventListener("click", async ()=> {
+      loginError.textContent = "";
+      const email = loginEmail.value.trim();
+      const pass = loginPassword.value.trim();
+      if (!email || !pass) { loginError.textContent = "Заповніть email і пароль"; return; }
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        hideAuthModal();
+      } catch (err) {
+        console.error("login err", err);
+        loginError.textContent = err?.message || String(err);
+      }
+    });
+
+    onAuthStateChanged(auth, (user)=> {
+      currentUser = user;
+      if (user) {
+        profileBtn.style.background = `url(${user.photoURL || DEFAULT_AVATAR}) center/cover`;
+        try { dbSet(dbRef(db, `presence/${user.uid}`), { ts: Date.now(), nick: user.displayName || user.email }); } catch(e){}
+      } else {
+        profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
+      }
+      updateOnlineCount();
+    });
+
+    // ---------- 6 годин без підтвердження ----------
     async function canSendMessage(){
-      const u = auth.currentUser; if (!u) return false;
-      if (u.emailVerified) return true;
-      const key = "regTime_"+u.uid;
-      const local = localStorage.getItem(key);
-      const six = 6*60*60*1000;
-      if (local && Date.now()-Number(local) < six) return true;
-      const snap = await dbGet(dbRef(db, `users/${u.uid}/createdAt`));
-      if (snap.exists() && Date.now()-Number(snap.val()) < six){ localStorage.setItem(key, String(snap.val())); return true; }
+      const user = auth.currentUser;
+      if (!user) return false;
+      if (user.emailVerified) return true;
+      const localKey = "regTime_" + user.uid;
+      const localVal = localStorage.getItem(localKey);
+      const sixHours = 6 * 60 * 60 * 1000;
+      if (localVal && (Date.now() - Number(localVal) < sixHours)) return true;
+      try {
+        const snap = await dbGet(dbRef(db, `users/${user.uid}/createdAt`));
+        if (snap && snap.exists()) {
+          const created = Number(snap.val());
+          if (!Number.isNaN(created) && Date.now() - created < sixHours) {
+            localStorage.setItem(localKey, String(created));
+            return true;
+          }
+        }
+      } catch (e) { console.error("canSendMessage db get error", e); }
       return false;
     }
 
-    /* ---- рендер повідомлення ---- */
-    function tstr(ts){ return new Date(ts).toLocaleString(); }
-    function renderMessage(m, container=messagesEl){
+    // ---------- Rendering ----------
+    function timeStr(ts){ return new Date(ts).toLocaleString(); }
+    function renderMessage(m, container = messagesEl){
       if (!m || !m.ts) return;
-      const wrap = document.createElement('div');
-      wrap.className = 'message' + ((currentUser && m.uid===currentUser.uid)?' self':'');
-      wrap.dataset.uid = m.uid || '';
-      wrap.dataset.msgid = m.id || '';
+      const wrap = document.createElement("div");
+      wrap.className = "message" + ((currentUser && m.uid === currentUser?.uid) ? " self" : "");
+      wrap.dataset.uid = m.uid || "";
+      wrap.dataset.msgid = m.id || "";
 
-      const ava = document.createElement('img');
-      ava.className='avatar'; ava.src=m.avatar||DEFAULT_AVATAR; ava.alt=m.nick||'avatar'; ava.title=m.nick||'Профіль';
-      ava.addEventListener('click', ()=> openProfile(m.uid));
+      const avatar = document.createElement("img");
+      avatar.className = "avatar";
+      avatar.src = m.avatar || DEFAULT_AVATAR;
+      avatar.alt = m.nick || "avatar";
+      avatar.title = m.nick || "Показ профілю";
+      avatar.addEventListener("click", ()=> openProfile(m.uid));
 
-      const bubble = document.createElement('div'); bubble.className='bubble';
-      const meta = document.createElement('div'); meta.className='meta';
-      meta.textContent = `${m.nick||'Анонім'} · ${tstr(m.ts)}${m.recipientUid?' · особисте':''}`;
-      bubble.appendChild(meta);
-      if (m.text){ const d=document.createElement('div'); d.className='txt'; d.innerText=m.text; bubble.appendChild(d); }
-      if (m.image){ const im=document.createElement('img'); im.src=m.image; im.alt='Фото'; bubble.appendChild(im); }
+      const txt = document.createElement("div");
+      txt.className = "message-content";
+      const meta = document.createElement("div");
+      meta.className = "message-meta";
+      meta.textContent = `${m.nick || "Анонім"} · ${timeStr(m.ts)}` + (m.recipientUid ? " · особисте" : "");
+      txt.appendChild(meta);
 
-      wrap.appendChild(ava); wrap.appendChild(bubble); container.appendChild(wrap);
+      if (m.text) {
+        const p = document.createElement("div");
+        p.className = "text";
+        p.innerText = m.text;
+        txt.appendChild(p);
+      }
+      if (m.image) {
+        const im = document.createElement("img");
+        im.src = m.image;
+        im.alt = "Фото";
+        im.className = "chat-image";
+        txt.appendChild(im);
+      }
 
-      wrap.addEventListener('contextmenu', (ev)=>{ ev.preventDefault(); showMsgMenu(ev.pageX, ev.pageY, m, wrap); });
+      wrap.appendChild(avatar);
+      wrap.appendChild(txt);
+      container.appendChild(wrap);
 
-      const area = container.closest('.chat-area');
-      if (area && (area.scrollHeight - area.scrollTop - area.clientHeight < 200)) area.scrollTop = area.scrollHeight;
+      // контекстное меню
+      wrap.addEventListener('contextmenu', (ev) => {
+        ev.preventDefault();
+        showMsgMenu(ev.pageX, ev.pageY, m, wrap);
+      });
+
+      // автоскролл
+      const chatArea = container.closest('.chat-area');
+      if (chatArea) {
+        const nearBottom = chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight < 200;
+        if (nearBottom) chatArea.scrollTop = chatArea.scrollHeight;
+      }
     }
 
-    /* ---- підписка на основний чат ---- */
+    // ---------- Subscriptions ----------
     const msgsQuery = query(dbRef(db, "messages"), orderByChild("ts"), limitToLast(MSG_LIMIT));
-    onChildAdded(msgsQuery, (snap)=>{ const m = snap.val(); m.id = snap.key; renderMessage(m, messagesEl); });
+    onChildAdded(msgsQuery, (snap) => {
+      const m = snap.val(); m.id = snap.key;
+      renderMessage(m, messagesEl);
+    });
 
-    /* ---- підписка на чат оренди ---- */
-    const rentQuery = query(dbRef(db, "rentMessages"), orderByChild("ts"), limitToLast(200));
-    onChildAdded(rentQuery, (snap)=>{ const m=snap.val(); m.id=snap.key; renderMessage(m, rentMessagesEl); });
+    const rentQuery = query(dbRef(db, "rentMessages"), orderByChild("ts"), limitToLast(MSG_LIMIT));
+    onChildAdded(rentQuery, (snap) => {
+      const m = snap.val(); m.id = snap.key;
+      renderMessage(m, rentMessagesEl);
+    });
 
-    /* ---- ресайз фото у браузері ---- */
-    function resizeImageFile(file, maxW=900, quality=.8){
-      return new Promise((resolve,reject)=>{
-        const img=new Image(), reader=new FileReader();
-        reader.onload=e=>{ img.onload=()=>{ const sc=Math.min(1,maxW/img.width); const w=Math.round(img.width*sc), h=Math.round(img.height*sc);
-          const c=document.createElement('canvas'); c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
-          resolve(c.toDataURL('image/jpeg',quality)); }; img.onerror=reject; img.src=e.target.result; };
-        reader.onerror=reject; reader.readAsDataURL(file);
+    // ---------- Image helper ----------
+    function resizeImageFile(file, maxWidth = 900, quality = 0.8) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          img.onload = () => {
+            const scale = Math.min(1, maxWidth / img.width);
+            const w = Math.round(img.width * scale);
+            const h = Math.round(img.height * scale);
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            const dataUrl = canvas.toDataURL('image/jpeg', quality);
+            resolve(dataUrl);
+          };
+          img.onerror = (err) => reject(err);
+          img.src = e.target.result;
+        };
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
       });
     }
 
-    /* ---- Відправити повідомлення ---- */
-    document.getElementById('cameraLabel').addEventListener('click', (e)=>{ if (!auth.currentUser){ e.preventDefault(); showAuth(); } });
-    sendButton.addEventListener('click', async ()=>{
-      if (!auth.currentUser){ showAuth(); return; }
-      if (!await canSendMessage()){ alert("Підтвердіть email або скористайтесь 6-годинним доступом."); return; }
-      const text = messageInput.value.trim(); const file = fileInput.files[0];
+    // ---------- Send message (работает и для "Чат", и для "Чат Оренда") ----------
+    sendButton.addEventListener("click", async ()=>{
+      if (!auth.currentUser) { showAuthModal(); return; }
+      if (!await canSendMessage()) { alert("Підтвердіть email або скористайтесь 6-годинним доступом після реєстрації."); return; }
+
+      const text = messageInput.value.trim();
+      const file = fileInput.files[0];
       if (!text && !file) return;
 
-      let imageData=null;
-      if (file){ try{ imageData = await resizeImageFile(file, 1000, .8); }catch{ return alert("Помилка обробки фото"); } }
+      let imageData = null;
+      if (file) {
+        try {
+          imageData = await resizeImageFile(file, 900, 0.8);
+        } catch (e) {
+          console.error("resize error", e);
+          alert("Помилка обробки фото");
+          return;
+        }
+      }
 
-      const msg = { uid:auth.currentUser.uid, nick:auth.currentUser.displayName||auth.currentUser.email||'Анонім', avatar:auth.currentUser.photoURL||DEFAULT_AVATAR, text:text||null, image:imageData||null, ts:Date.now(), recipientUid:null };
-      try{ await dbPush(dbRef(db,"messages"), msg); messageInput.value=""; fileInput.value=""; }catch{ alert("Помилка відправки"); }
+      const msg = {
+        uid: auth.currentUser.uid,
+        nick: auth.currentUser.displayName || auth.currentUser.email || "Анонім",
+        avatar: auth.currentUser.photoURL || DEFAULT_AVATAR,
+        text: text || null,
+        image: imageData || null,
+        ts: Date.now(),
+        recipientUid: null
+      };
+
+      // выберем коллекцию по активной вкладке
+      const activeTab = document.querySelector(".tab-button.active")?.dataset.target || "chatTab";
+      const path = (activeTab === "rentTab") ? "rentMessages" : "messages";
+
+      try {
+        await dbPush(dbRef(db, path), msg);
+        messageInput.value = "";
+        fileInput.value = "";
+      } catch (err) {
+        console.error("dbPush error", err);
+        alert("Помилка відправки повідомлення");
+      }
     });
-    messageInput.addEventListener('keydown', e=>{ if (e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendButton.click(); } });
 
-    /* ---- Профіль / Друзі / Інбокс ---- */
-    function closeModal(m){ m.classList.remove('show'); m.setAttribute('aria-hidden','true'); }
-    function openModal(m){ m.classList.add('show'); m.setAttribute('aria-hidden','false'); }
+    messageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendButton.click(); }
+    });
 
-    profileBtn.addEventListener('click', ()=>{ if (!auth.currentUser) return showAuth(); openProfile(auth.currentUser.uid, true); });
-    profileClose.addEventListener('click', ()=> closeModal(profileModal));
+    document.querySelector('.camera-btn')?.addEventListener("click", (e) => {
+      if (!auth.currentUser) { e.preventDefault(); showAuthModal(); return; }
+    });
 
-    friendsBtn.addEventListener('click', ()=>{ if (!auth.currentUser) return showAuth(); loadFriends('list'); openModal(friendsModal); });
-    friendsClose.addEventListener('click', ()=> closeModal(friendsModal));
-
-    document.getElementById('bellBtn').addEventListener('click', ()=>{ if (!auth.currentUser) return showAuth(); loadInbox(); openModal(inboxModal); });
-    inboxClose.addEventListener('click', ()=> closeModal(inboxModal));
+    // ---------- Profile ----------
+    profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
+    profileBtn.addEventListener("click", async ()=> {
+      if (!auth.currentUser) { showAuthModal(); return; }
+      openProfile(auth.currentUser.uid, true);
+    });
+    profileClose.addEventListener("click", ()=> { profileModal.classList.remove("show"); profileModal.setAttribute("aria-hidden","true"); });
 
     async function openProfile(uid, self=false){
-      openModal(profileModal);
-      profileContent.innerHTML = "<p>Завантаження…</p>";
-      try{
+      profileContent.innerHTML = "<p>Завантаження...</p>";
+      profileModal.classList.add("show"); profileModal.setAttribute("aria-hidden","false");
+      try {
         const snap = await dbGet(dbRef(db, `users/${uid}`));
-        const user = snap.exists()? snap.val() : { nick:'Анонім', avatar:DEFAULT_AVATAR };
-        const isSelf = currentUser && currentUser.uid===uid;
+        const user = (snap && snap.exists()) ? snap.val() : { nick: "Анонім", avatar: DEFAULT_AVATAR };
+        const isSelf = auth.currentUser && auth.currentUser.uid === uid;
         profileContent.innerHTML = `
           <div style="display:flex;gap:12px;align-items:center">
-            <img src="${user.avatar||DEFAULT_AVATAR}" style="width:84px;height:84px;border-radius:12px;object-fit:cover">
-            <div><h3 style="margin:0">${user.nick||'Анонім'}</h3><div style="color:#555">${user.email||''}</div></div>
+            <img src="${user.avatar || DEFAULT_AVATAR}" style="width:84px;height:84px;border-radius:12px;object-fit:cover">
+            <div>
+              <h3>${user.nick || "Анонім"}</h3>
+              <div style="color:${user.email ? '#333' : '#666'}">${user.email || ''}</div>
+            </div>
           </div>
           <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-            ${isSelf ? '<button id="editAvatarBtn" class="small-btn">Змінити аватар</button><button id="signOutBtn" class="small-btn">Вийти</button>' :
-              '<button id="pmBtn" class="small-btn">Написати</button><button id="addFriendBtn" class="small-btn">Додати в друзі</button>'}
-            <button id="inboxOpenBtn" class="small-btn">Особисті</button>
+            ${isSelf ? '<button id="editAvatarBtn" class="small-btn">Змінити аватар</button>' : `<button id="pmBtn" class="small-btn">Написати</button><button id="addFriendBtn" class="small-btn">Додати в друзі</button>`}
+            <button id="viewPhotosBtn" class="small-btn">Галерея</button>
           </div>
-          <div id="profileMsg" style="margin-top:6px;color:#b91c1c"></div>
+          <div id="profileMsg" style="margin-top:8px;color:#b91c1c"></div>
         `;
         if (isSelf){
-          document.getElementById('editAvatarBtn').onclick = ()=>{
-            const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
-            inp.onchange=async ()=>{ const f=inp.files[0]; if (!f) return;
-              const dataUrl = await resizeImageFile(f, 420, .8);
-              await dbSet(dbRef(db, `users/${uid}/avatar`), dataUrl);
-              await updateProfile(auth.currentUser, { photoURL:dataUrl });
-              profileBtn.style.backgroundImage=`url(${dataUrl})`; openProfile(uid,true);
-            }; inp.click();
-          };
-          document.getElementById('signOutBtn').onclick = async ()=>{ try{ await dbRemove(dbRef(db,`presence/${uid}`)); }catch{} auth.signOut(); closeModal(profileModal); };
-        }else{
-          document.getElementById('pmBtn').onclick = ()=> openPrivateChat(uid);
-          document.getElementById('addFriendBtn').onclick = async ()=>{
-            if (!auth.currentUser) return showAuth();
-            await dbSet(dbRef(db, `friends/${auth.currentUser.uid}/${uid}`), { ts:Date.now() });
-            document.getElementById('profileMsg').textContent='Запит надіслано / додано';
-          };
+          document.getElementById("editAvatarBtn").addEventListener("click", ()=> {
+            const inp = document.createElement("input"); inp.type="file"; inp.accept="image/*";
+            inp.addEventListener("change", async ()=> {
+              const f = inp.files[0];
+              if (!f) return;
+              try {
+                const dataUrl = await resizeImageFile(f, 400, 0.8);
+                await dbSet(dbRef(db, `users/${uid}/avatar`), dataUrl);
+                await updateProfile(auth.currentUser, { photoURL: dataUrl });
+                profileContent.querySelector('img').src = dataUrl;
+                profileBtn.style.background = `url(${dataUrl}) center/cover`;
+                alert("Аватар оновлено");
+              } catch(e){ alert("Помилка завантаження аватара"); console.error(e); }
+            });
+            inp.click();
+          });
+        } else {
+          document.getElementById("pmBtn").addEventListener("click", ()=> {
+            profileModal.classList.remove("show"); profileModal.setAttribute("aria-hidden","true");
+            openPrivateChat(uid);
+          });
+          document.getElementById("addFriendBtn").addEventListener("click", async ()=> {
+            if (!auth.currentUser) { showAuthModal(); return; }
+            try {
+              await dbSet(dbRef(db, `friends/${auth.currentUser.uid}/${uid}`), { ts: Date.now() });
+              document.getElementById("profileMsg").textContent = "Запит на додавання відправлено / додано.";
+            } catch(e){ document.getElementById("profileMsg").textContent = "Помилка"; }
+          });
         }
-        document.getElementById('inboxOpenBtn').onclick = ()=>{ loadInbox(); openModal(inboxModal); };
-      }catch{ profileContent.innerHTML="<p>Помилка завантаження профілю</p>"; }
+      } catch(e){ profileContent.innerHTML = "<p>Помилка завантаження профілю</p>"; }
     }
-    /* ---- Особисті (ПМ) з інбоксом ---- */
+
+    // ---------- Private chat ----------
     async function openPrivateChat(otherUid){
-      if (!auth.currentUser) return showAuth();
+      if (!auth.currentUser){ showAuthModal(); return; }
       const uid = auth.currentUser.uid;
-      const convoId = uid < otherUid ? `${uid}_${otherUid}` : `${otherUid}_${uid}`;
+      const convoId = uid < otherUid ? uid + "_" + otherUid : otherUid + "_" + uid;
       const text = prompt("Напишіть особисте повідомлення:");
       if (!text) return;
-      await dbPush(dbRef(db, `privateMessages/${convoId}`), { from:uid, to:otherUid, text, ts:Date.now() });
-      /* нотиф для отримувача */
-      await dbPush(dbRef(db, `notifications/${otherUid}`), { type:'pm', from:uid, ts:Date.now(), convoId });
-      alert("Відправлено");
-    }
-    async function loadInbox(){
-      if (!auth.currentUser) return;
-      const uid = auth.currentUser.uid;
-      const node = dbRef(db, 'privateMessages');
-      const snap = await dbGet(node);
-      const mine = [];
-      if (snap.exists()){
-        const all = snap.val();
-        Object.keys(all).forEach(cid=>{
-          const msgs = all[cid];
-          const arr = Object.keys(msgs).map(k=>msgs[k]).filter(m=>m.from===uid || m.to===uid);
-          if (arr.length){
-            const last = arr.sort((a,b)=>a.ts-b.ts).at(-1);
-            const other = last.from===uid ? last.to : last.from;
-            mine.push({ cid, last, other });
-          }
-        });
-      }
-      inboxList.innerHTML = mine.sort((a,b)=>b.last.ts-a.last.ts).map(it=>`
-        <div style="padding:10px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;gap:10px;align-items:center">
-          <div>
-            <div style="font-weight:700">${it.other}</div>
-            <div style="font-size:12px;color:#555">${new Date(it.last.ts).toLocaleString()}</div>
-            <div>${it.last.text}</div>
-          </div>
-          <button class="small-btn" data-reply="${it.other}">Відповісти</button>
-        </div>
-      `).join('') || '<div>Порожньо</div>';
-      inboxList.querySelectorAll('[data-reply]').forEach(btn=>{
-        btn.onclick = ()=> openPrivateChat(btn.dataset.reply);
-      });
+      const pm = { from: uid, to: otherUid, text, ts: Date.now() };
+      await dbPush(dbRef(db, `privateMessages/${convoId}`), pm);
+      alert("Повідомлення відправлено");
     }
 
-    /* ---- Друзі ---- */
-    async function getFriends(uid){ const s=await dbGet(dbRef(db,`friends/${uid}`)); return s.exists()? Object.keys(s.val()) : []; }
-    async function getPresence(uid){ const s=await dbGet(dbRef(db,`presence/${uid}`)); return s.exists()? s.val():null; }
-
-    async function loadFriends(mode='list'){
-      const uid = auth.currentUser.uid;
-      const friends = await getFriends(uid);
-      if (mode==='online'){
-        const arr=[]; for (const f of friends){ const p=await getPresence(f); if (p) arr.push({uid:f, ...p}); }
-        friendsContent.innerHTML = arr.map(p=>`<div style="padding:8px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center">
-          <div><b>${p.nick||p.uid}</b> <span style="color:#10b981">● online</span></div>
-          <button class="small-btn" data-pm="${p.uid}">Написати</button>
-        </div>`).join('') || '<div>Немає онлайн</div>';
-        friendsContent.querySelectorAll('[data-pm]').forEach(b=> b.onclick=()=>openPrivateChat(b.dataset.pm));
-      } else if (mode==='requests'){
-        /* спрощено: заявки — це ті, кого ти додав, але тебе ще ні (для демо) */
-        friendsContent.innerHTML = friends.map(f=>`<div style="padding:8px;border-bottom:1px solid #eee;display:flex;gap:8px;align-items:center">
-          <div style="flex:1">${f}</div>
-          <button class="small-btn" data-approve="${f}">Підтвердити</button>
-          <button class="small-btn" data-remove="${f}">Видалити</button>
-        </div>`).join('') || '<div>Заявок немає</div>';
-        friendsContent.querySelectorAll('[data-approve]').forEach(b=> b.onclick=async ()=>{ await dbSet(dbRef(db,`friends/${b.dataset.approve}/${uid}`),{ts:Date.now()}); loadFriends('requests'); });
-        friendsContent.querySelectorAll('[data-remove]').forEach(b=> b.onclick=async ()=>{ await dbRemove(dbRef(db,`friends/${uid}/${b.dataset.remove}`)); loadFriends('requests'); });
-      } else {
-        friendsContent.innerHTML = friends.map(f=>`<div style="padding:8px;border-bottom:1px solid #eee;display:flex;gap:8px;align-items:center">
-          <div style="flex:1">${f}</div>
-          <button class="small-btn" data-pm="${f}">Написати</button>
-          <button class="small-btn" data-unf="${f}">Видалити</button>
-        </div>`).join('') || '<div>Друзів поки немає</div>';
-        friendsContent.querySelectorAll('[data-pm]').forEach(b=> b.onclick=()=>openPrivateChat(b.dataset.pm));
-        friendsContent.querySelectorAll('[data-unf]').forEach(b=> b.onclick=async ()=>{ await dbRemove(dbRef(db,`friends/${uid}/${b.dataset.unf}`)); loadFriends('list'); });
-      }
-      document.getElementById('friendsTabList').onclick = ()=> loadFriends('list');
-      document.getElementById('friendsTabRequests').onclick = ()=> loadFriends('requests');
-      document.getElementById('friendsTabOnline').onclick = ()=> loadFriends('online');
-    }
-
-    /* ---- Меню дій над повідомленням ---- */
+    // ---------- Message menu ----------
     function showMsgMenu(x,y,msg,wrap){
-      msgMenu.style.left = x+"px"; msgMenu.style.top = y+"px"; msgMenu.style.display="block";
-      const hide=()=>{ msgMenu.style.display="none"; document.removeEventListener('click', hide); };
-      document.addEventListener('click', hide, {once:true});
+      msgMenu.style.left = x + "px"; msgMenu.style.top = y + "px"; msgMenu.style.display = "block";
+      const hide = ()=> { msgMenu.style.display = "none"; document.removeEventListener("click", hide); };
+      document.addEventListener("click", hide, { once:true });
       msgMenu.querySelectorAll('button').forEach(btn=>{
-        btn.onclick = async ()=>{
+        btn.onclick = async ()=> {
           const act = btn.dataset.act;
-          try{
-            if (act==='reply'){
-              const r = prompt("Відповідь:");
-              if (r){
-                await dbPush(dbRef(db,"messages"), {
-                  uid:auth.currentUser.uid, nick:auth.currentUser.displayName||auth.currentUser.email,
-                  avatar:auth.currentUser.photoURL||DEFAULT_AVATAR, text:"↩️ "+r, ts:Date.now(), recipientUid:msg.uid
+          try {
+            if (act === 'reply') {
+              const r = prompt("Ваша відповідь:");
+              if (r) {
+                await dbPush(dbRef(db, "messages"), {
+                  uid: auth.currentUser.uid,
+                  nick: auth.currentUser.displayName || auth.currentUser.email || "Анонім",
+                  avatar: auth.currentUser.photoURL || DEFAULT_AVATAR,
+                  text: "↩️ Відповідь: " + r,
+                  ts: Date.now(),
+                  recipientUid: msg.uid
                 });
               }
             } else {
-              if (msg.id){ await dbSet(dbRef(db, `messageReactions/${msg.id}/${auth.currentUser.uid}`), { act, ts:Date.now() }); alert("OK: "+act); }
+              if (msg.id) {
+                await dbSet(dbRef(db, `messageReactions/${msg.id}/${auth.currentUser.uid}`), { act, ts: Date.now() });
+                alert("Дія виконана: " + act);
+              } else alert("Немає id повідомлення");
             }
-          }catch{ alert("Помилка"); }
+          } catch(e){ console.error(e); alert("Помилка дії"); }
         };
       });
     }
 
-    /* ---- Онлайн-лічильник (реальний у шапці, x10 не показуємо) ---- */
-    function updateOnline(){
-      onValue(dbRef(db,'presence'), (snap)=>{
+    // ---------- Presence / online counter ----------
+    function updateOnlineCount(){
+      onValue(dbRef(db, "presence"), (snap)=>{
         const val = snap.val() || {};
         const real = Object.keys(val).length;
-        onlinePill.textContent = `Онлайн: ${real}`;
+        const shown = real * 10;
+        document.querySelector('.sys-msg').textContent =
+          `Якщо ви вперше — натисніть "Відправити" — з'явиться реєстрація. 6 годин доступу без підтвердження email. Онлайн (прибл.): ${shown}`;
       });
     }
+    window.addEventListener('beforeunload', async ()=> {
+      try{ await dbRemove(dbRef(db, `presence/${auth.currentUser?.uid}`)); } catch(e){}
+    });
 
-    /* ---- Боти: інтервал ×2.5 (на 60% рідше) ---- */
-    const BOT_USERS = [
-      { uid:'bot_1_pf', nick:'Oleh S.', avatar:'https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg',
-        ads:[
-          {text:`O2 СІМ КАРТА\nБез ліміт інтернет\nПлата 699 крон/міс`, image:null},
-          {text:'Продаю iPhone 11 Pro Max — пишіть в приват', image:'https://i.ibb.co/dwcXPqDr/IMG-1954f6b56869b9817a131ae33f3a37b6-V.jpg'},
-          {text:'Акція: чохли у подарунок', image:null}
-        ],
-        base: 2*60*1000
-      },
-      { uid:'bot_2_pf', nick:'Anna M.', avatar:'https://i.ibb.co/QFWDvGZ8/IMG-6748e7141906901b131b8fd5130a5c01-V.jpg',
-        ads:[
-          {text:'Запрошую моделей на перманентний макіяж. Прага.', image:'https://i.ibb.co/QFWDvGZ8/IMG-6748e7141906901b131b8fd5130a5c01-V.jpg'},
-          {text:'Губи (дозвіл на відео/фото). Лише за матеріал.', image:null},
-          {text:'28.07 о 14:00. Пишіть у приват 🫶🏻', image:null}
-        ],
-        base: 3*60*1000
-      },
-      { uid:'bot_3_pf', nick:'Marek H.', avatar:'https://i.ibb.co/rfNV6ddC/IMG-0cd648a74f86227fe46db2d01c099be0-V.jpg',
-        ads:[
-          {text:'Потрібен водій для переїзду. WhatsApp +48 793 463 757', image:null},
-          {text:'Є бус для перевезень. Телеграм: @carlx_xxx', image:null},
-          {text:'Доступний сьогодні: пишіть', image:'https://i.ibb.co/MzdTMPR/IMG-8231d8142ffcbba7c682ca598683e3f2-V.jpg'}
-        ],
-        base: 4*60*1000
-      }
+    // ---------- Bots (замедлены на 60%) ----------
+    const BOTS = [
+      { uid: "bot_1", nick:"Bot_Оголошення_1",
+        ads: ["🍲 Безкоштовна їжа для переселенців — адреса A","🧸 Речі для дітей — пункт B","⛑️ Першопоміч — інфо C"],
+        interval: 2*60*1000 },
+      { uid: "bot_2", nick:"Bot_Оголошення_2",
+        ads: ["🏠 Допомога з житлом — контакти D","🛍️ Пакети допомоги — пункт E","🤝 Івент волонтерів — F"],
+        interval: 3*60*1000 },
+      { uid: "bot_3", nick:"Bot_Оголошення_3",
+        ads: ["⚖️ Юридичні консультації — G","🍛 Гарячі обіди — H","🗣️ Курси мови — I"],
+        interval: 4*60*1000 },
     ];
-    const SLOW = 2.5; // ×2.5 інтервали = −60% частоти
     (function startBots(){
-      BOT_USERS.forEach(bot=>{
-        let i=0; setInterval(async ()=>{
-          const ad = bot.ads[i % bot.ads.length]; i++;
-          try{
-            await dbPush(dbRef(db,'messages'), { uid:bot.uid, nick:bot.nick, avatar:bot.avatar, text:ad.text, image:ad.image||null, ts:Date.now() });
-            await dbPush(dbRef(db,'botPosts'), { uid:bot.uid, nick:bot.nick, text:ad.text, ts:Date.now() });
-          }catch(e){ console.error('bot push err', e); }
-        }, Math.round(bot.base * SLOW));
+      BOTS.forEach((bot)=>{
+        // +60% к базовому интервалу
+        const slowed = Math.round(bot.interval * 1.6);
+        let i = 0;
+        setInterval(async ()=>{
+          const text = bot.ads[i % bot.ads.length];
+          i++;
+          try {
+            await dbPush(dbRef(db, "messages"), {
+              uid: bot.uid,
+              nick: bot.nick,
+              avatar: DEFAULT_AVATAR,
+              text,
+              ts: Date.now()
+            });
+          } catch(e){ console.error("bot push err", e); }
+        }, slowed);
       });
     })();
 
-    /* ---- Карта + 25 точок ---- */
+    // ---------- Map ----------
     const POINTS = [
       { title: "Nemocnice Motol", pos: {lat:50.058, lng:14.360}, cat:"hospital" },
-      { title: "Nemocnice Na Františku", pos: {lat:50.086, lng:14.418}, cat:"hospital" },
+      { title: "Nemocnice Na Frantisku", pos: {lat:50.086, lng:14.418}, cat:"hospital" },
       { title: "Klinika Praha", pos: {lat:50.078, lng:14.422}, cat:"hospital" },
-      { title: "Právní pomoc A", pos: {lat:50.083, lng:14.412}, cat:"lawyer" },
-      { title: "Právní pomoc B", pos: {lat:50.089, lng:14.430}, cat:"lawyer" },
-      { title: "Advokátní kancelář C", pos: {lat:50.071, lng:14.425}, cat:"lawyer" },
+      { title: "Pravni pomoc центр A", pos: {lat:50.083, lng:14.412}, cat:"lawyer" },
+      { title: "Pravni pomoc центр B", pos: {lat:50.089, lng:14.430}, cat:"lawyer" },
+      { title: "Advokatni kancelar C", pos: {lat:50.071, lng:14.425}, cat:"lawyer" },
       { title: "Albert Supermarket", pos: {lat:50.084, lng:14.417}, cat:"shop" },
       { title: "Billa City", pos: {lat:50.076, lng:14.437}, cat:"shop" },
       { title: "Kaufland Praha", pos: {lat:50.085, lng:14.414}, cat:"shop" },
-      { title: "Pomoc Centrum 1", pos: {lat:50.082, lng:14.419}, cat:"help" },
-      { title: "Pomoc Centrum 2", pos: {lat:50.088, lng:14.427}, cat:"help" },
+      { title: "Pomoc Центр 1", pos: {lat:50.082, lng:14.419}, cat:"help" },
+      { title: "Pomoc Центр 2", pos: {lat:50.088, lng:14.427}, cat:"help" },
       { title: "Shelter Point", pos: {lat:50.074, lng:14.432}, cat:"help" },
       { title: "Clinic D", pos: {lat:50.090, lng:14.418}, cat:"hospital" },
       { title: "Clinic E", pos: {lat:50.079, lng:14.404}, cat:"hospital" },
@@ -731,138 +716,90 @@
       { title: "Pharmacy 1", pos: {lat:50.088, lng:14.420}, cat:"shop" }
     ];
 
+    // карта инициализируется ОДИН РАЗ и сохраняет состояние в localStorage
+    window.__mapInited = false;
     window.initMap = function(){
-      const center = { lat: 50.0755, lng: 14.4378 };
-      window.map = new google.maps.Map(document.getElementById('map'), { center, zoom:13, gestureHandling:'greedy' });
+      if (window.__mapInited) return;
+      window.__mapInited = true;
+
+      const saved = JSON.parse(localStorage.getItem('map_state') || '{}');
+      const fallbackCenter = { lat: 50.0755, lng: 14.4378 };
+      const center = saved.center || fallbackCenter;
+      const zoom = saved.zoom || 13;
+
+      window.map = new google.maps.Map(document.getElementById("map"), { center, zoom, gestureHandling:"greedy" });
+
+      // markers
       window.markers = [];
       POINTS.forEach(p=>{
         const color = (p.cat==="hospital")?"#FF6B6B":(p.cat==="lawyer")?"#4D96FF":(p.cat==="shop")?"#FFD166":"#8AF598";
         const svg = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"><circle cx="18" cy="18" r="12" fill="${color}" stroke="#fff" stroke-width="3"/></svg>`);
-        const mk = new google.maps.Marker({ position:p.pos, map:window.map, title:p.title, icon:{url:`data:image/svg+xml;utf8,${svg}`, scaledSize:new google.maps.Size(36,36)} });
-        mk.title=p.title; mk.cat=p.cat;
+        const mk = new google.maps.Marker({
+          position:p.pos, map:window.map, title:p.title,
+          icon:{url:`data:image/svg+xml;utf8,${svg}`, scaledSize:new google.maps.Size(36,36)}
+        });
+        mk.title = p.title;
+        mk.cat = p.cat;
         mk.addListener('click', ()=> new google.maps.InfoWindow({content:`<b>${p.title}</b><div>${p.cat}</div>`}).open(window.map, mk));
         window.markers.push(mk);
       });
-      centerBtn?.addEventListener('click', ()=> window.map.panTo(center));
-      mapSearch?.addEventListener('input', e=>{
+
+      // сохраняем состояние
+      window.map.addListener('idle', ()=>{
+        const st = { center: { lat: window.map.getCenter().lat(), lng: window.map.getCenter().lng() }, zoom: window.map.getZoom() };
+        localStorage.setItem('map_state', JSON.stringify(st));
+      });
+
+      centerBtn?.addEventListener("click", ()=> {
+        const saved2 = JSON.parse(localStorage.getItem('map_state') || '{}');
+        window.map.panTo(saved2.center || fallbackCenter);
+        if (saved2.zoom) window.map.setZoom(saved2.zoom);
+      });
+
+      mapSearch?.addEventListener("input", (e)=> {
         const q = e.target.value.trim().toLowerCase();
-        window.markers.forEach(mk=> mk.setVisible(!q || mk.title.toLowerCase().includes(q)));
+        window.markers.forEach(mk => mk.setVisible(!q || mk.title.toLowerCase().includes(q)));
       });
     };
-     /* ---- Адмінка ---- */
-    const ADMIN_EMAIL = 'urciknikolaj642@gmail.com';
 
-    // Виклик правою кнопкою по аватару профілю
-    profileBtn.addEventListener('contextmenu', (e)=>{ e.preventDefault(); if (!auth.currentUser || auth.currentUser.email!==ADMIN_EMAIL) return alert('Адмін тільки для '+ADMIN_EMAIL); openAdmin(); });
-
-    function openAdmin(){
-      const modal = document.createElement('div'); modal.className='modal show';
-      const panel = document.createElement('div'); panel.className='panel'; panel.style.maxWidth='800px';
-      panel.innerHTML = `
-        <button class="close" id="admClose">×</button>
-        <h3>Адмін-панель</h3>
-        <div class="admin-panel" style="display:grid;gap:10px">
-          <div class="admin-row" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <span><b>Онлайн (реально):</b> <span id="admOnline">…</span></span>
-            <span><b>Нові сьогодні:</b> <span id="admRegToday">…</span></span>
-            <span><b>За 7 днів:</b> <span id="admReg7d">…</span></span>
-          </div>
-          <div class="admin-row" style="display:flex;gap:8px;align-items:center">
-            <label>Боти:</label>
-            <button id="viewBotLog" class="small-btn">Лог ботів</button>
-            <button id="exportMsgs" class="small-btn">Експорт повідомлень</button>
-            <button id="toggleMaintenance" class="small-btn">Перемкнути тех.режим</button>
-          </div>
-          <div class="admin-row" style="display:flex;gap:8px;align-items:center">
-            <label>Пошук:</label>
-            <input id="adminQuery" placeholder="ключове слово" style="flex:1;padding:8px;border:1px solid #ddd;border-radius:8px"/>
-            <button id="searchMsgs" class="small-btn">Пошук</button>
-          </div>
-          <div class="admin-row" style="display:flex;gap:8px;align-items:center">
-            <label>Бан (UID):</label>
-            <input id="banUid" placeholder="UID" style="flex:1;padding:8px;border:1px solid #ddd;border-radius:8px"/>
-            <button id="banBtn" class="small-btn">Забанити</button>
-            <button id="unbanBtn" class="small-btn">Розбанити</button>
-          </div>
-          <div id="adminResults" style="margin-top:6px;max-height:50vh;overflow:auto;border:1px solid #eee;padding:6px;border-radius:8px;background:#fff"></div>
-        </div>`;
-      modal.appendChild(panel); document.body.appendChild(modal);
-
-      const admClose = panel.querySelector('#admClose'); admClose.onclick = ()=>{ modal.remove(); };
-
-      /* онлайн реально */
-      const off = onValue(dbRef(db,'presence'), s=>{
-        const v=s.val()||{}; panel.querySelector('#admOnline').textContent = Object.keys(v).length;
-      });
-
-      /* реєстрації сьогодні / 7 днів */
-      (async ()=>{
-        const today = new Date().toISOString().slice(0,10);
-        const snap = await dbGet(dbRef(db,'stats/registrations'));
-        let todayCount=0, weekCount=0;
-        if (snap.exists()){
-          const all = snap.val();
-          const days = [...Array(7)].map((_,i)=>{ const d=new Date(); d.setDate(d.getDate()-i); return d.toISOString().slice(0,10); });
-          todayCount = (all[today]?.count)||0;
-          weekCount = days.reduce((acc,d)=> acc + ((all[d]?.count)||0), 0);
-        }
-        panel.querySelector('#admRegToday').textContent = todayCount;
-        panel.querySelector('#admReg7d').textContent = weekCount;
-      })();
-
-      panel.querySelector('#viewBotLog').onclick = async ()=>{
-        const s=await dbGet(dbRef(db,'botPosts')); const out=panel.querySelector('#adminResults'); out.innerHTML='';
-        if (s.exists()){ const data=s.val(); Object.keys(data).reverse().slice(0,200).forEach(k=>{
-          const m=data[k]; const d=document.createElement('div'); d.style.padding='6px'; d.style.borderBottom='1px solid #eee';
-          d.textContent = `${m.nick||m.uid} • ${new Date(m.ts).toLocaleString()} • ${m.text||''}`; out.appendChild(d);
-        }); } else out.textContent='Логу немає';
-      };
-
-      panel.querySelector('#exportMsgs').onclick = async ()=>{
-        const snap = await dbGet(dbRef(db,'messages')); if (!snap.exists()) return alert('Порожньо');
-        const blob = new Blob([JSON.stringify(snap.val())], {type:'application/json'});
-        const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='messages_export.json'; a.click(); URL.revokeObjectURL(url);
-      };
-
-      panel.querySelector('#toggleMaintenance').onclick = async ()=>{
-        const s = await dbGet(dbRef(db,'settings/maintenance')); const cur = s.exists()? Boolean(s.val()) : false;
-        await dbSet(dbRef(db,'settings/maintenance'), !cur); alert('Maintenance: '+(!cur));
-      };
-
-      panel.querySelector('#searchMsgs').onclick = async ()=>{
-        const q = panel.querySelector('#adminQuery').value.trim().toLowerCase();
-        const out=panel.querySelector('#adminResults'); if (!q) return out.textContent='Введіть запит';
-        const s = await dbGet(dbRef(db,'messages')); out.innerHTML='';
-        if (!s.exists()) return out.textContent='Порожньо';
-        const all=s.val(); Object.keys(all).forEach(k=>{
-          const m=all[k]; if ((m.text||'').toLowerCase().includes(q) || (m.nick||'').toLowerCase().includes(q)){
-            const d=document.createElement('div'); d.style.padding='6px'; d.style.borderBottom='1px solid #eee';
-            d.innerHTML=`<strong>${m.nick||m.uid}</strong> • ${new Date(m.ts).toLocaleString()}<div>${m.text||''}</div><div style="margin-top:6px"><button data-del="${k}" class="small-btn">Видалити</button></div>`;
-            out.appendChild(d); d.querySelector('[data-del]').onclick = async (e)=>{ if (!confirm('Видалити?')) return; await dbRemove(dbRef(db,`messages/${e.target.dataset.del}`)); d.remove(); };
-          }
-        });
-      };
-
-      panel.querySelector('#banBtn').onclick = async ()=>{
-        const uid = panel.querySelector('#banUid').value.trim(); if (!uid) return;
-        await dbSet(dbRef(db,`users/${uid}/banned`), true); alert('Забанено '+uid);
-      };
-      panel.querySelector('#unbanBtn').onclick = async ()=>{
-        const uid = panel.querySelector('#banUid').value.trim(); if (!uid) return;
-        await dbSet(dbRef(db,`users/${uid}/banned`), false); alert('Розбанено '+uid);
-      };
+    function maybeInitMap(){
+      // если скрипт уже загрузился — просто вызвать initMap()
+      if (typeof google !== 'undefined' && google.maps) {
+        window.initMap();
+        return;
+      }
+      // если скрипт не добавлен — добавим один раз
+      if (!document.getElementById('gmaps-script')) {
+        const s = document.createElement('script');
+        s.id = 'gmaps-script';
+        // ключ, который ты прислал: AIzaSyBFrxVhpb6nHJ6rhiLl5Ho8t0jOb1iEQNc
+        s.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBFrxVhpb6nHJ6rhiLl5Ho8t0jOb1iEQNc&callback=initMap";
+        s.async = true; s.defer = true;
+        document.body.appendChild(s);
+      }
     }
 
-    /* ---- Присутність (best-effort) ---- */
-    window.addEventListener('beforeunload', async ()=>{ try{ await dbRemove(dbRef(db,`presence/${auth.currentUser?.uid}`)); }catch{} });
+    // ----- Friends online helper (можно вызывать по надобности) -----
+    async function getFriendsOnline(){
+      if (!currentUser) return [];
+      const snap = await dbGet(dbRef(db, `friends/${currentUser.uid}`));
+      const friends = snap && snap.exists() ? Object.keys(snap.val()) : [];
+      const online = [];
+      for (const f of friends){
+        const p = await dbGet(dbRef(db, `presence/${f}`));
+        if (p && p.exists()) online.push({ uid:f, ...p.val() });
+      }
+      return online;
+    }
 
-    /* ---- Автозаповнення аватарки за замовчуванням ---- */
-    profileBtn.style.backgroundImage = `url(${DEFAULT_AVATAR})`;
-    document.addEventListener('DOMContentLoaded', ()=>{ /* no-op для сумісності */ });
-
+    // ----- On load -----
+    updateOnlineCount();
+    document.addEventListener('DOMContentLoaded', ()=> {
+      profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
+      // карта инициализируется лениво — при переходе на вкладку "Карта"
+    });
   </script>
 
-  <!-- Google Maps (твій ключ) -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AlzaSyBFrxVhpb6nHJ6rhiL15&callback=initMap"></script>
+  <!-- Google Maps: скрипт инжектится динамически в maybeInitMap() с твоим ключом -->
 </body>
 </html>
