@@ -1,3 +1,48 @@
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
 <!doctype html>
 <html lang="uk">
 <head>
@@ -1159,5 +1204,49 @@
 
   </script>
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9tOqK-Ze3F8MeAIzirty8o4e7WZk3w3A&callback=initMap"></script>
+</body>
+</html>
+...      once.addEventListener('click', ()=> BotController.postOnce(bot));
+      range.addEventListener('input', ()=>{ speedv.textContent = range.value + '×'; BotController.setSpeed(bot.id, Number(range.value)); localStorage.setItem('botSpeed_'+bot.id, range.value); });
+      // persist speed
+      const saved = localStorage.getItem('botSpeed_'+bot.id);
+      if (saved){ range.value = saved; speedv.textContent = saved + '×'; BotController.setSpeed(bot.id, Number(saved)); }
+      return wrap;
+    }
+
+    function initAdminUI(){
+      // top floating chips (short)
+      botsRow.innerHTML = '';
+      BOTS_DEF.forEach(bot=> botsRow.appendChild(buildBotChip(bot)));
+      // modal (extended)
+      adminBots.innerHTML = '';
+      BOTS_DEF.forEach(bot=> adminBots.appendChild(buildBotChip(bot)));
+
+      startAllBtn.onclick = ()=> BotController.startAll();
+      stopAllBtn.onclick = ()=> BotController.stopAll();
+      postOnceAllBtn.onclick = ()=> BotController.postOnceAll();
+
+      gearBtn.onclick = ()=> { adminModal.classList.add('show'); adminModal.setAttribute('aria-hidden','false'); };
+      adminClose.onclick = ()=> { adminModal.classList.remove('show'); adminModal.setAttribute('aria-hidden','true'); };
+    }
+
+    /* ---------------- Map (placeholder / static) ---------------- */
+    let map = null; window.map = map;
+    function initMap(){
+      const el = document.getElementById('map'); if (!el) return;
+      el.innerHTML = "<div style='display:flex;align-items:center;justify-content:center;height:100%;font-weight:800;color:#0b1220'>Тут буде карта Google (stub)</div>";
+    }
+    centerBtn.addEventListener('click', ()=> initMap());
+    mapSearch.addEventListener('change', ()=> {/*TODO*/});
+
+    /* ---------------- Final tweaks ---------------- */
+    // hide msg menu on scroll
+    document.getElementById('chatArea').addEventListener('scroll', ()=> msgMenu.style.display='none');
+    document.getElementById('rentArea').addEventListener('scroll', ()=> msgMenu.style.display='none');
+
+    // Unread cleanup when switching tabs initially
+    updateTabBadges();
+
+  </script>
 </body>
 </html>
