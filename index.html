@@ -126,6 +126,8 @@
       .chat-image{max-width:200px}
     }
   </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
 
@@ -244,6 +246,12 @@
   <input id="fileInput" type="file" accept="image/*" style="display:none">
 
   <!-- input area (shared for active chat tab: chat or rent) -->
+  
+  <div id="quotaBar" style="position:fixed;left:0;right:0;bottom:68px;display:flex;gap:8px;align-items:center;justify-content:center;padding:6px 10px;margin:0 auto;max-width:1020px;z-index:81">
+    <div id="quotaText" style="background:rgba(0,0,0,.35);border:1px solid rgba(57,255,145,.35);color:#dfffe8;border-radius:10px;padding:6px 10px;font-weight:800"></div>
+    <button id="openPayBtn" class="tab-button">💳 Підписка</button>
+  </div>
+
   <div class="chat-input" role="region" aria-label="Відправка повідомлення">
     <label for="fileInput" class="camera-btn" title="Додати фото" id="cameraLabel" aria-hidden="true">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -659,44 +667,44 @@
         const isSelf = auth.currentUser && auth.currentUser.uid === uid;
         const email = user.email || "";
 
-        profileContent.innerHTML = \`
+        profileContent.innerHTML = `
           <div style="display:flex;gap:12px;align-items:center">
-            <img src="\${user.avatar || DEFAULT_AVATAR}" style="width:84px;height:84px;border-radius:12px;object-fit:cover">
+            <img src="${user.avatar || DEFAULT_AVATAR}" style="width:84px;height:84px;border-radius:12px;object-fit:cover">
             <div>
-              <h3 style="margin:0 0 4px">\${user.nick || "Анонім"}</h3>
-              <div style="color:\${email ? '#333':'#666'}">\${email}</div>
+              <h3 style="margin:0 0 4px">${user.nick || "Анонім"}</h3>
+              <div style="color:${email ? '#333':'#666'}">${email}</div>
             </div>
           </div>
           <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-            \${isSelf ? \`
+            ${isSelf ? `
                 <button id="editAvatarBtn" class="tab-button">Змінити аватар (URL)</button>
                 <button id="myDMsBtn" class="tab-button">Мої ЛС</button>
                 <button id="signOutBtn" class="tab-button" style="background:#ffe1e1">Вийти</button>
                 <a class="tab-button" id="buyAdsBtn" href="mailto:urciknikolaj642@gmail.com?subject=Покупка%20реклами%20Praha%20Fušky">Купити рекламу</a>
-              \` : \`
+              ` : `
                 <button id="pmBtn" class="tab-button">Написати ЛС</button>
                 <button id="addFriendBtn" class="tab-button">Додати в друзі</button>
                 <button id="reportBtn" class="tab-button" style="background:#ffe7c4">Поскаржитись</button>
-              \`}
+              `}
           </div>
           <div id="profileMsg" style="margin-top:8px;color:#b91c1c"></div>
-        \`;
+        `;
 
         if (isSelf){
           document.getElementById("editAvatarBtn").addEventListener("click", async ()=>{
             const url = prompt("Встав URL зображення для аватарки:");
             if (!url) return;
             try{
-              await dbSet(dbRef(db, \`users/\${uid}/avatar\`), url);
+              await dbSet(dbRef(db, `users/${uid}/avatar`), url);
               await updateProfile(auth.currentUser, { photoURL: url });
               profileContent.querySelector('img').src = url;
-              profileBtn.style.background = \`url(\${url}) center/cover\`;
+              profileBtn.style.background = `url(${url}) center/cover`;
               notify("Аватар оновлено","Фото змінено через URL.");
             }catch(e){ notify("Помилка","Не вдалося оновити аватар"); }
           });
           document.getElementById("myDMsBtn").addEventListener("click", ()=> { profileModal.classList.remove("show"); setActiveTab("dmTab"); });
           document.getElementById("signOutBtn").addEventListener("click", async ()=> {
-            try{ await dbRemove(dbRef(db, \`presence/\${auth.currentUser.uid}\`)); }catch(e){}
+            try{ await dbRemove(dbRef(db, `presence/${auth.currentUser.uid}`)); }catch(e){}
             await signOut(auth);
             profileModal.classList.remove("show");
           });
@@ -718,7 +726,7 @@
 
       const panel = document.createElement('div');
       panel.className = 'modal show'; panel.style.zIndex = 98;
-      panel.innerHTML = \`
+      panel.innerHTML = `
         <div class="modal-panel">
           <button class="modal-close">✖</button>
           <h3>Діалог</h3>
@@ -727,19 +735,19 @@
             <input id="dmText" placeholder="Напишіть повідомлення..." style="flex:1;padding:10px;border-radius:8px;border:1px solid #ddd">
             <button id="dmSend" class="tab-button">Відправити</button>
           </div>
-        </div>\`;
+        </div>`;
       document.body.appendChild(panel);
       const closeBtn = panel.querySelector('.modal-close');
       closeBtn.addEventListener('click', ()=> panel.remove());
 
       const thread = panel.querySelector('#dmThread');
-      const dmQ = query(dbRef(db, \`privateMessages/\${cid}\`), orderByChild("ts"), limitToLast(200));
+      const dmQ = query(dbRef(db, `privateMessages/${cid}`), orderByChild("ts"), limitToLast(200));
       onChildAdded(dmQ, (snap)=>{
         const m = snap.val();
         const row = document.createElement('div');
         row.style.margin = "6px 0";
         row.style.textAlign = m.from === uid ? "right" : "left";
-        row.textContent = \`\${m.text}  (\${new Date(m.ts).toLocaleTimeString()})";
+        row.textContent = `${m.text}  (${new Date(m.ts).toLocaleTimeString()})`;
         thread.appendChild(row);
         thread.scrollTop = thread.scrollHeight;
       });
@@ -748,15 +756,15 @@
         const t = panel.querySelector('#dmText').value.trim();
         if (!t) return;
         const pm = { from: uid, to: otherUid, text: t, ts: Date.now() };
-        await dbPush(dbRef(db, \`privateMessages/\${cid}\`), pm);
-        await dbPush(dbRef(db, \`notifications/\${otherUid}\`), { ts: Date.now(), type:"dm", text:\`Нове ЛС від \${auth.currentUser.displayName||'Користувач'}\`, from: uid });
+        await dbPush(dbRef(db, `privateMessages/${cid}`), pm);
+        await dbPush(dbRef(db, `notifications/${otherUid}`), { ts: Date.now(), type:"dm", text:`Нове ЛС від ${auth.currentUser.displayName||'Користувач'}`, from: uid });
         panel.querySelector('#dmText').value = "";
       });
     }
 
     async function loadDMList(){
       const u = auth.currentUser; if (!u) { dmList.innerHTML = "<i>Увійдіть, щоб бачити ЛС</i>"; return; }
-      dmList.innerHTML = \`<p>Відкривайте ЛС через профілі або по сповіщеннях 🔔. (Для списку розмов краще завести conversations/\${u.uid}).</p>\`;
+      dmList.innerHTML = `<p>Відкривайте ЛС через профілі або по сповіщеннях 🔔. (Для списку розмов краще завести conversations/${u.uid}).</p>`;
     }
 
     /* ---------------- Message menu ---------------- */
@@ -782,8 +790,8 @@
               }
             } else {
               if (msg.id) {
-                await dbSet(dbRef(db, \`messageReactions/\${msg.id}/\${auth.currentUser.uid}\`), { act, ts: Date.now() });
-                await dbPush(dbRef(db, \`notifications/\${msg.uid}\`), { ts: Date.now(), type:"reaction", text:\`\${act} на ваше повідомлення\`, from: auth.currentUser.uid });
+                await dbSet(dbRef(db, `messageReactions/${msg.id}/${auth.currentUser.uid}`), { act, ts: Date.now() });
+                await dbPush(dbRef(db, `notifications/${msg.uid}`), { ts: Date.now(), type:"reaction", text:`${act} на ваше повідомлення`, from: auth.currentUser.uid });
                 notify("Дія виконана", "Реакцію збережено");
               } else notify("Помилка", "Немає id повідомлення");
             }
@@ -798,11 +806,11 @@
         const val = snap.val() || {};
         const real = Object.keys(val).length;
         const shown = real * 10;
-        onlineNeon.textContent = \`Онлайн (прибл.): \${shown}\`;
+        onlineNeon.textContent = `Онлайн (прибл.): ${shown}`;
       });
     }
     window.addEventListener('beforeunload', async ()=> {
-      try{ if (auth.currentUser) await dbRemove(dbRef(db, \`presence/\${auth.currentUser.uid}\`)); }catch(e){}
+      try{ if (auth.currentUser) await dbRemove(dbRef(db, `presence/${auth.currentUser.uid}`)); }catch(e){}
     });
 
     /* ---------------- Friends ---------------- */
@@ -811,25 +819,25 @@
       const from = auth.currentUser.uid;
       if (from === toUid) return;
       try{
-        await dbSet(dbRef(db, \`friendRequests/\${toUid}/\${from}\`), { from, ts: Date.now() });
-        await dbSet(dbRef(db, \`friends/\${from}/\${toUid}\`), { status:"requested", ts: Date.now(), fromUid: from });
-        await dbPush(dbRef(db, \`notifications/\${toUid}\`), { ts: Date.now(), type:"friend", text:\`Запит у друзі від \${auth.currentUser.displayName||'Користувач'}\`, from });
+        await dbSet(dbRef(db, `friendRequests/${toUid}/${from}`), { from, ts: Date.now() });
+        await dbSet(dbRef(db, `friends/${from}/${toUid}`), { status:"requested", ts: Date.now(), fromUid: from });
+        await dbPush(dbRef(db, `notifications/${toUid}`), { ts: Date.now(), type:"friend", text:`Запит у друзі від ${auth.currentUser.displayName||'Користувач'}`, from });
         notify("Запит відправлено","Користувач отримає сповіщення.");
       }catch(e){ notify("Помилка","Не вдалося відправити запит"); }
     }
 
     function friendCard(u, online){
       const div = document.createElement('div'); div.className = 'friend-card';
-      div.innerHTML = \`
-        <img src="\${u.avatar||DEFAULT_AVATAR}" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
+      div.innerHTML = `
+        <img src="${u.avatar||DEFAULT_AVATAR}" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
         <div style="flex:1">
-          <div style="font-weight:800">\${u.nick||'Користувач'}</div>
-          <div style="font-size:12px;color:\${online?'#10b981':'#64748b'}">\${online?'онлайн':'офлайн'}</div>
+          <div style="font-weight:800">${u.nick||'Користувач'}</div>
+          <div style="font-size:12px;color:${online?'#10b981':'#64748b'}">${online?'онлайн':'офлайн'}</div>
         </div>
         <div style="display:flex;gap:6px">
           <button class="tab-button btn-pm">✉️</button>
           <button class="tab-button btn-open">👀</button>
-        </div>\`;
+        </div>`;
       return div;
     }
 
@@ -838,35 +846,35 @@
       if (!u){ friendsList.innerHTML=""; friendRequests.innerHTML=""; friendsOnlineCountEl.textContent="0"; return; }
 
       // Requests to me
-      const reqSnap = await dbGet(dbRef(db, \`friendRequests/\${u.uid}\`));
+      const reqSnap = await dbGet(dbRef(db, `friendRequests/${u.uid}`));
       friendRequests.innerHTML = "";
       if (reqSnap.exists()){
         const reqs = reqSnap.val();
         for (const fromUid of Object.keys(reqs)){
-          const uSnap = await dbGet(dbRef(db, \`users/\${fromUid}\`));
+          const uSnap = await dbGet(dbRef(db, `users/${fromUid}`));
           const ud = uSnap.exists()?uSnap.val():{nick:'Користувач',avatar:DEFAULT_AVATAR};
           const item = document.createElement('div');
           item.className = 'friend-card';
-          item.innerHTML = \`
-            <img src="\${ud.avatar||DEFAULT_AVATAR}" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
+          item.innerHTML = `
+            <img src="${ud.avatar||DEFAULT_AVATAR}" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
             <div style="flex:1">
-              <div style="font-weight:800">\${ud.nick||'Користувач'}</div>
+              <div style="font-weight:800">${ud.nick||'Користувач'}</div>
               <div style="font-size:12px;color:#64748b">заявка у друзі</div>
             </div>
             <div style="display:flex;gap:6px">
               <button class="tab-button btn-accept">✅ Прийняти</button>
               <button class="tab-button btn-decline" style="background:#ffe1e1">✖</button>
-            </div>\`;
+            </div>`;
           item.querySelector('.btn-accept').addEventListener('click', async ()=>{
-            await dbSet(dbRef(db, \`friends/\${u.uid}/\${fromUid}\`), { status:"accepted", ts: Date.now() });
-            await dbSet(dbRef(db, \`friends/\${fromUid}/\${u.uid}\`), { status:"accepted", ts: Date.now() });
-            await dbRemove(dbRef(db, \`friendRequests/\${u.uid}/\${fromUid}\`));
-            await dbPush(dbRef(db, \`notifications/\${fromUid}\`), { ts: Date.now(), type:"friend", text:\`\${auth.currentUser.displayName||'Користувач'} додав(ла) вас у друзі\`, from: u.uid });
+            await dbSet(dbRef(db, `friends/${u.uid}/${fromUid}`), { status:"accepted", ts: Date.now() });
+            await dbSet(dbRef(db, `friends/${fromUid}/${u.uid}`), { status:"accepted", ts: Date.now() });
+            await dbRemove(dbRef(db, `friendRequests/${u.uid}/${fromUid}`));
+            await dbPush(dbRef(db, `notifications/${fromUid}`), { ts: Date.now(), type:"friend", text:`${auth.currentUser.displayName||'Користувач'} додав(ла) вас у друзі`, from: u.uid });
             refreshFriendsBlocks();
           });
           item.querySelector('.btn-decline').addEventListener('click', async ()=>{
-            await dbRemove(dbRef(db, \`friendRequests/\${u.uid}/\${fromUid}\`));
-            await dbRemove(dbRef(db, \`friends/\${fromUid}/\${u.uid}\`));
+            await dbRemove(dbRef(db, `friendRequests/${u.uid}/${fromUid}`));
+            await dbRemove(dbRef(db, `friends/${fromUid}/${u.uid}`));
             refreshFriendsBlocks();
           });
           friendRequests.appendChild(item);
@@ -877,16 +885,16 @@
 
       // My friends
       friendsList.innerHTML = "";
-      const frSnap = await dbGet(dbRef(db, \`friends/\${u.uid}\`));
+      const frSnap = await dbGet(dbRef(db, `friends/${u.uid}`));
       let onlineCount = 0;
       if (frSnap.exists()){
         const fr = frSnap.val();
         for (const fid of Object.keys(fr)){
           const rel = fr[fid];
           if (rel.status !== "accepted") continue;
-          const uSnap = await dbGet(dbRef(db, \`users/\${fid}\`));
+          const uSnap = await dbGet(dbRef(db, `users/${fid}`));
           const ud = uSnap.exists()?uSnap.val():{nick:'Користувач',avatar:DEFAULT_AVATAR};
-          const pSnap = await dbGet(dbRef(db, \`presence/\${fid}\`));
+          const pSnap = await dbGet(dbRef(db, `presence/${fid}`));
           const isOnline = pSnap.exists();
           if (isOnline) onlineCount++;
           const card = friendCard(ud, isOnline);
@@ -904,7 +912,7 @@
     function notify(title, text){
       const row = document.createElement('div');
       row.style.padding = "6px 8px"; row.style.borderBottom = "1px solid #eee";
-      row.textContent = \`\${title}: \${text}\`;
+      row.textContent = `${title}: ${text}`;
       notifList.prepend(row);
       let n = Number(bellBadge.dataset.n || "0") + 1;
       bellBadge.dataset.n = String(n);
@@ -912,7 +920,7 @@
       bellBadge.style.display = n>0 ? "inline-block":"none";
     }
     function subscribeNotifications(uid){
-      onChildAdded(dbRef(db, \`notifications/\${uid}\`), (snap)=>{
+      onChildAdded(dbRef(db, `notifications/${uid}`), (snap)=>{
         const v = snap.val() || {};
         notify(v.type || "Info", v.text || "");
       });
@@ -956,25 +964,25 @@
     const BOTS_DEF = [
       { id: 'bot_1', nick:"Bot_Оголошення_1", avatar:"https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg",
         posts:[
-          {text:\`O2 СІМ КАРТА\nБез ліміт інтернет\nБез ліміт дзвінки\nПрацює в Європі\nПлата 699 крон/міс. Ціна 299 кс. тел 607914467 (Viber/WhatsApp/Telegram)\`, image:"https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg"},
-          {text:\`Доброго дня! Продаю свій улюблений iPhone 11 Pro Max разом із 26 чохлами — чохли віддаю безкоштовно. У телефоні нічого не мінялося, жодних тріщин, не падав, усе оригінальне. Продаю лише тому, що придбав новий. Працює так само чудово, як у перший день. Звісно ж без Apple ID. Якщо маєте запитання — пишіть, з радістю відповім :)\`, image:"https://i.ibb.co/dwcXPqDr/IMG-1954f6b56869b9817a131b8fd5130a5c01-V.jpg"},
-          {text:\`Оголошення\`, image:"https://i.ibb.co/G3kDcrYZ/IMG-fa590121e46c5b030c5ddc94d4e8bea9-V.jpg"}
+          {text:`O2 СІМ КАРТА\nБез ліміт інтернет\nБез ліміт дзвінки\nПрацює в Європі\nПлата 699 крон/міс. Ціна 299 кс. тел 607914467 (Viber/WhatsApp/Telegram)`, image:"https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg"},
+          {text:`Продаю iPhone 11 Pro Max + 26 чохлів (чохли безкоштовно). Телефон без тріщин, не падав, все оригінал, без Apple ID. Питання у приват.`, image:"https://i.ibb.co/dwcXPqDr/IMG-1954f6b56869b9817a131ae33f3a37b6-V.jpg"},
+          {text:`Оголошення`, image:"https://i.ibb.co/G3kDcrYZ/IMG-fa590121e46c5b030c5ddc94d4e8bea9-V.jpg"}
         ],
         baseInterval: 2*60*1000*1.6
       },
       { id: 'bot_2', nick:"Bot_Оголошення_2", avatar:"https://i.ibb.co/Z11WVrVC/IMG-b83692bb79a1468af74c81620750e8c0-V.jpg",
         posts:[
-          {text:\`Шаблон\`, image:"https://i.ibb.co/Z11WVrVC/IMG-b83692bb79a1468af74c81620750e8c0-V.jpg"},
-          {text:\`Запрошую моделей на перманентний макіяж від сертифікованого майстра під моїм контролем ✨\n\n• Губи (дозвіл на відео та фото, без попереднього ПМ)\n\n🔸 Ціна — лише за матеріал\n\n📍Прага\n📅 28.07 на 14:00\nДля детальнішої інформації звертайтесь в особисті повідомлення 🫶🏻\n\n🔹 Ідеально для тих, хто:\n• Мріє про ПМ, але стримувала ціна\n• Хоче якісний результат за мінімум\n📸 Фото та запис — у повідомлення 💌\`, image:"https://i.ibb.co/QFWDvGZ8/IMG-6748e7141906901b131b8fd5130a5c01-V.jpg"},
-          {text:\`Оголошення 3\`, image:"https://i.ibb.co/j97RhTny/IMG-593d75b053ea1a28cdfb9fc52f93afad-V.jpg"}
+          {text:`Шаблон`, image:"https://i.ibb.co/Z11WVrVC/IMG-b83692bb79a1468af74c81620750e8c0-V.jpg"},
+          {text:`Запрошую моделей на перманентний макіяж (Прага, 28.07 о 14:00). Ціна — лише матеріали. Деталі у приват.`, image:"https://i.ibb.co/QFWDvGZ8/IMG-6748e7141906901b131b8fd5130a5c01-V.jpg"},
+          {text:`Оголошення 3`, image:"https://i.ibb.co/j97RhTny/IMG-593d75b053ea1a28cdfb9fc52f93afad-V.jpg"}
         ],
         baseInterval: 3*60*1000*1.6
       },
       { id: 'bot_3', nick:"Bot_Оголошення_3", avatar:"https://i.ibb.co/MzdTMPR/IMG-8231d8142ffcbba7c682ca598683e3f2-V.jpg",
         posts:[
-          {text:\`Нужен водитель для помощи в переезде (со своим авто). WhatsApp: +48 793 463 757 • Telegram: @carlx_xxx\`, image:null},
-          {text:\`Оголошення\`, image:"https://i.ibb.co/MzdTMPR/IMG-8231d8142ffcbba7c682ca598683e3f2-V.jpg"},
-          {text:\`Оголошення 3\`, image:"https://i.ibb.co/rfNV6ddC/IMG-0cd648a74f86227fe46db2d01c099be0-V.jpg"}
+          {text:`Нужен водитель для помощи в переезде (со своим авто). WhatsApp: +48 793 463 757 • Telegram: @carlx_xxx`, image:null},
+          {text:`Оголошення`, image:"https://i.ibb.co/MzdTMPR/IMG-8231d8142ffcbba7c682ca598683e3f2-V.jpg"},
+          {text:`Оголошення 3`, image:"https://i.ibb.co/rfNV6ddC/IMG-0cd648a74f86227fe46db2d01c099be0-V.jpg"}
         ],
         baseInterval: 4*60*1000*1.6
       }
@@ -1047,7 +1055,7 @@
       function getSpeed(id){ return speeds.get(id) || 1; }
 
       function updateUIState(id){
-        const chip = document.querySelector(\`[data-bot='\${id}']\`);
+        const chip = document.querySelector(`[data-bot='${id}']`);
         if (!chip) return;
         const running = isRunning(id);
         chip.querySelector('.state').textContent = running ? '● працює' : '○ зупинено';
@@ -1061,15 +1069,15 @@
       const wrap = document.createElement('div');
       wrap.className = 'admin-chip';
       wrap.dataset.bot = bot.id;
-      wrap.innerHTML = \`
-        <img src="\${bot.avatar}" style="width:26px;height:26px;border-radius:6px;object-fit:cover"> 
-        <b>\${bot.nick}</b>
+      wrap.innerHTML = `
+        <img src="${bot.avatar}" style="width:26px;height:26px;border-radius:6px;object-fit:cover"> 
+        <b>${bot.nick}</b>
         <span class="state" style="font-size:12px;opacity:.8">○ зупинено</span>
         <button class="toggle tab-button" style="padding:6px 10px">▶️ Запустити</button>
         <button class="once tab-button" style="padding:6px 10px;background:#fff3cd">⚡️ Раз</button>
         <label style="font-size:12px">швидк. <input type="range" min="0.5" max="3" step="0.1" value="1" class="speed"></label>
         <span class="speedv" style="font-size:12px">1×</span>
-      \`;
+      `;
       const toggle = wrap.querySelector('.toggle');
       const once = wrap.querySelector('.once');
       const range = wrap.querySelector('.speed');
@@ -1159,5 +1167,306 @@
 
   </script>
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9tOqK-Ze3F8MeAIzirty8o4e7WZk3w3A&callback=initMap"></script>
+
+  <!-- subscription & payment modal -->
+  <div id="payModal" class="modal" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true">
+      <button class="modal-close" id="payClose">✖</button>
+      <h3>Підписка • 100 Kč/міс</h3>
+      <p style="margin-top:0">Оплачуйте на рахунок <b>354037257/0300</b>. Після оплати надішліть фото квитанції. Бот перевірить текст і активує підписку.</p>
+      <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px">
+        <input id="payFile" type="file" accept="image/*" />
+        <button id="payOcrBtn" class="tab-button">📷 Перевірити фото</button>
+      </div>
+      <div id="payOcrStatus" style="font-size:13px;color:#111;background:#f6f6f6;border:1px solid #eee;border-radius:8px;padding:8px;min-height:60px"></div>
+      <div style="margin-top:10px">
+        <button id="activateMonthBtn" class="tab-button" style="display:none;background:#10b981;color:#fff">✅ Активувати на місяць</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // --- Quotas & Subscription constants ---
+    const PRICE_CZK = 100;
+    const BANK_ACCOUNT = "354037257/0300";
+    const FREE_LIMIT_TEXT = 200;     // 200 простих СМС
+    const FREE_LIMIT_MEDIA = 100;    // 100 СМС з фото
+
+    // DB helpers reuse existing 'db' from main module
+    const usageRef = (uid)=> dbRef(db, `usage/${uid}`);
+    const subsRef  = (uid)=> dbRef(db, `subscriptions/${uid}`);
+    let _usageCache = null;
+    let _subsCache = null;
+    let _expectingType = null;
+    let _expectingSince = 0;
+
+    function fmtDaysLeft(ts){
+      const ms = ts - Date.now();
+      if (ms <= 0) return "закінчилась";
+      const days = Math.ceil(ms / (24*60*60*1000));
+      return days + " дн.";
+    }
+
+    async function readUsage(uid){
+      try{
+        const snap = await dbGet(usageRef(uid));
+        _usageCache = snap.exists()? snap.val(): { textCount:0, photoCount:0 };
+      }catch(e){ _usageCache = { textCount:0, photoCount:0 }; }
+      return _usageCache;
+    }
+
+    async function readSubs(uid){
+      try{
+        const snap = await dbGet(subsRef(uid));
+        _subsCache = snap.exists()? snap.val(): { activeUntil:0 };
+      }catch(e){ _subsCache = { activeUntil:0 }; }
+      return _subsCache;
+    }
+
+    async function writeUsage(uid, nu){
+      try{ await dbSet(usageRef(uid), nu); }catch(e){ console.error("usage write", e); }
+    }
+    async function writeSubs(uid, nv){
+      try{ await dbSet(subsRef(uid), nv); }catch(e){ console.error("subs write", e); }
+    }
+
+    // Override quota text UI whenever auth changes
+    const quotaTextEl = document.getElementById("quotaText");
+    const openPayBtn = document.getElementById("openPayBtn");
+    const payModal = document.getElementById("payModal");
+    const payClose = document.getElementById("payClose");
+    const payFile = document.getElementById("payFile");
+    const payOcrBtn = document.getElementById("payOcrBtn");
+    const payOcrStatus = document.getElementById("payOcrStatus");
+    const activateMonthBtn = document.getElementById("activateMonthBtn");
+
+    openPayBtn?.addEventListener("click", ()=>{ payModal.classList.add("show"); payModal.setAttribute("aria-hidden","false"); });
+    payClose?.addEventListener("click", ()=>{ payModal.classList.remove("show"); payModal.setAttribute("aria-hidden","true"); });
+
+    // OCR flow with Tesseract: look for the phrase + account
+    async function runOCR(file){
+      if (!file){ payOcrStatus.textContent = "Додайте фото квитанції."; return; }
+      payOcrStatus.textContent = "Розпізнаю текст…";
+      try{
+        const { createWorker } = Tesseract;
+        const worker = await createWorker();
+        const { data: { text } } = await worker.recognize(file);
+        await worker.terminate();
+        payOcrStatus.textContent = "Розпізнано:\n" + text;
+        const ph1 = /плат[её]ж\s+подтвержд[её]н моей реквизит[аыи]/i;
+        const okPhrase = ph1.test(text);
+        const okAcc = text.includes("354037257/0300") || /3540\s*37257\s*\/\s*0300/.test(text);
+        if (okPhrase && okAcc){
+          payOcrStatus.textContent += "\n✅ Збіг знайдено. Можна активувати підписку.";
+          activateMonthBtn.style.display = "inline-flex";
+        } else {
+          payOcrStatus.textContent += "\n⚠️ Фраза або рахунок не знайдені. Ви можете активувати вручну через адміна.";
+          activateMonthBtn.style.display = "none";
+        }
+      }catch(e){
+        console.error(e);
+        payOcrStatus.textContent = "Помилка OCR. Спробуйте інше фото.";
+        activateMonthBtn.style.display = "none";
+      }
+    }
+    payOcrBtn?.addEventListener("click", ()=> runOCR(payFile.files?.[0]));
+
+    activateMonthBtn?.addEventListener("click", async ()=>{
+      if (!auth.currentUser) { notify("Потрібен вхід","Увійдіть у профіль"); return; }
+      const uid = auth.currentUser.uid;
+      const now = Date.now();
+      const base = _subsCache?.activeUntil && _subsCache.activeUntil > now ? _subsCache.activeUntil : now;
+      const monthMs = 30*24*60*60*1000;
+      const nv = { activeUntil: base + monthMs, lastProofTs: now };
+      await writeSubs(uid, nv);
+      notify("Підписка активована", "Дякуємо! Дійсна до: " + new Date(nv.activeUntil).toLocaleDateString());
+      renderQuotaUI(); // refresh
+      payModal.classList.remove("show"); payModal.setAttribute("aria-hidden","true");
+    });
+
+    async function renderQuotaUI(){
+      const u = auth.currentUser;
+      if (!u){ quotaTextEl.textContent = "Гість: увійдіть, щоб писати"; return; }
+      const [usg, sub] = await Promise.all([readUsage(u.uid), readSubs(u.uid)]);
+      const active = sub.activeUntil && sub.activeUntil > Date.now();
+      const leftText = Math.max(0, FREE_LIMIT_TEXT - (usg.textCount||0));
+      const leftPhoto = Math.max(0, FREE_LIMIT_MEDIA - (usg.photoCount||0));
+      quotaTextEl.textContent = active
+        ? `Підписка: ${fmtDaysLeft(sub.activeUntil)} до завершення`
+        : `Безкоштовно залишилось: текст ${leftText} / фото ${leftPhoto}. Після лімітів — 100 Kč/міс на ${BANK_ACCOUNT}`;
+    }
+
+    onAuthStateChanged(auth, async ()=>{
+      // refresh quota bar once user changes
+      renderQuotaUI();
+    });
+
+    // --- Quota-aware send gate ---
+    async function canSendByQuota(){
+      const u = auth.currentUser;
+      if (!u) return false;
+      const [usg, sub] = await Promise.all([readUsage(u.uid), readSubs(u.uid)]);
+      const active = sub.activeUntil && sub.activeUntil > Date.now();
+      if (active) return true;
+
+      const hasFile = !!(document.getElementById('fileInput')?.files?.[0]);
+      if (hasFile){
+        const leftPhoto = Math.max(0, FREE_LIMIT_MEDIA - (usg.photoCount||0));
+        if (leftPhoto <= 0){
+          notify("Ліміт вичерпано", `Фото/СМС: 100 із 100. Оформіть підписку за ${PRICE_CZK} Kč на ${BANK_ACCOUNT}.`);
+          return false;
+        }
+        _expectingType = "photo";
+      } else {
+        const leftText = Math.max(0, FREE_LIMIT_TEXT - (usg.textCount||0));
+        if (leftText <= 0){
+          notify("Ліміт вичерпано", `Текстові СМС: 200 із 200. Оформіть підписку за ${PRICE_CZK} Kč на ${BANK_ACCOUNT}.`);
+          return false;
+        }
+        _expectingType = "text";
+      }
+      _expectingSince = Date.now() - 2500; // tolerate a tiny clock skew
+      return true;
+    }
+
+    // Replace/override the earlier canSendMessage() with quota logic + original 6h rule
+    const _sixHours = 6 * 60 * 60 * 1000;
+    window.canSendMessage = async function(){
+      const user = auth.currentUser;
+      if (!user) return false;
+      // 6h rule from the original implementation
+      if (user.emailVerified){
+        // ok for email-verified, proceed to quota
+      } else {
+        const localKey = "regTime_" + user.uid;
+        const localVal = localStorage.getItem(localKey);
+        if (localVal && (Date.now() - Number(localVal) < _sixHours)){
+          // allowed within 6h grace
+        } else {
+          try {
+            const snap = await dbGet(dbRef(db, `users/${user.uid}/createdAt`));
+            if (snap && snap.exists()) {
+              const created = Number(snap.val());
+              if (!Number.isNaN(created) && Date.now() - created < _sixHours) {
+                localStorage.setItem(localKey, String(created));
+              } else {
+                notify("Потрібне підтвердження email", "6 годин доступу закінчилися. Підтвердіть email або оформіть підписку.");
+                return false;
+              }
+            } else {
+              notify("Потрібне підтвердження email", "Підтвердіть email або оформіть підписку.");
+              return false;
+            }
+          } catch(e){
+            console.error(e);
+            notify("Помилка", "Не вдалося перевірити доступ. Спробуйте ще.");
+            return false;
+          }
+        }
+      }
+      // Quota gate
+      const ok = await canSendByQuota();
+      if (!ok) return false;
+      return true;
+    };
+
+    // After message actually appears in the chat (from our uid), increment usage once
+    function postSendWatcher(m){
+      try{
+        if (!auth.currentUser) return;
+        if (m.uid !== auth.currentUser.uid) return;
+        if (!_expectingType) return;
+        if (!m.ts || m.ts < _expectingSince) return;
+        const isPhoto = !!m.image;
+        const type = _expectingType;
+        // Clear expectation so we don't double-count
+        _expectingType = null;
+        _expectingSince = 0;
+        // Update usage in DB (serverless)
+        (async ()=>{
+          const u = await readUsage(auth.currentUser.uid);
+          const nu = { textCount: u.textCount||0, photoCount: u.photoCount||0 };
+          if (type === "photo" || isPhoto) nu.photoCount += 1;
+          else nu.textCount += 1;
+          await writeUsage(auth.currentUser.uid, nu);
+          renderQuotaUI();
+        })();
+      }catch(e){ console.error(e); }
+    }
+
+    // Hook into existing stream renders (messages + rentMessages)
+    const _origRenderMain = (snap)=>{ try{ const m = snap.val(); m.id = snap.key; postSendWatcher(m);}catch(e){} };
+    const _origRenderRent = (snap)=>{ try{ const m = snap.val(); m.id = snap.key; postSendWatcher(m);}catch(e){} };
+
+    // Attach lightweight listeners (do not re-render, original handlers already render)
+    onChildAdded(dbRef(db, "messages"), _origRenderMain);
+    onChildAdded(dbRef(db, "rentMessages"), _origRenderRent);
+
+    // --- Admin tools: delete message + ban user (lightweight) ---
+    function attachAdminActions(){
+      if (!isAdmin) return;
+      // Add global delegation for delete/ban on message content
+      document.addEventListener('click', async (e)=>{
+        const btn = e.target.closest('[data-admin-act]');
+        if (!btn) return;
+        const act = btn.dataset.adminAct;
+        const msgid = btn.dataset.msgid;
+        const uid = btn.dataset.uid;
+        if (act === 'del' && msgid){
+          await dbRemove(dbRef(db, `messages/${msgid}`));
+          notify("Видалено","Повідомлення видалене");
+        }
+        if (act === 'ban' && uid){
+          await dbSet(dbRef(db, `bans/${uid}`), { ts: Date.now(), by: auth.currentUser.uid });
+          notify("Бан","Користувача забанено");
+        }
+      });
+    }
+
+    // Extend existing render to show small admin buttons
+    const _messages = document.getElementById("messages");
+    const _rentMessages = document.getElementById("rentMessages");
+    const observer = new MutationObserver(()=>{
+      if (!isAdmin) return;
+      document.querySelectorAll('.message').forEach(wrap=>{
+        if (wrap.dataset._admInit) return;
+        wrap.dataset._admInit = "1";
+        const uid = wrap.dataset.uid || "";
+        const msgid = wrap.dataset.msgid || "";
+        const host = wrap.querySelector('.message-content .msg-actions');
+        if (host){
+          const span = document.createElement('span');
+          span.innerHTML = `
+            <button data-admin-act="del" data-msgid="${msgid}" title="Видалити">🗑️</button>
+            <button data-admin-act="ban" data-uid="${uid}" title="Бан">⛔</button>
+          `;
+          host.appendChild(span);
+        }
+      });
+    });
+    observer.observe(_messages, { childList:true, subtree:true });
+    observer.observe(_rentMessages, { childList:true, subtree:true });
+    attachAdminActions();
+
+    // --- Hard gate: prevent banned users from sending
+    async function checkBan(uid){
+      try{ const s = await dbGet(dbRef(db, `bans/${uid}`)); return s.exists(); }catch(e){ return false; }
+    }
+    // Override sendButton click to add ban check prior to original handler (capture phase)
+    const _sendBtn = document.getElementById("sendButton");
+    _sendBtn.addEventListener('click', async (ev)=>{
+      if (!auth.currentUser) return; // original handler will open auth
+      const banned = await checkBan(auth.currentUser.uid);
+      if (banned){
+        ev.stopImmediatePropagation();
+        ev.preventDefault();
+        notify("Бан", "Ви забанені. Зверніться до адміністратора.");
+      }
+    }, true);
+
+    // Initial render of quota bar
+    renderQuotaUI();
+  </script>
+
 </body>
 </html>
