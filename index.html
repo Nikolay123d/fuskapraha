@@ -13,6 +13,48 @@
       color: #fff;
     }
     header {
+      <!-- Профіль ліворуч -->
+<button id="profileBtn" class="icon-btn" title="Профіль" style="left:10px;top:8px;background-image:url('https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg')"></button>
+
+<!-- Праворуч: ⚙️ та 🔔 -->
+<div class="header-actions">
+  <button id="gearBtn" class="icon-btn" title="Адмін" style="display:none">⚙️</button>
+  <div style="position:relative">
+    <button id="bellBtn" class="icon-btn" title="Сповіщення">🔔</button>
+    <span id="bellBadge" class="badge">0</span>
+  </div>
+</div>
+
+<!-- Модал: Сповіщення -->
+<div id="bellModal" class="modal">
+  <div class="panel">
+    <button class="close" id="bellClose">✖</button>
+    <h3>Сповіщення</h3>
+    <div id="notifList" style="max-height:60vh;overflow:auto"></div>
+  </div>
+</div>
+
+<!-- Модал: Профіль (контент генерується скриптом) -->
+<div id="profileModal" class="modal">
+  <div class="panel">
+    <button class="close" id="profileClose">✖</button>
+    <div id="profileContent">Завантаження…</div>
+  </div>
+</div>
+
+<!-- Модал: Адмін-панель — Учасники -->
+<div id="adminModal" class="modal">
+  <div class="panel">
+    <button class="close" id="adminClose">✖</button>
+    <h3>Адмін-панель</h3>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+      <button id="btnClearChat">🧹 Очистити чат</button>
+      <button id="btnClearRent">🧹 Очистити оренду</button>
+      <button id="btnReloadUsers">🔄 Оновити список</button>
+    </div>
+    <div id="usersList" style="max-height:60vh;overflow:auto;border:1px solid #eee;border-radius:8px"></div>
+  </div>
+</div>
       text-align: center;
       font-size: 28px;
       font-weight: bold;
@@ -802,6 +844,27 @@
       bellBox.prepend(d);
       setTimeout(()=>d.remove(), 2600);
     }
+    /* header actions */
+.header-actions{position:fixed;right:10px;top:8px;display:flex;gap:10px;z-index:9998}
+.icon-btn{width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.9);
+  background:rgba(0,0,0,.35);color:#fff;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+#profileBtn{position:fixed;left:10px;top:8px;background-size:cover;background-position:center}
+.badge{position:absolute;right:-6px;top:-6px;background:#ff3366;color:#fff;border-radius:12px;
+  padding:2px 6px;font-size:12px;font-weight:700;display:none}
+
+/* modals */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.6);z-index:9999}
+.modal .panel{background:#fff;color:#111;width:92%;max-width:720px;border-radius:12px;padding:14px;position:relative}
+.modal .close{position:absolute;right:10px;top:10px;border:none;background:transparent;font-size:18px;cursor:pointer}
+
+/* admin participants list */
+.user-row{display:flex;gap:10px;align-items:center;padding:8px;border-bottom:1px solid #eee}
+.user-row img{width:36px;height:36px;border-radius:8px;object-fit:cover}
+.user-row .tags{font-size:12px;opacity:.7}
+.user-row .actions{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.user-row .actions button{padding:6px 8px;border-radius:8px;border:none;cursor:pointer}
 
     /* ======= Firebase ======= */
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
@@ -1266,7 +1329,126 @@
       }
     });
   </script>
+/* ===== Профіль / Колокольчик / Адмін-панель ===== */
+const profileBtn = document.getElementById('profileBtn');
+const gearBtn = document.getElementById('gearBtn');
+const bellBtn = document.getElementById('bellBtn');
+const bellBadge = document.getElementById('bellBadge');
+const bellModal = document.getElementById('bellModal');
+const bellClose = document.getElementById('bellClose');
+const notifList = document.getElementById('notifList');
 
+const adminModal = document.getElementById('adminModal');
+const adminClose = document.getElementById('adminClose');
+const usersList = document.getElementById('usersList');
+const btnReloadUsers = document.getElementById('btnReloadUsers');
+const btnClearChat = document.getElementById('btnClearChat');
+const btnClearRent = document.getElementById('btnClearRent');
+
+let banned = false;
+
+/* показ профілю */
+profileBtn.onclick = ()=> auth.currentUser ? openProfile(auth.currentUser.uid) : showAuth();
+document.getElementById('profileClose').onclick = ()=> document.getElementById('profileModal').style.display='none';
+
+/* колокольчик */
+bellBtn.onclick = ()=>{ bellModal.style.display='flex'; bellBadge.style.display='none'; };
+bellClose.onclick = ()=> bellModal.style.display='none';
+
+/* підписка на сповіщення */
+function subscribeNotifications(uid){
+  onChildAdded(dbRef(db, `notifications/${uid}`),(snap)=>{
+    const v = snap.val()||{};
+    const row = document.createElement('div');
+    row.style.cssText = "padding:8px;border-bottom:1px solid #eee";
+    row.textContent = `${v.type||'Info'}: ${v.text||''}`;
+    notifList.prepend(row);
+    // бейдж
+    const n = Number(bellBadge.dataset.n||"0")+1;
+    bellBadge.dataset.n = String(n);
+    bellBadge.textContent = n;
+    bellBadge.style.display = 'inline-block';
+  });
+}
+
+/* роль адміна + бан-статус */
+onAuthStateChanged(auth, async (u)=>{
+  if (u){
+    profileBtn.style.backgroundImage = `url(${u.photoURL||DEFAULT_AVATAR})`;
+    const roleSnap = await dbGet(dbRef(db, `users/${u.uid}/role`));
+    isAdmin = (u.email===ADMIN_EMAIL) || (roleSnap.exists() && roleSnap.val()==='admin');
+    gearBtn.style.display = isAdmin ? 'flex' : 'none';
+    subscribeNotifications(u.uid);
+    // бан-статус
+    onValue(dbRef(db, `users/${u.uid}/ban`), s=> banned = !!s.val());
+  } else {
+    gearBtn.style.display = 'none';
+    banned = false;
+  }
+});
+
+/* Адмін-кнопка */
+gearBtn.onclick = ()=>{ if(isAdmin){ adminModal.style.display='flex'; loadAllUsers(); } };
+adminClose.onclick = ()=> adminModal.style.display='none';
+
+/* завантажити список усіх користувачів */
+async function loadAllUsers(){
+  usersList.innerHTML = 'Завантаження…';
+  const snap = await dbGet(dbRef(db,'users'));
+  usersList.innerHTML = '';
+  const val = snap.val()||{};
+  const ids = Object.keys(val);
+  if (!ids.length){ usersList.innerHTML = '<i>Користувачів немає</i>'; return; }
+  for (const uid of ids){
+    const u = val[uid];
+    const row = document.createElement('div');
+    row.className = 'user-row';
+    row.innerHTML = `
+      <img src="${u.avatar||DEFAULT_AVATAR}">
+      <div>
+        <div><b>${u.nick||'Користувач'}</b></div>
+        <div class="tags">${u.email||''}${u.role==='admin'?' · admin':''}${u.ban?' · 🔒 забанений':''}${u.premium?' · ⭐ преміум':''}${u.donate?' · 💳 донат':''}</div>
+      </div>
+      <div class="actions">
+        <button class="pm">✉️ ЛС</button>
+        <button class="donate">💳 Донат</button>
+        <button class="premium">⭐ Преміум</button>
+        <button class="ban">${u.ban?'✅ Розбанити':'⛔ Забанити'}</button>
+        <button class="profile">👀 Профіль</button>
+      </div>`;
+    row.querySelector('.pm').onclick = ()=> openDM(uid);
+    row.querySelector('.profile').onclick = ()=> openProfile(uid);
+    row.querySelector('.donate').onclick = async ()=>{
+      await dbSet(dbRef(db,`users/${uid}/donate`), true);
+      await dbPush(dbRef(db,`notifications/${uid}`), {ts:Date.now(), type:'donate', text:'Донат активовано адміністратором'});
+      loadAllUsers();
+    };
+    row.querySelector('.premium').onclick = async ()=>{
+      await dbSet(dbRef(db,`users/${uid}/premium`), true);
+      await dbPush(dbRef(db,`notifications/${uid}`), {ts:Date.now(), type:'premium', text:'Преміум активовано'});
+      loadAllUsers();
+    };
+    row.querySelector('.ban').onclick = async ()=>{
+      const newVal = !(u.ban===true);
+      await dbSet(dbRef(db,`users/${uid}/ban`), newVal);
+      await dbPush(dbRef(db,`notifications/${uid}`), {ts:Date.now(), type:'moderation', text: newVal?'Обліковий запис заблоковано':'Блокування знято'});
+      loadAllUsers();
+    };
+    usersList.appendChild(row);
+  }
+}
+btnReloadUsers.onclick = loadAllUsers;
+
+/* очистити чати */
+btnClearChat.onclick = async ()=>{ if(confirm('Очистити основний чат?')){ await dbRemove(dbRef(db,'messages')); toast('✅ Очищено'); } };
+btnClearRent.onclick  = async ()=>{ if(confirm('Очистити чат оренди?')){ await dbRemove(dbRef(db,'rentMessages')); toast('✅ Очищено'); } };
+
+/* Заборона відправки для забанених */
+const _origSendToPath = sendToPath;
+sendToPath = async function(path, extra={}){
+  if (banned){ toast('Ваш акаунт заблоковано. Зверніться до адміністратора.', false); return; }
+  await _origSendToPath(path, extra);
+};
   <!-- Google Maps (твой ключ) -->
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFrxVhpb6nHJ6rhiLl5Ho8t0jOb1iEQNc&callback=_ensureMap"></script>
 </body>
