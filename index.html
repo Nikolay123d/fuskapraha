@@ -11,8 +11,8 @@
   <style>
     :root{
       --accent:#2ecc71;
-      --accent-neon: #39ff91;
-      --glass: rgba(255,255,255,0.95);
+      --accent-neon:#39ff91;
+      --glass:rgba(255,255,255,0.95);
       --muted:#64748b;
       --max-width:1020px;
       --avatar-size:44px;
@@ -20,12 +20,13 @@
       --header-h:74px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;background:#071126;color:#0b1220;overflow-x:hidden}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:#071126;color:#0b1220;overflow-x:hidden}
     body{
-      background-image: url('https://i.ibb.co/27hgtZfY/Prague.jpg');
-      background-size: cover;background-position:center;background-attachment: fixed;
+      background-image:url('https://i.ibb.co/27hgtZfY/Prague.jpg');
+      background-size:cover;background-position:center;background-attachment:fixed;
     }
 
+    /* Header */
     header{position:sticky;top:0;z-index:70;padding:10px 8px 6px;text-align:center;color:#fff;backdrop-filter:blur(3px)}
     .brandRow{display:flex;align-items:center;justify-content:center;gap:10px;position:relative;min-height:var(--header-h)}
     .profile-btn{position:absolute;left:10px;top:12px;z-index:100;width:46px;height:46px;border-radius:50%;border:2px solid #fff;background-size:cover;background-position:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
@@ -34,56 +35,57 @@
     .bell-badge{position:absolute;top:-6px;right:-6px;background:#ff3366;color:#fff;border-radius:12px;padding:2px 6px;font-size:12px;font-weight:700;box-shadow:0 0 10px rgba(255,51,102,.9)}
 
     header h1{
-      margin:0; font-family:'UnifrakturCook', Inter, sans-serif; font-weight:700; font-size:34px; letter-spacing:1px; text-transform:uppercase;
-      background: linear-gradient(90deg,#d00,#1155ff); -webkit-background-clip:text; background-clip:text; color:transparent;
-      text-shadow: 0 2px 0 rgba(0,0,0,.55), 0 6px 18px rgba(0,0,0,.6);
+      margin:0;font-family:'UnifrakturCook',Inter,sans-serif;font-weight:700;font-size:34px;letter-spacing:1px;text-transform:uppercase;
+      background:linear-gradient(90deg,#d00,#1155ff);-webkit-background-clip:text;background-clip:text;color:transparent;
+      text-shadow:0 2px 0 rgba(0,0,0,.55),0 6px 18px rgba(0,0,0,.6);
     }
     header .sub{
-      margin:6px auto 0; font-size:13px; color:#e8ffee; display:inline-block; padding:6px 10px; border-radius:10px;
-      background:rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.2)
+      margin:6px auto 0;font-size:13px;color:#e8ffee;display:inline-block;padding:6px 10px;border-radius:10px;
+      background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.2)
     }
 
-    .topBar{position:sticky;top:calc(var(--header-h));z-index:66;backdrop-filter: blur(2px)}
+    /* Tabs */
+    .topBar{position:sticky;top:calc(var(--header-h));z-index:66;backdrop-filter:blur(2px)}
     .neon-wrap{max-width:var(--max-width);margin:6px auto 0;padding:6px 8px}
     .neon-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
     .tab-button{
-      border:none; font-weight:800; letter-spacing:.2px; cursor:pointer; border-radius:12px; padding:8px 14px; color:#021f13;
-      background:#cfffdf; box-shadow: 0 0 12px rgba(57,255,145,.45), inset 0 -3px 0 rgba(0,0,0,.08);
-      transition:.15s transform ease, .15s box-shadow ease;
+      border:none;font-weight:800;letter-spacing:.2px;cursor:pointer;border-radius:12px;padding:8px 14px;color:#021f13;
+      background:#cfffdf;box-shadow:0 0 12px rgba(57,255,145,.45),inset 0 -3px 0 rgba(0,0,0,.08);
+      transition:.15s transform ease,.15s box-shadow ease;
     }
-    .tab-button:hover{transform:translateY(-1px); box-shadow:0 0 16px rgba(57,255,145,.85), inset 0 -3px 0 rgba(0,0,0,.08)}
-    .tab-button.active{outline:2px solid var(--accent-neon); box-shadow:0 0 18px rgba(57,255,145,.95), inset 0 -3px 0 rgba(0,0,0,.08)}
+    .tab-button:hover{transform:translateY(-1px);box-shadow:0 0 16px rgba(57,255,145,.85),inset 0 -3px 0 rgba(0,0,0,.08)}
+    .tab-button.active{outline:2px solid var(--accent-neon);box-shadow:0 0 18px rgba(57,255,145,.95),inset 0 -3px 0 rgba(0,0,0,.08)}
 
-    .online-neon{
-      margin:8px auto 10px; max-width:var(--max-width); text-align:center; color:#baffd1; font-weight:800;
-      text-shadow:0 0 8px rgba(57,255,145,.9);
-      background:rgba(0,0,0,.35); border:1px solid rgba(57,255,145,.35);
-      border-radius:10px; padding:6px 10px;
-    }
+    .online-neon{margin:8px auto 10px;max-width:var(--max-width);text-align:center;color:#baffd1;font-weight:800;
+      text-shadow:0 0 8px rgba(57,255,145,.9);background:rgba(0,0,0,.35);border:1px solid rgba(57,255,145,.35);
+      border-radius:10px;padding:6px 10px}
 
     main.container{max-width:var(--max-width);margin:0 auto;padding:10px}
     .tab-content{display:none}
     .tab-content.active{display:block}
 
+    /* Chat */
     .chat-area{height:calc(100vh - 320px);overflow:auto;padding:14px 8px;background:transparent}
     .messages{display:flex;flex-direction:column;gap:12px;padding-bottom:220px;transform:scale(var(--chat-scale));transform-origin:bottom left}
     .message{display:flex;gap:10px;align-items:flex-start;max-width:78%;word-break:break-word}
     .message.self{margin-left:auto;flex-direction:row-reverse}
-    .avatar{width:var(--avatar-size);height:var(--avatar-size);border-radius:50%;object-fit:cover;flex:0 0 var(--avatar-size);box-shadow:0 3px 10px rgba(0,0,0,0.35);cursor:pointer}
-    .message-content{background:var(--glass);padding:10px 12px;border-radius:14px;box-shadow:0 6px 30px rgba(2,6,23,0.18);color:#0b1220; position:relative}
+    .avatar{width:var(--avatar-size);height:var(--avatar-size);border-radius:50%;object-fit:cover;flex:0 0 var(--avatar-size);box-shadow:0 3px 10px rgba(0,0,0,.35);cursor:pointer}
+    .message-content{background:var(--glass);padding:10px 12px;border-radius:14px;box-shadow:0 6px 30px rgba(2,6,23,0.18);color:#0b1220;position:relative}
     .message.self .message-content{background:#E9FFF0}
     .message-meta{font-size:12px;color:var(--muted);margin-bottom:6px}
     .chat-image{max-width:300px;border-radius:8px;margin-top:8px;display:block}
-    .message-content .text { font-family: 'Inter', sans-serif; font-weight:600; font-size:1rem; color:#0b1220; white-space:pre-wrap }
-    .msg-actions{position:absolute; right:6px; top:6px; opacity:.65; font-size:12px}
+    .message-content .text{font-family:'Inter',sans-serif;font-weight:600;font-size:1rem;color:#0b1220;white-space:pre-wrap}
+    .msg-actions{position:absolute;right:6px;top:6px;opacity:.65;font-size:12px}
     .msg-actions button{border:none;background:transparent;cursor:pointer}
 
-    .chat-input{position:fixed;left:0;right:0;bottom:0;padding:10px;background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.99));border-top:1px solid rgba(0,0,0,0.06);z-index:80;display:flex;gap:8px;align-items:center;max-width:var(--max-width);margin:0 auto}
+    /* input bar */
+    .chat-input{position:fixed;left:0;right:0;bottom:0;padding:10px;background:linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,255,255,0.99));border-top:1px solid rgba(0,0,0,0.06);z-index:80;display:flex;gap:8px;align-items:center;max-width:var(--max-width);margin:0 auto}
     .camera-btn{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;width:48px;height:48px;border-radius:50%;background:#fff;border:1px solid #e6e6e6}
     .camera-btn svg{width:20px;height:20px}
     .chat-input input[type="text"]{flex:1;padding:12px 14px;border-radius:24px;border:1px solid #d0d7de;font-size:16px;outline:none}
     .send-btn{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(46,204,113,0.18)}
 
+    /* modals */
     .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:95}
     .modal.show{display:flex}
     .modal-panel{background:#fff;border-radius:12px;padding:18px;width:92%;max-width:720px;position:relative;box-shadow:0 18px 80px rgba(2,6,23,0.4)}
@@ -93,23 +95,31 @@
     .auth-actions button{flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
     .error-line{color:#b91c1c;font-size:13px;margin-top:6px}
 
+    /* context menu */
     .msg-menu{position:absolute;background:#fff;border-radius:8px;padding:6px;box-shadow:0 6px 20px rgba(0,0,0,0.2);z-index:200;display:none}
     .msg-menu button{display:block;border:none;background:transparent;padding:6px 10px;text-align:left;width:100%;cursor:pointer}
     .msg-menu button:hover{background:rgba(0,0,0,0.03)}
 
+    /* friends/help */
     .help-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:12px}
     .help-card{background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
     .help-card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
-
     .friends-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
     .friend-card{background:#fff;border-radius:10px;padding:10px;box-shadow:0 2px 10px rgba(0,0,0,.08);display:flex;gap:10px;align-items:center}
 
+    /* map */
     #map{width:100%;height:60vh;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.3);background:#eaf7ff}
 
-    .admin-bar{position:sticky; top:0; z-index:67; display:none; max-width:var(--max-width); margin:6px auto; padding:8px; border-radius:10px; background:rgba(0,0,0,.35); border:1px solid rgba(57,255,145,.35); color:#dfffe8}
-    .admin-bar .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
-    .admin-chip{display:inline-flex;align-items:center;gap:6px; padding:6px 8px; border-radius:10px; background:#ffffff; color:#111; box-shadow:0 2px 8px rgba(0,0,0,.15)}
+    /* Admin bar */
+    .admin-bar{position:sticky;top:0;z-index:67;display:none;max-width:var(--max-width);margin:6px auto;padding:8px;border-radius:10px;background:rgba(0,0,0,.35);border:1px solid rgba(57,255,145,.35);color:#dfffe8}
+    .admin-bar .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .admin-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border-radius:10px;background:#ffffff;color:#111;box-shadow:0 2px 8px rgba(0,0,0,.15)}
     .admin-chip input[type="range"]{width:120px}
+    .admin-close{margin-left:auto;background:#fff;color:#111;border:none;border-radius:8px;padding:6px 10px;cursor:pointer}
+
+    /* toast */
+    .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#111;color:#fff;padding:10px 14px;border-radius:12px;box-shadow:0 6px 30px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;z-index:9999}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
 
     @media (max-width:640px){
       .chat-area{height:calc(100vh - 360px)}
@@ -132,6 +142,7 @@
     <div class="sub">Якщо ви вперше — натисніть «Відправити» — з'явиться реєстрація. 6 годин доступу без підтвердження email.</div>
   </header>
 
+  <!-- Tabs + online -->
   <div class="topBar">
     <div class="neon-wrap">
       <nav class="neon-tabs" role="tablist" aria-label="Вкладки">
@@ -148,6 +159,7 @@
   </div>
 
   <main class="container" role="main">
+    <!-- Admin bar (hidden by default; toggle via ⚙️; closable) -->
     <div id="adminBar" class="admin-bar">
       <div class="row" style="justify-content:space-between">
         <div style="font-weight:800">Керування ботами</div>
@@ -156,22 +168,26 @@
           <button id="stopAll" class="tab-button" style="background:#ffe1e1">⏹ Зупинити всіх</button>
           <button id="postOnceAll" class="tab-button" style="background:#fff3cd">⚡️ По одному посту</button>
         </div>
+        <button id="adminBarClose" class="admin-close">✖</button>
       </div>
       <div id="botsRow" class="row" style="margin-top:8px"></div>
     </div>
 
+    <!-- Chat -->
     <section id="chatTab" class="tab-content active" role="region" aria-label="Чат">
       <div class="chat-area" id="chatArea" aria-live="polite">
         <div id="messages" class="messages" role="log"></div>
       </div>
     </section>
 
+    <!-- Rent Chat -->
     <section id="rentTab" class="tab-content" role="region" aria-label="Чат Оренда">
       <div class="chat-area" id="rentArea">
         <div id="rentMessages" class="messages" role="log"></div>
       </div>
     </section>
 
+    <!-- Map -->
     <section id="mapTab" class="tab-content" role="region" aria-label="Карта">
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
         <div style="flex:1">
@@ -184,6 +200,7 @@
       <div id="map"></div>
     </section>
 
+    <!-- Friends -->
     <section id="friendsTab" class="tab-content" role="region" aria-label="Друзі">
       <h2 style="color:#fff;margin:6px 0">Друзі та заявки</h2>
       <div class="friends-wrap">
@@ -198,6 +215,7 @@
       </div>
     </section>
 
+    <!-- Help -->
     <section id="helpTab" class="tab-content" role="region" aria-label="Допомога">
       <h2 style="color:#fff">Термінова допомога у Празі</h2>
       <div class="help-grid" id="helpGrid">
@@ -216,11 +234,13 @@
       </div>
     </section>
 
+    <!-- Direct Messages (overview) -->
     <section id="dmTab" class="tab-content" role="region" aria-label="Особисті">
       <h2 style="color:#fff;margin:6px 0">Мої діалоги</h2>
       <div id="dmList"></div>
     </section>
 
+    <!-- Assistant -->
     <section id="assistantTab" class="tab-content" role="region" aria-label="Помічник Праги">
       <div id="assistantBox" style="margin-top:12px;background:#ffffffcc;border-radius:12px;padding:12px">
         <h3 style="margin:0 0 8px">Помічник по Празі</h3>
@@ -234,8 +254,10 @@
     </section>
   </main>
 
+  <!-- hidden file for camera -->
   <input id="fileInput" type="file" accept="image/*" style="display:none">
 
+  <!-- input bar (shared) -->
   <div class="chat-input" role="region" aria-label="Відправка повідомлення">
     <label for="fileInput" class="camera-btn" title="Додати фото" id="cameraLabel" aria-hidden="true">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -247,6 +269,7 @@
     <button id="sendButton" class="send-btn">Відправити</button>
   </div>
 
+  <!-- auth modal -->
   <div id="authModal" class="modal" aria-hidden="true">
     <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
       <button class="modal-close" id="modalClose">✖</button>
@@ -276,6 +299,7 @@
     </div>
   </div>
 
+  <!-- profile modal -->
   <div id="profileModal" class="modal" aria-hidden="true">
     <div class="modal-panel" role="dialog" aria-modal="true">
       <button class="modal-close" id="profileClose">✖</button>
@@ -283,6 +307,7 @@
     </div>
   </div>
 
+  <!-- message actions menu -->
   <div id="msgMenu" class="msg-menu" role="menu">
     <button data-act="like">👍 Лайк</button>
     <button data-act="warn">⚠️ Обережно (шахрай)</button>
@@ -291,6 +316,7 @@
     <button data-act="reply">↩️ Відповісти</button>
   </div>
 
+  <!-- notifications modal -->
   <div id="bellModal" class="modal" aria-hidden="true">
     <div class="modal-panel" role="dialog" aria-modal="true">
       <button class="modal-close" id="bellClose">✖</button>
@@ -299,6 +325,7 @@
     </div>
   </div>
 
+  <!-- Admin modal -->
   <div id="adminModal" class="modal" aria-hidden="true">
     <div class="modal-panel" role="dialog" aria-modal="true">
       <button class="modal-close" id="adminClose">✖</button>
@@ -308,8 +335,11 @@
     </div>
   </div>
 
-  <!-- Firebase + App -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Firebase + app logic -->
   <script type="module">
+    /* ---------------- Firebase ---------------- */
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import {
       getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile,
@@ -317,9 +347,10 @@
     } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import {
       getDatabase, ref as dbRef, push as dbPush, onChildAdded, query, orderByChild, limitToLast,
-      get as dbGet, set as dbSet, onValue, remove as dbRemove, update as dbUpdate
+      get as dbGet, set as dbSet, onValue, remove as dbRemove, update as dbUpdate, off as dbOff
     } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
+    // --- Config ---
     const firebaseConfig = {
       apiKey: "AIzaSyDw_bVibsVyZegH7OJyZ_yRjI3uLhroVBk",
       authDomain: "praga-4baee.firebaseapp.com",
@@ -335,10 +366,12 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
+    /* ---------------- Admin detection ---------------- */
     const ADMIN_EMAIL = "urciknikolaj642@gmail.com";
     const ADMIN_UIDS = new Set();
     let isAdmin = false;
 
+    /* ---------------- DOM refs ---------------- */
     const tabButtons = document.querySelectorAll(".tab-button");
     const tabContents = document.querySelectorAll(".tab-content");
     const messagesEl = document.getElementById("messages");
@@ -394,23 +427,23 @@
     const adminModal = document.getElementById('adminModal');
     const adminClose = document.getElementById('adminClose');
     const adminBots = document.getElementById('adminBots');
+    const adminBarClose = document.getElementById('adminBarClose');
 
     const DEFAULT_AVATAR = "https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg";
     let currentUser = null;
-    const MSG_LIMIT = 500;
+    const MSG_LIMIT = 700;
 
     const BANK_ACCOUNT = "354037257/0300";
-    const ASSISTANT_ENDPOINT = "/assistant";
+    const ASSISTANT_ENDPOINT = "/assistant"; // поставь сюда URL Cloud Function или сервера
 
+    /* ---------------- Tabs + hotkeys ---------------- */
     function setActiveTab(id) {
       tabButtons.forEach(b => b.classList.toggle("active", b.dataset.target === id));
       tabContents.forEach(c => c.style.display = (c.id === id) ? "block" : "none");
       if (id === "chatTab" || id === "rentTab") messageInput.focus();
       if (id === "mapTab") { if (typeof google !== 'undefined' && window.map) google.maps.event.trigger(window.map,'resize'); }
-      adminBar.style.display = (id === 'chatTab' && isAdmin) ? 'block' : (isAdmin ? 'block' : 'none');
     }
     tabButtons.forEach(btn => btn.addEventListener("click", ()=> setActiveTab(btn.dataset.target)));
-
     document.addEventListener("keydown", (e)=> {
       const k = e.key.toLowerCase();
       if (k === 'c') setActiveTab("chatTab");
@@ -422,6 +455,15 @@
       if (k === 'a') setActiveTab("assistantTab");
     });
 
+    /* ---------------- Toast helper ---------------- */
+    const toastEl = document.getElementById('toast');
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(()=> toastEl.classList.remove('show'), 1400);
+    }
+
+    /* ---------------- Auth modal ---------------- */
     function showAuthModal(){ authModal.classList.add("show"); authModal.setAttribute("aria-hidden","false"); regError.textContent=""; loginError.textContent=""; }
     function hideAuthModal(){ authModal.classList.remove("show"); authModal.setAttribute("aria-hidden","true"); }
     modalClose?.addEventListener("click", hideAuthModal);
@@ -439,14 +481,13 @@
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
         const photo = avatarUrl || DEFAULT_AVATAR;
         await updateProfile(cred.user, { displayName: nick, photoURL: photo });
-        await dbSet(dbRef(db, `users/${cred.user.uid}`), {
-          nick, email, avatar: photo, createdAt: Date.now()
-        });
+        await dbSet(dbRef(db, `users/${cred.user.uid}`), { nick, email, avatar: photo, createdAt: Date.now() });
         localStorage.setItem("regTime_" + cred.user.uid, String(Date.now()));
         await sendEmailVerification(cred.user);
         try { await dbSet(dbRef(db, `presence/${cred.user.uid}`), { ts: Date.now(), nick }); } catch(e){}
         hideAuthModal();
-        await dbPush(dbRef(db, `notifications/${cred.user.uid}`), { ts: Date.now(), type:"info", text:"Натисніть ‘Відправити’ для реєстрації. 6 годин доступу без підтвердження email." });
+        await dbPush(dbRef(db, `notifications/${cred.user.uid}`), { ts: Date.now(), type:"info", text:"Натисніть ‘Відправити’ для реєстрації. 6 годин доступу без підтвердження email.", from: cred.user.uid });
+        toast("✅ Реєстрація успішна");
       } catch (err) { console.error(err); regError.textContent = err?.message || String(err); }
     });
     loginSubmit?.addEventListener("click", async ()=> {
@@ -457,25 +498,34 @@
       try {
         await signInWithEmailAndPassword(auth, email, pass);
         hideAuthModal();
+        toast("✅ Ви увійшли");
       } catch (err) { console.error(err); loginError.textContent = err?.message || String(err); }
     });
 
+    /* ---------------- Auth state ---------------- */
+    let inboxUnsub = null;
     onAuthStateChanged(auth, async (user)=> {
       currentUser = user;
+      // Clean previous listeners
+      if (inboxUnsub) { inboxUnsub(); inboxUnsub = null; }
       if (user) {
         profileBtn.style.background = `url(${user.photoURL || DEFAULT_AVATAR}) center/cover`;
         try { await dbSet(dbRef(db, `presence/${user.uid}`), { ts: Date.now(), nick: user.displayName || user.email }); } catch(e){}
         subscribeNotifications(user.uid);
-        loadDMList();
+        subscribeInbox(user.uid); // realtime DM list
 
+        // admin
         try {
           const roleSnap = await dbGet(dbRef(db, `users/${user.uid}/role`));
           const role = roleSnap.exists() ? roleSnap.val() : null;
-          isAdmin = (user.email === "urciknikolaj642@gmail.com") || ADMIN_UIDS.has(user.uid) || role === 'admin';
-        } catch(e){ isAdmin = (user.email === "urciknikolaj642@gmail.com") || ADMIN_UIDS.has(user.uid); }
+          isAdmin = (user.email === ADMIN_EMAIL) || ADMIN_UIDS.has(user.uid) || role === 'admin';
+        } catch(e){ isAdmin = (user.email === ADMIN_EMAIL) || ADMIN_UIDS.has(user.uid); }
         gearBtn.style.display = isAdmin ? 'flex' : 'none';
-        adminBar.style.display = isAdmin ? 'block' : 'none';
-        if (isAdmin) { await loadBotPosts(); initAdminUI(); }
+
+        // Admin bar visibility from localStorage
+        const adminVisible = localStorage.getItem('adminBarVisible') === '1';
+        adminBar.style.display = (isAdmin && adminVisible) ? 'block' : 'none';
+        if (isAdmin) initAdminUI();
       } else {
         profileBtn.style.background = `url(${DEFAULT_AVATAR}) center/cover`;
         isAdmin = false; gearBtn.style.display = 'none'; adminBar.style.display = 'none';
@@ -484,6 +534,7 @@
       refreshFriendsBlocks();
     });
 
+    /* ---------------- 6h rule + ban ---------------- */
     async function isBanned(uid){
       const s = await dbGet(dbRef(db, `settings/banned/${uid}`));
       return s.exists() && s.val() === true;
@@ -510,6 +561,7 @@
       return false;
     }
 
+    /* ---------------- Rendering messages ---------------- */
     function timeStr(ts){ return new Date(ts).toLocaleString(); }
     function isNearBottom(area){ return (area.scrollHeight - area.scrollTop - area.clientHeight) < 160; }
     function scrollToBottom(area){ area.scrollTop = area.scrollHeight; }
@@ -568,21 +620,18 @@
       if (area && stick) scrollToBottom(area);
     }
 
-    let initialMainLoaded = false;
-    let initialRentLoaded = false;
-    const msgsQuery = query(dbRef(db, "messages"), orderByChild("ts"), limitToLast(MSG_LIMIT));
-    onChildAdded(msgsQuery, (snap) => {
+    /* ---------------- Chats subscriptions ---------------- */
+    let initialMainLoaded=false, initialRentLoaded=false;
+    const msgsQuery = query(dbRef(db,"messages"), orderByChild("ts"), limitToLast(MSG_LIMIT));
+    onChildAdded(msgsQuery, (snap)=>{
       const m = snap.val(); m.id = snap.key; renderMessage(m, messagesEl);
-      if (!initialMainLoaded) {
-        clearTimeout(window._scrollMainInit);
-        window._scrollMainInit = setTimeout(()=>{ const area = document.getElementById('chatArea'); scrollToBottom(area); initialMainLoaded = true; }, 80);
-      }
+      if (!initialMainLoaded){ clearTimeout(window._scrollMainInit); window._scrollMainInit = setTimeout(()=>{ const area=document.getElementById('chatArea'); scrollToBottom(area); initialMainLoaded=true; }, 80); }
       tryHandleDonationFlow(m);
     });
-
-    const rentQuery = query(dbRef(db, "rentMessages"), orderByChild("ts"), limitToLast(MSG_LIMIT));
-    onChildAdded(rentQuery, (snap) => {
+    const rentQuery = query(dbRef(db,"rentMessages"), orderByChild("ts"), limitToLast(MSG_LIMIT));
+    onChildAdded(rentQuery, (snap)=>{
       const m = snap.val(); m.id = snap.key; renderMessage(m, rentMessagesEl);
+      if (!initialRentLoaded){ clearTimeout(window._scrollRentInit); window._scrollRentInit = setTimeout(()=>{ const area=document.getElementById('rentArea'); scrollToBottom(area); initialRentLoaded=true; }, 80); }
     });
 
     function activeChatPath(){
@@ -595,6 +644,7 @@
       return m ? m[0] : null;
     }
 
+    /* ---------------- Send message ---------------- */
     sendButton.addEventListener("click", async ()=>{
       if (!auth.currentUser) { showAuthModal(); return; }
       if (!await canSendMessage()) { notify("Потрібне підтвердження email", "Скористайтесь 6-годинним доступом після реєстрації або підтвердіть email."); return; }
@@ -625,13 +675,13 @@
       try {
         await dbPush(dbRef(db, activeChatPath()), msg);
         messageInput.value = ""; fileInput.value = "";
+        toast("✅ Успішно надіслано");
       } catch (err) { console.error(err); notify("Помилка", "Не вдалося відправити повідомлення"); }
     });
-    messageInput.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendButton.click(); } });
-    document.querySelector('.camera-btn')?.addEventListener("click", (e) => {
-      if (!auth.currentUser) { e.preventDefault(); showAuthModal(); return; }
-    });
+    messageInput.addEventListener("keydown", (e)=>{ if (e.key==="Enter" && !e.shiftKey){ e.preventDefault(); sendButton.click(); } });
+    document.querySelector('.camera-btn')?.addEventListener("click",(e)=>{ if (!auth.currentUser){ e.preventDefault(); showAuthModal(); return; } });
 
+    /* ---------------- Profile ---------------- */
     profileBtn.addEventListener("click", async ()=> {
       if (!auth.currentUser) { showAuthModal(); return; }
       openProfile(auth.currentUser.uid, true);
@@ -639,13 +689,16 @@
     profileClose.addEventListener("click", ()=> { profileModal.classList.remove("show"); profileModal.setAttribute("aria-hidden","true"); });
 
     async function openProfile(uid, self=false){
-      profileContent.innerHTML = "<p>Завантаження...</p>";
+      profileContent.innerHTML = "<p>Завантаження…</p>";
       profileModal.classList.add("show"); profileModal.setAttribute("aria-hidden","false");
       try {
+        // Fetch user profile quickly
         const snap = await dbGet(dbRef(db, `users/${uid}`));
         const user = snap && snap.exists() ? snap.val() : { nick: "Анонім", avatar: DEFAULT_AVATAR };
         const isSelf = auth.currentUser && auth.currentUser.uid === uid;
         const email = user.email || "";
+        const planSnap = await dbGet(dbRef(db, `users/${uid}/plan`));
+        const plan = planSnap.exists()? String(planSnap.val()) : "free";
 
         profileContent.innerHTML = `
           <div style="display:flex;gap:12px;align-items:center">
@@ -653,7 +706,7 @@
             <div>
               <h3 style="margin:0 0 4px">${user.nick || "Анонім"}</h3>
               <div style="color:${email ? '#333':'#666'}">${email}</div>
-              <div style="margin-top:6px;font-size:12px;color:#64748b" id="planRow">План: <span id="planVal">free</span></div>
+              <div style="margin-top:6px;font-size:12px;color:#64748b">План: <span id="planVal">${plan}</span></div>
             </div>
           </div>
           <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
@@ -673,9 +726,6 @@
           <div id="profileMsg" style="margin-top:8px;color:#b91c1c"></div>
         `;
 
-        const planSnap = await dbGet(dbRef(db, `users/${uid}/plan`));
-        profileContent.querySelector('#planVal').textContent = planSnap.exists()? String(planSnap.val()) : "free";
-
         if (isSelf){
           document.getElementById("editAvatarBtn").addEventListener("click", async ()=>{
             const url = prompt("Встав URL зображення для аватарки:");
@@ -685,7 +735,7 @@
               await updateProfile(auth.currentUser, { photoURL: url });
               profileContent.querySelector('img').src = url;
               profileBtn.style.background = `url(${url}) center/cover`;
-              notify("Аватар оновлено","Фото змінено через URL.");
+              toast("✅ Аватар оновлено");
             }catch(e){ notify("Помилка","Не вдалося оновити аватар"); }
           });
           document.getElementById("myDMsBtn").addEventListener("click", ()=> { profileModal.classList.remove("show"); setActiveTab("dmTab"); });
@@ -697,12 +747,12 @@
           document.getElementById("buyStd").addEventListener("click", async ()=>{
             await dbSet(dbRef(db, `users/${uid}/plan`), "standard");
             profileContent.querySelector('#planVal').textContent = "standard";
-            notify("Ок","Стандарт активовано (демо).");
+            toast("✅ Стандарт активовано");
           });
           document.getElementById("buyPro").addEventListener("click", async ()=>{
             await dbSet(dbRef(db, `users/${uid}/plan`), "premium");
             profileContent.querySelector('#planVal').textContent = "premium";
-            notify("Ок","Преміум активовано (демо).");
+            toast("✅ Преміум активовано");
           });
         } else {
           document.getElementById("pmBtn").addEventListener("click", ()=> { profileModal.classList.remove("show"); openPrivateChat(uid); });
@@ -712,6 +762,7 @@
       } catch(e){ profileContent.innerHTML = "<p>Помилка завантаження профілю</p>"; }
     }
 
+    /* ---------------- Private chat ---------------- */
     function convoIdFor(uidA, uidB){ return uidA < uidB ? uidA + "_" + uidB : uidB + "_" + uidA; }
 
     async function openPrivateChat(otherUid){
@@ -719,7 +770,6 @@
       const uid = auth.currentUser.uid;
       const cid = convoIdFor(uid, otherUid);
 
-      // Ensure participants map exists for rules-based access
       await dbUpdate(dbRef(db, `privateMessages/${cid}/participants`), { [uid]: true, [otherUid]: true });
 
       const panel = document.createElement('div');
@@ -736,10 +786,12 @@
         </div>`;
       document.body.appendChild(panel);
       const closeBtn = panel.querySelector('.modal-close');
+      const input = panel.querySelector('#dmText');
+      input.focus();
       closeBtn.addEventListener('click', ()=> panel.remove());
 
       const thread = panel.querySelector('#dmThread');
-      const dmQ = query(dbRef(db, `privateMessages/${cid}/items`), orderByChild("ts"), limitToLast(200));
+      const dmQ = query(dbRef(db, `privateMessages/${cid}/items`), orderByChild("ts"), limitToLast(500));
       onChildAdded(dmQ, (snap)=>{
         const m = snap.val();
         const row = document.createElement('div');
@@ -753,13 +805,14 @@
       markInboxRead(uid, otherUid);
 
       panel.querySelector('#dmSend').addEventListener('click', async ()=>{
-        const t = panel.querySelector('#dmText').value.trim();
+        const t = input.value.trim();
         if (!t) return;
         const pm = { from: uid, to: otherUid, text: t, ts: Date.now() };
         await dbPush(dbRef(db, `privateMessages/${cid}/items`), pm);
         await dbPush(dbRef(db, `notifications/${otherUid}`), { ts: Date.now(), type:"dm", text:`Нове ЛС від ${auth.currentUser.displayName||'Користувач'}`, from: uid });
         await touchInboxMeta(uid, otherUid, t);
-        panel.querySelector('#dmText').value = "";
+        input.value = "";
+        toast("✅ Успішно надіслано");
       });
     }
 
@@ -772,21 +825,17 @@
       const prevUnread = bSnap.exists() && bSnap.val().unread ? Number(bSnap.val().unread) : 0;
       await dbUpdate(cB, { otherUid: fromUid, lastText: text||"", lastTs: now, unread: prevUnread + 1 });
     }
-    async function markInboxRead(myUid, otherUid){
-      await dbUpdate(dbRef(db, `inboxMeta/${myUid}/${otherUid}`), { unread: 0 });
-    }
+    async function markInboxRead(myUid, otherUid){ await dbUpdate(dbRef(db, `inboxMeta/${myUid}/${otherUid}`), { unread: 0 }); }
 
-    async function loadDMList(){
-      const u = auth.currentUser;
-      if (!u){ dmList.innerHTML = "<i>Увійдіть, щоб бачити ЛС</i>"; return; }
-
-      dmList.innerHTML = "<p>Завантаження...</p>";
-      try{
-        const snap = await dbGet(dbRef(db, `inboxMeta/${u.uid}`));
-        if (!snap.exists()){ dmList.innerHTML = "<i>Немає діалогів</i>"; return; }
-        const val = snap.val();
-        const ids = Object.keys(val);
-        const rows = await Promise.all(ids.map(async otherUid=>{
+    /* ---------------- DM list (realtime) ---------------- */
+    function subscribeInbox(uid){
+      if (inboxUnsub) { inboxUnsub(); inboxUnsub = null; }
+      const ref = dbRef(db, `inboxMeta/${uid}`);
+      const cb = async (snap)=>{
+        const val = snap.val() || {};
+        const ids = Object.keys(val).sort((a,b)=> (val[b].lastTs||0)-(val[a].lastTs||0));
+        if (!ids.length){ dmList.innerHTML = "<i>Немає діалогів</i>"; return; }
+        const parts = await Promise.all(ids.map(async otherUid=>{
           const meta = val[otherUid] || {};
           const uSnap = await dbGet(dbRef(db, `users/${otherUid}`));
           const ud = uSnap.exists()?uSnap.val():{ nick:"Користувач", avatar:DEFAULT_AVATAR };
@@ -804,18 +853,14 @@
               </div>
             </div>`;
         }));
-
-        dmList.innerHTML = rows.join("");
-        dmList.querySelectorAll("[data-open]").forEach(btn=>{
-          btn.addEventListener("click", ()=> openPrivateChat(btn.dataset.open));
-        });
-
-        onChildAdded(dbRef(db, `inboxMeta/${u.uid}`), ()=> loadDMList());
-      } catch(e){
-        dmList.innerHTML = "<i>Помилка завантаження ЛС</i>";
-      }
+        dmList.innerHTML = parts.join("");
+        dmList.querySelectorAll("[data-open]").forEach(btn=> btn.addEventListener("click", ()=> openPrivateChat(btn.dataset.open)));
+      };
+      onValue(ref, cb);
+      inboxUnsub = ()=> dbOff(ref, 'value', cb);
     }
 
+    /* ---------------- Message menu ---------------- */
     function showMsgMenu(x,y,msg,wrap){
       msgMenu.style.left = x + "px"; msgMenu.style.top = y + "px"; msgMenu.style.display = "block";
       const hide = ()=> { msgMenu.style.display = "none"; document.removeEventListener("click", hide); };
@@ -835,24 +880,26 @@
                   ts: Date.now(),
                   recipientUid: msg.uid
                 });
+                toast("✅ Відповідь надіслано");
               }
             } else {
               if (msg.id) {
                 await dbSet(dbRef(db, `messageReactions/${msg.id}/${auth.currentUser.uid}`), { act, ts: Date.now() });
                 await dbPush(dbRef(db, `notifications/${msg.uid}`), { ts: Date.now(), type:"reaction", text:`${act} на ваше повідомлення`, from: auth.currentUser.uid });
-                notify("Дія виконана", "Реакцію збережено");
-              } else notify("Помилка", "Немає id повідомлення");
+                toast("✅ Дія виконана");
+              } else notify("Помилка","Немає id повідомлення");
             }
           } catch(e){ console.error(e); notify("Помилка дії","Спробуйте ще раз"); }
         };
       });
     }
 
+    /* ---------------- Presence / online ×10 ---------------- */
     function updateOnlineCount(){
       onValue(dbRef(db, "presence"), (snap)=>{
         const val = snap.val() || {};
         const real = Object.keys(val).length;
-        const shown = real * 10 + (real>0?1:0);
+        const shown = real*10 + (real>0?1:0);
         onlineNeon.textContent = `Онлайн (прибл.): ${shown}`;
       });
     }
@@ -865,6 +912,7 @@
       }
     }, 60000);
 
+    /* ---------------- Friends ---------------- */
     async function sendFriendRequest(toUid){
       if (!auth.currentUser) { showAuthModal(); return; }
       const from = auth.currentUser.uid;
@@ -873,7 +921,8 @@
         await dbSet(dbRef(db, `friendRequests/${toUid}/${from}`), { from, to: toUid, ts: Date.now() });
         await dbSet(dbRef(db, `friends/${from}/${toUid}`), { status:"requested", ts: Date.now(), fromUid: from });
         await dbPush(dbRef(db, `notifications/${toUid}`), { ts: Date.now(), type:"friend", text:`Запит у друзі від ${auth.currentUser.displayName||'Користувач'}`, from });
-        notify("Запит відправлено","Користувач отримає сповіщення.");
+        toast("✅ Запит відправлено");
+        refreshFriendsBlocks();
       }catch(e){ notify("Помилка","Не вдалося відправити запит"); }
     }
 
@@ -896,6 +945,7 @@
       const u = auth.currentUser;
       if (!u){ friendsList.innerHTML=""; friendRequests.innerHTML=""; friendsOnlineCountEl.textContent="0"; return; }
 
+      // Requests to me
       const reqSnap = await dbGet(dbRef(db, `friendRequests/${u.uid}`));
       friendRequests.innerHTML = "";
       if (reqSnap.exists()){
@@ -920,11 +970,13 @@
             await dbSet(dbRef(db, `friends/${fromUid}/${u.uid}`), { status:"accepted", ts: Date.now() });
             await dbRemove(dbRef(db, `friendRequests/${u.uid}/${fromUid}`));
             await dbPush(dbRef(db, `notifications/${fromUid}`), { ts: Date.now(), type:"friend", text:`${auth.currentUser.displayName||'Користувач'} додав(ла) вас у друзі`, from: u.uid });
+            toast("✅ Додано в друзі");
             refreshFriendsBlocks();
           });
           item.querySelector('.btn-decline').addEventListener('click', async ()=>{
             await dbRemove(dbRef(db, `friendRequests/${u.uid}/${fromUid}`));
             await dbRemove(dbRef(db, `friends/${fromUid}/${u.uid}`));
+            toast("✅ Відхилено");
             refreshFriendsBlocks();
           });
           friendRequests.appendChild(item);
@@ -933,6 +985,7 @@
         friendRequests.innerHTML = "<i>Немає заявок</i>";
       }
 
+      // My friends
       friendsList.innerHTML = "";
       const frSnap = await dbGet(dbRef(db, `friends/${u.uid}`));
       let onlineCount = 0;
@@ -957,33 +1010,35 @@
       friendsOnlineCountEl.textContent = String(onlineCount);
     }
 
+    /* ---------------- Notifications (bell) ---------------- */
     function notify(title, text){
       const row = document.createElement('div');
       row.style.padding = "6px 8px"; row.style.borderBottom = "1px solid #eee";
       row.textContent = `${title}: ${text}`;
       notifList.prepend(row);
-      const n = Number(bellBadge.dataset.n || "0") + 1;
+      let n = Number(bellBadge.dataset.n || "0") + 1;
       bellBadge.dataset.n = String(n);
       bellBadge.textContent = n;
-      bellBadge.style.display = "inline-block";
+      bellBadge.style.display = n>0 ? "inline-block":"none";
     }
     function subscribeNotifications(uid){
       onChildAdded(dbRef(db, `notifications/${uid}`), (snap)=>{
         const v = snap.val() || {};
-        notify((v.type||"Info").toString(), (v.text||"").toString());
+        notify(v.type || "Info", v.text || "");
       });
     }
     bellBtn.addEventListener('click', ()=>{
       bellModal.classList.add("show");
       bellModal.setAttribute("aria-hidden","false");
       bellBadge.dataset.n = "0";
-      bellBadge.textContent = "0";
       bellBadge.style.display = "none";
+      bellBadge.textContent = "0";
     });
     bellClose.addEventListener('click', ()=>{
       bellModal.classList.remove("show"); bellModal.setAttribute("aria-hidden","true");
     });
 
+    /* ---------------- Image resize helper ---------------- */
     function resizeImageFile(file, maxWidth = 900, quality = 0.8) {
       return new Promise((resolve, reject) => {
         const img = new Image();
@@ -1008,8 +1063,9 @@
       });
     }
 
+    /* ---------------- Bots controller ---------------- */
     const BOTS_DEF = [
-      { id: 'bot_1', nick:"Bot_Оголошення_1", avatar:"https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg",
+      { id:'bot_1', nick:"Bot_Оголошення_1", avatar:"https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg",
         posts:[
           {text:`O2 СІМ КАРТА\nБез ліміт інтернет\nБез ліміт дзвінки\nПрацює в Європі\nПлата 699 крон/міс. Ціна 299 кс. тел 607914467 (Viber/WhatsApp/Telegram)`, image:"https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg"},
           {text:`Доброго дня! Продаю iPhone 11 Pro Max + 26 чохлів (чохли у подарунок). Без тріщин, не падав, усе оригінальне, без Apple ID. Пишіть у приват.`, image:"https://i.ibb.co/dwcXPqDr/IMG-1954f6b56869b9817a131ae33f3a37b6-V.jpg"},
@@ -1017,7 +1073,7 @@
         ],
         baseInterval: 2*60*1000
       },
-      { id: 'bot_2', nick:"Bot_Оголошення_2", avatar:"https://i.ibb.co/Z11WVrVC/IMG-b83692bb79a1468af74c81620750e8c0-V.jpg",
+      { id:'bot_2', nick:"Bot_Оголошення_2", avatar:"https://i.ibb.co/Z11WVrVC/IMG-b83692bb79a1468af74c81620750e8c0-V.jpg",
         posts:[
           {text:`Шаблон`, image:"https://i.ibb.co/Z11WVrVC/IMG-b83692bb79a1468af74c81620750e8c0-V.jpg"},
           {text:`Запрошую моделей на перманентний макіяж (Прага, 28.07 о 14:00). Ціна — лише матеріали. Деталі у приват.`, image:"https://i.ibb.co/QFWDvGZ8/IMG-6748e7141906901b131b8fd5130a5c01-V.jpg"},
@@ -1025,7 +1081,7 @@
         ],
         baseInterval: 3*60*1000
       },
-      { id: 'bot_3', nick:"Bot_Оголошення_3", avatar:"https://i.ibb.co/MzdTMPR/IMG-8231d8142ffcbba7c682ca598683e3f2-V.jpg",
+      { id:'bot_3', nick:"Bot_Оголошення_3", avatar:"https://i.ibb.co/MzdTMPR/IMG-8231d8142ffcbba7c682ca598683e3f2-V.jpg",
         posts:[
           {text:`Нужен водитель для помощи в переезде (со своим авто). WhatsApp: +48 793 463 757 • Telegram: @carlx_xxx`, image:null},
           {text:`Оголошення`, image:"https://i.ibb.co/MzdTMPR/IMG-8231d8142ffcbba7c682ca598683e3f2-V.jpg"},
@@ -1033,88 +1089,62 @@
         ],
         baseInterval: 4*60*1000
       },
-      { id: 'bot_donate', nick:"DonateBot", avatar:"https://i.ibb.co/tMqgVf1/donate-icon.png",
+      { id:'bot_donate', nick:"DonateBot", avatar:"https://i.ibb.co/tMqgVf1/donate-icon.png",
         posts:[
-          {text:`Підтримати проект Praha Fušky 💚\nРахунок ČSOB: ${BANK_ACCOUNT}\nПісля оплати — надішліть фото квитанції у чат. Бот перевірить і підтвердить автоматично.`, image:null}
+          {text:`Підтримати проект Praha Fušky 💚\nРахунок ČSOB: 354037257/0300\nПісля оплати — надішліть фото квитанції у чат. Бот перевірить і підтвердить автоматично.`, image:null}
         ],
-        baseInterval: 0
+        baseInterval:0
       }
     ];
 
-    const BotController = (() => {
+    const BotController = (()=>{
       const timers = new Map();
       const indices = new Map();
       const speeds = new Map();
-      function nextIndex(id, posts){
-        const i = (indices.get(id) || 0);
-        indices.set(id, i+1);
-        return posts[i % posts.length];
-      }
+      function nextIndex(id, posts){ const i=(indices.get(id)||0); indices.set(id,i+1); return posts[i % posts.length]; }
       async function post(bot){
         const p = nextIndex(bot.id, bot.posts);
-        try {
-          await dbPush(dbRef(db, "messages"), {
-            uid: bot.id, nick: bot.nick, avatar: bot.avatar,
-            text: p.text, image: p.image || null, ts: Date.now()
-          });
-          if (bot.id === 'bot_donate'){
-            await dbSet(dbRef(db, `donations/awaiting`), { ts: Date.now() });
-          }
-        } catch(e){ console.error("bot push err", e); }
+        try{
+          await dbPush(dbRef(db, "messages"), { uid:bot.id, nick:bot.nick, avatar:bot.avatar, text:p.text, image:p.image||null, ts:Date.now() });
+          if (bot.id==='bot_donate'){ await dbSet(dbRef(db, `donations/awaiting`), { ts:Date.now() }); }
+        }catch(e){ console.error("bot push err", e); }
       }
       function isRunning(id){ return timers.has(id); }
-      function computeInterval(bot){
-        const mult = speeds.get(bot.id) || 1;
-        const minMs = 15000;
-        return Math.max(minMs, bot.baseInterval / mult);
-      }
+      function computeInterval(bot){ const mult=speeds.get(bot.id)||1; const minMs=15000; return Math.max(minMs, bot.baseInterval / mult); }
       function start(bot){
         if (isRunning(bot.id)) return;
-        if (bot.baseInterval === 0){ post(bot); return; }
-        const tick = async ()=>{ await post(bot); schedule(); };
-        function schedule(){
-          const ms = computeInterval(bot);
-          const t = setTimeout(tick, ms);
-          timers.set(bot.id, t);
-          updateUIState(bot.id);
-        }
+        if (bot.baseInterval===0){ post(bot); return; }
+        const tick=async()=>{ await post(bot); schedule(); };
+        function schedule(){ const ms=computeInterval(bot); const t=setTimeout(tick,ms); timers.set(bot.id,t); updateUIState(bot.id); }
         schedule();
       }
-      function stop(id){
-        const t = timers.get(id);
-        if (t){ clearTimeout(t); timers.delete(id); updateUIState(id); }
-      }
+      function stop(id){ const t=timers.get(id); if (t){ clearTimeout(t); timers.delete(id); updateUIState(id); } }
       function setSpeed(botId, mult){
         speeds.set(botId, mult);
-        if (timers.has(botId)){
-          clearTimeout(timers.get(botId));
-          timers.delete(botId);
-          const bot = BOTS_DEF.find(b=>b.id===botId);
-          if (bot) start(bot);
-        }
+        if (timers.has(botId)){ clearTimeout(timers.get(botId)); timers.delete(botId); const bot=BOTS_DEF.find(b=>b.id===botId); if (bot) start(bot); }
         updateUIState(botId);
       }
       function postOnce(bot){ return post(bot); }
       function stopAll(){ Array.from(timers.keys()).forEach(stop); }
       function startAll(){ BOTS_DEF.forEach(b=>{ if (b.baseInterval>0) start(b); }); }
       function postOnceAll(){ return Promise.all(BOTS_DEF.map(postOnce)); }
-      function getSpeed(id){ return speeds.get(id) || 1; }
+      function getSpeed(id){ return speeds.get(id)||1; }
       function updateUIState(id){
-        const chip = document.querySelector(`[data-bot='${id}']`);
+        const chip=document.querySelector(`[data-bot='${id}']`);
         if (!chip) return;
-        const running = isRunning(id);
-        chip.querySelector('.state').textContent = running ? '● працює' : '○ зупинено';
-        chip.querySelector('.toggle').textContent = running ? '⏹ Зупинити' : '▶️ Запустити';
+        const running=isRunning(id);
+        chip.querySelector('.state').textContent=running?'● працює':'○ зупинено';
+        chip.querySelector('.toggle').textContent=running?'⏹ Зупинити':'▶️ Запустити';
       }
       return { start, stop, setSpeed, isRunning, postOnce, stopAll, startAll, postOnceAll, getSpeed };
     })();
 
     function buildBotChip(bot){
-      const wrap = document.createElement('div');
-      wrap.className = 'admin-chip';
-      wrap.dataset.bot = bot.id;
-      wrap.innerHTML = `
-        <img src="${bot.avatar}" style="width:26px;height:26px;border-radius:6px;object-fit:cover"> 
+      const wrap=document.createElement('div');
+      wrap.className='admin-chip';
+      wrap.dataset.bot=bot.id;
+      wrap.innerHTML=`
+        <img src="${bot.avatar}" style="width:26px;height:26px;border-radius:6px;object-fit:cover">
         <b>${bot.nick}</b>
         <span class="state" style="font-size:12px;opacity:.8">○ зупинено</span>
         <button class="toggle tab-button" style="padding:6px 10px">▶️ Запустити</button>
@@ -1122,105 +1152,79 @@
         <label style="font-size:12px">швидк. <input type="range" min="0.5" max="3" step="0.1" value="1" class="speed"></label>
         <span class="speedv" style="font-size:12px">1×</span>
       `;
-      const toggle = wrap.querySelector('.toggle');
-      const once = wrap.querySelector('.once');
-      const range = wrap.querySelector('.speed');
-      const speedv = wrap.querySelector('.speedv');
+      const toggle=wrap.querySelector('.toggle');
+      const once=wrap.querySelector('.once');
+      const range=wrap.querySelector('.speed');
+      const speedv=wrap.querySelector('.speedv');
 
-      toggle.addEventListener('click', ()=>{
-        if (BotController.isRunning(bot.id)) BotController.stop(bot.id); else BotController.start(bot);
-      });
+      toggle.addEventListener('click', ()=>{ if (BotController.isRunning(bot.id)) BotController.stop(bot.id); else BotController.start(bot); });
       once.addEventListener('click', ()=> BotController.postOnce(bot));
-      range.addEventListener('input', ()=>{
-        const v = Number(range.value);
-        speedv.textContent = v.toFixed(1) + '×';
-        BotController.setSpeed(bot.id, v);
-        localStorage.setItem('bot_speed_'+bot.id, String(v));
-      });
-      const saved = Number(localStorage.getItem('bot_speed_'+bot.id) || '1');
-      if (!Number.isNaN(saved) && saved){ range.value = String(saved); speedv.textContent = saved.toFixed(1)+'×'; BotController.setSpeed(bot.id, saved); }
+      range.addEventListener('input', ()=>{ const v=Number(range.value); speedv.textContent=v.toFixed(1)+'×'; BotController.setSpeed(bot.id, v); localStorage.setItem('bot_speed_'+bot.id, String(v)); });
+      const saved=Number(localStorage.getItem('bot_speed_'+bot.id)||'1');
+      if (!Number.isNaN(saved)&&saved){ range.value=String(saved); speedv.textContent=saved.toFixed(1)+'×'; BotController.setSpeed(bot.id, saved); }
       return wrap;
     }
 
-    async function loadBotPosts(){
-      for (const b of BOTS_DEF){
-        const snap = await dbGet(dbRef(db, `botPosts/${b.id}`));
-        if (snap.exists()){
-          const val = snap.val();
-          const list = Array.isArray(val) ? val : Object.values(val);
-          if (Array.isArray(list) && list.length) b.posts = list.map(x=>({text:x.text||"", image:x.image||null}));
-        }
-      }
-      return BOTS_DEF;
-    }
-
     function buildAdminExtra(){
-      const wrap = document.createElement('div');
-      wrap.style.marginTop = "8px";
-      wrap.innerHTML = `
+      const wrap=document.createElement('div');
+      wrap.style.marginTop="8px";
+      wrap.innerHTML=`
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button id="clearMain" class="tab-button" style="background:#ffe1e1">🧹 Очистити Чат</button>
           <button id="clearRent" class="tab-button" style="background:#ffe1e1">🧹 Очистити Оренда</button>
           <button id="donateMsg" class="tab-button" style="background:#e0ffe7">💳 Донат-повідомлення</button>
-          <button id="banUser" class="tab-button" title="Вкажіть UID користувача">⛔️ Забанити</button>
+          <button id="banUser" class="tab-button">⛔️ Забанити</button>
           <button id="unbanUser" class="tab-button">✅ Розбанити</button>
-          <button id="adminHide" class="tab-button" style="background:#ddd">✖ Сховати панель</button>
         </div>`;
       return wrap;
     }
 
     function initAdminUI(){
-      botsRow.innerHTML = '';
+      // Do not auto-show: controlled by localStorage + gear
+      adminBots.innerHTML='';
+      BOTS_DEF.forEach(bot=> adminBots.appendChild(buildBotChip(bot)));
+      adminBots.appendChild(buildAdminExtra());
+
+      // floating strip content
+      botsRow.innerHTML='';
       BOTS_DEF.forEach(bot=> botsRow.appendChild(buildBotChip(bot)));
+
       startAllBtn.onclick = ()=> BotController.startAll();
       stopAllBtn.onclick = ()=> BotController.stopAll();
       postOnceAllBtn.onclick = ()=> BotController.postOnceAll();
 
-      adminBots.innerHTML = '';
-      BOTS_DEF.forEach(bot=> adminBots.appendChild(buildBotChip(bot)));
-      const extra = buildAdminExtra();
-      adminBots.appendChild(extra);
-
-      extra.querySelector('#clearMain').onclick = async ()=>{ if (confirm("Очистити messages?")) await dbRemove(dbRef(db,"messages")); };
-      extra.querySelector('#clearRent').onclick = async ()=>{ if (confirm("Очистити rentMessages?")) await dbRemove(dbRef(db,"rentMessages")); };
-      extra.querySelector('#donateMsg').onclick = ()=> BotController.postOnce(BOTS_DEF.find(b=>b.id==='bot_donate'));
-      extra.querySelector('#banUser').onclick = async ()=>{
-        const uid = prompt("UID для бану:");
-        if (!uid) return;
-        await dbSet(dbRef(db, `settings/banned/${uid}`), true);
-        notify("Ок","Користувач заблокований");
-      };
-      extra.querySelector('#unbanUser').onclick = async ()=>{
-        const uid = prompt("UID для розбану:");
-        if (!uid) return;
-        await dbRemove(dbRef(db, `settings/banned/${uid}`));
-        notify("Ок","Користувач розблокований");
-      };
-      extra.querySelector('#adminHide').onclick = ()=>{ adminModal.classList.remove('show'); adminModal.setAttribute('aria-hidden','true'); adminBar.style.display='none'; };
-
+      adminClose.onclick = ()=>{ adminModal.classList.remove('show'); adminModal.setAttribute('aria-hidden','true'); };
       gearBtn.onclick = ()=>{ adminModal.classList.add('show'); adminModal.setAttribute('aria-hidden','false'); };
+      adminBarClose.onclick = ()=>{ localStorage.setItem('adminBarVisible','0'); adminBar.style.display='none'; };
 
-      setTimeout(()=>{
-        if (!messagesEl.firstChild){
-          notify('Підказка', 'Чат порожній. Використайте ⚙️ щоб запустити або ⚡️ додати перші пости ботів.');
-        }
-      }, 600);
+      // extra actions
+      adminBots.querySelector('#clearMain').onclick = async ()=>{ if (confirm("Очистити messages?")){ await dbRemove(dbRef(db,"messages")); toast("✅ Очищено"); } };
+      adminBots.querySelector('#clearRent').onclick = async ()=>{ if (confirm("Очистити rentMessages?")){ await dbRemove(dbRef(db,"rentMessages")); toast("✅ Очищено"); } };
+      adminBots.querySelector('#donateMsg').onclick = ()=> BotController.postOnce(BOTS_DEF.find(b=>b.id==='bot_donate'));
+      adminBots.querySelector('#banUser').onclick = async ()=>{ const uid=prompt("UID для бану:"); if (!uid) return; await dbSet(dbRef(db, `settings/banned/${uid}`), true); toast("✅ Заблоковано"); };
+      adminBots.querySelector('#unbanUser').onclick = async ()=>{ const uid=prompt("UID для розбану:"); if (!uid) return; await dbRemove(dbRef(db, `settings/banned/${uid}`)); toast("✅ Розблоковано"); };
     }
 
+    // Toggle admin bar visibility with gear (double click to toggle bar quickly)
+    gearBtn.addEventListener('dblclick', ()=>{
+      if (!isAdmin) return;
+      const vis = adminBar.style.display === 'block' ? '0' : '1';
+      localStorage.setItem('adminBarVisible', vis);
+      adminBar.style.display = (vis==='1') ? 'block' : 'none';
+    });
+
+    /* ---------------- Map ---------------- */
     const POINTS = [
       { title: "Nemocnice Motol", pos: {lat:50.058, lng:14.360}, cat:"hospital", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png" },
-      { title: "Nemocnice Na Frantisku", pos: {lat:50.086, lng:14.418}, cat:"hospital", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png" }
+      { title: "Nemocnice Na Frantisku", pos: {lat:50.086, lng:14.418}, cat:"hospital", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png" },
+      { title: "Klinika Praha", pos: {lat:50.078, lng:14.422}, cat:"hospital", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png" }
     ];
-
     let map, markers=[];
     function initMap(){
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat:50.0755, lng:14.4378}, zoom: 12, mapTypeControl:false, streetViewControl:false
-      });
+      map = new google.maps.Map(document.getElementById('map'), { center:{lat:50.0755,lng:14.4378}, zoom:12, mapTypeControl:false, streetViewControl:false });
       markers = POINTS.map(p=> new google.maps.Marker({ position:p.pos, title:p.title, icon:p.icon, map }));
     }
     window.initMap = initMap;
-
     mapSearch?.addEventListener('input', ()=>{
       const q = mapSearch.value.toLowerCase();
       markers.forEach((m, idx)=>{
@@ -1231,12 +1235,15 @@
     });
     centerBtn?.addEventListener('click', ()=>{ if (map) map.setCenter({lat:50.0755,lng:14.4378}); });
 
-    gearBtn.addEventListener('click', ()=>{ if (isAdmin){ adminModal.classList.add('show'); adminModal.setAttribute('aria-hidden','false'); }});
+    /* ---------------- Inbox/Requests live refresh on auth ---------------- */
+    function bindFriendLive(){
+      if (!auth.currentUser) return;
+      onValue(dbRef(db, `friends/${auth.currentUser.uid}`), ()=> refreshFriendsBlocks());
+      onValue(dbRef(db, `friendRequests/${auth.currentUser.uid}`), ()=> refreshFriendsBlocks());
+    }
+    onAuthStateChanged(auth, ()=> bindFriendLive());
 
-    onValue(dbRef(db, `friends/${auth.currentUser?.uid||"__"}`), ()=> refreshFriendsBlocks());
-    onValue(dbRef(db, `friendRequests/${auth.currentUser?.uid||"__"}`), ()=> refreshFriendsBlocks());
-
-    // ===== Donat OCR Flow =====
+    /* ---------------- Donate OCR ---------------- */
     async function tryHandleDonationFlow(m){
       if (!m || !m.image) return;
       if (!auth.currentUser) return;
@@ -1248,13 +1255,12 @@
         if (contains){
           await dbRemove(dbRef(db, `donations/awaiting`));
           await dbPush(dbRef(db, "messages"), {
-            uid: 'bot_donate', nick: 'DonateBot', avatar: 'https://i.ibb.co/tMqgVf1/donate-icon.png',
-            text: `✅ Оплату підтверджено. Дякуємо за підтримку!`, image: null, ts: Date.now()
+            uid:'bot_donate', nick:'DonateBot', avatar:'https://i.ibb.co/tMqgVf1/donate-icon.png',
+            text:`✅ Оплату підтверджено. Дякуємо за підтримку!`, image:null, ts:Date.now()
           });
         }
       } catch(e){ console.warn("Donate OCR err", e); }
     }
-
     async function ocrContainsAccount(imageUrl, accountStr){
       if (!window.Tesseract) return false;
       const res = await Tesseract.recognize(imageUrl, 'eng');
@@ -1263,58 +1269,25 @@
       return text.includes(pattern) || text.includes(pattern.replace('/',''));
     }
 
-    // ===== Assistant (needs backend proxy) =====
-    async function getPlan(uid){
-      const s = await dbGet(dbRef(db, `users/${uid}/plan`));
-      return s.exists()? String(s.val()) : "free";
-    }
-    async function getUsage(uid){
-      const s = await dbGet(dbRef(db, `usage/${uid}/assistantCount`));
-      return s.exists()? Number(s.val()) : 0;
-    }
-    async function incUsage(uid){
-      await dbSet(dbRef(db, `usage/${uid}/assistantCount`), (await getUsage(uid)) + 1 );
-    }
-    const asstThread = document.getElementById('asstThread');
+    /* ---------------- Assistant (needs backend proxy) ---------------- */
+    async function getPlan(uid){ const s = await dbGet(dbRef(db, `users/${uid}/plan`)); return s.exists()? String(s.val()) : "free"; }
+    async function getUsage(uid){ const s = await dbGet(dbRef(db, `usage/${uid}/assistantCount`)); return s.exists()? Number(s.val()) : 0; }
+    async function incUsage(uid){ await dbSet(dbRef(db, `usage/${uid}/assistantCount`), (await getUsage(uid)) + 1 ); }
+    const asstThread=document.getElementById('asstThread');
     function addAsstRow(text, mine=false){
-      const row = document.createElement('div');
-      row.style.margin = "6px 0";
-      row.style.textAlign = mine ? "right" : "left";
-      row.textContent = text;
-      asstThread.appendChild(row);
-      asstThread.scrollTop = asstThread.scrollHeight;
+      const row=document.createElement('div'); row.style.margin="6px 0"; row.style.textAlign=mine?"right":"left"; row.textContent=text; asstThread.appendChild(row); asstThread.scrollTop=asstThread.scrollHeight;
     }
     document.getElementById('asstSend')?.addEventListener('click', async ()=>{
-      const u = auth.currentUser;
-      if (!u){ showAuthModal(); return; }
-      const q = document.getElementById('asstText').value.trim();
-      if (!q) return;
-
-      const plan = await getPlan(u.uid);
-      const used = await getUsage(u.uid);
-      const limit = (plan==="premium") ? 999999 : 30;
-      if (used >= limit){
-        notify("Ліміт", "Вичерпано 30 безкоштовних звернень. Оформіть підписку 199 Kč/міс.");
-        return;
-      }
-
-      addAsstRow(q, true);
-      document.getElementById('asstText').value = "";
-
+      const u=auth.currentUser; if (!u){ showAuthModal(); return; }
+      const q=document.getElementById('asstText').value.trim(); if (!q) return;
+      const plan=await getPlan(u.uid); const used=await getUsage(u.uid); const limit=(plan==="premium")?999999:30;
+      if (used>=limit){ notify("Ліміт","Вичерпано 30 безкоштовних звернень. Оформіть підписку 199 Kč/міс."); return; }
+      addAsstRow(q,true); document.getElementById('asstText').value="";
       try{
-        const res = await fetch(ASSISTANT_ENDPOINT, {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({ uid: u.uid, question: q })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || "Помилка сервера");
-        addAsstRow(data.answer || data.reply || "(порожня відповідь)");
-        await incUsage(u.uid);
-      }catch(e){
-        console.error(e);
-        addAsstRow("Сервіс помічника поки не підключено. Налаштуйте бекенд /assistant із секретним ключем OpenAI.");
-      }
+        const res=await fetch(ASSISTANT_ENDPOINT,{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ uid:u.uid, question:q })});
+        const data=await res.json(); if (!res.ok) throw new Error(data?.error||"Помилка сервера");
+        addAsstRow(data.answer||data.reply||"(порожня відповідь)"); await incUsage(u.uid);
+      }catch(e){ console.error(e); addAsstRow("Сервіс помічника поки не підключено. Налаштуйте бекенд /assistant із ключем OpenAI."); }
     });
 
   </script>
