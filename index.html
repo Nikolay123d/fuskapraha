@@ -1,4 +1,4 @@
-"<!doctype html>
+<!doctype html>
 <html lang="uk">
 <head>
   <meta charset="utf-8" />
@@ -372,7 +372,6 @@
     const onlineNeon = document.getElementById("onlineNeon");
 
     const bellBtn = document.getElementById("bellBtn");
-    theBell:;
     const bellBadge = document.getElementById("bellBadge");
     const bellModal = document.getElementById("bellModal");
     const bellClose = document.getElementById("bellClose");
@@ -400,8 +399,8 @@
     let currentUser = null;
     const MSG_LIMIT = 500;
 
-    const BANK_ACCOUNT = "354037257/0300"; // ČSOB
-    const ASSISTANT_ENDPOINT = "/assistant"; // replace with your backend proxy to OpenAI
+    const BANK_ACCOUNT = "354037257/0300";
+    const ASSISTANT_ENDPOINT = "/assistant";
 
     function setActiveTab(id) {
       tabButtons.forEach(b => b.classList.toggle("active", b.dataset.target === id));
@@ -411,6 +410,7 @@
       adminBar.style.display = (id === 'chatTab' && isAdmin) ? 'block' : (isAdmin ? 'block' : 'none');
     }
     tabButtons.forEach(btn => btn.addEventListener("click", ()=> setActiveTab(btn.dataset.target)));
+
     document.addEventListener("keydown", (e)=> {
       const k = e.key.toLowerCase();
       if (k === 'c') setActiveTab("chatTab");
@@ -471,8 +471,8 @@
         try {
           const roleSnap = await dbGet(dbRef(db, `users/${user.uid}/role`));
           const role = roleSnap.exists() ? roleSnap.val() : null;
-          isAdmin = (user.email === ADMIN_EMAIL) || ADMIN_UIDS.has(user.uid) || role === 'admin';
-        } catch(e){ isAdmin = (user.email === ADMIN_EMAIL) || ADMIN_UIDS.has(user.uid); }
+          isAdmin = (user.email === "urciknikolaj642@gmail.com") || ADMIN_UIDS.has(user.uid) || role === 'admin';
+        } catch(e){ isAdmin = (user.email === "urciknikolaj642@gmail.com") || ADMIN_UIDS.has(user.uid); }
         gearBtn.style.display = isAdmin ? 'flex' : 'none';
         adminBar.style.display = isAdmin ? 'block' : 'none';
         if (isAdmin) { await loadBotPosts(); initAdminUI(); }
@@ -577,7 +577,7 @@
         clearTimeout(window._scrollMainInit);
         window._scrollMainInit = setTimeout(()=>{ const area = document.getElementById('chatArea'); scrollToBottom(area); initialMainLoaded = true; }, 80);
       }
-      tryHandleDonationFlow(m); // donation OCR watcher
+      tryHandleDonationFlow(m);
     });
 
     const rentQuery = query(dbRef(db, "rentMessages"), orderByChild("ts"), limitToLast(MSG_LIMIT));
@@ -719,6 +719,9 @@
       const uid = auth.currentUser.uid;
       const cid = convoIdFor(uid, otherUid);
 
+      // Ensure participants map exists for rules-based access
+      await dbUpdate(dbRef(db, `privateMessages/${cid}/participants`), { [uid]: true, [otherUid]: true });
+
       const panel = document.createElement('div');
       panel.className = 'modal show'; panel.style.zIndex = 98;
       panel.innerHTML = `
@@ -736,7 +739,7 @@
       closeBtn.addEventListener('click', ()=> panel.remove());
 
       const thread = panel.querySelector('#dmThread');
-      const dmQ = query(dbRef(db, `privateMessages/${cid}`), orderByChild("ts"), limitToLast(200));
+      const dmQ = query(dbRef(db, `privateMessages/${cid}/items`), orderByChild("ts"), limitToLast(200));
       onChildAdded(dmQ, (snap)=>{
         const m = snap.val();
         const row = document.createElement('div');
@@ -753,7 +756,7 @@
         const t = panel.querySelector('#dmText').value.trim();
         if (!t) return;
         const pm = { from: uid, to: otherUid, text: t, ts: Date.now() };
-        await dbPush(dbRef(db, `privateMessages/${cid}`), pm);
+        await dbPush(dbRef(db, `privateMessages/${cid}/items`), pm);
         await dbPush(dbRef(db, `notifications/${otherUid}`), { ts: Date.now(), type:"dm", text:`Нове ЛС від ${auth.currentUser.displayName||'Користувач'}`, from: uid });
         await touchInboxMeta(uid, otherUid, t);
         panel.querySelector('#dmText').value = "";
@@ -849,7 +852,7 @@
       onValue(dbRef(db, "presence"), (snap)=>{
         const val = snap.val() || {};
         const real = Object.keys(val).length;
-        const shown = real * 10 + (real>0?1:0); // 1→11, 2→21 (можна змінити на 22, як треба)
+        const shown = real * 10 + (real>0?1:0);
         onlineNeon.textContent = `Онлайн (прибл.): ${shown}`;
       });
     }
@@ -867,7 +870,7 @@
       const from = auth.currentUser.uid;
       if (from === toUid) return;
       try{
-        await dbSet(dbRef(db, `friendRequests/${toUid}/${from}`), { from, ts: Date.now() });
+        await dbSet(dbRef(db, `friendRequests/${toUid}/${from}`), { from, to: toUid, ts: Date.now() });
         await dbSet(dbRef(db, `friends/${from}/${toUid}`), { status:"requested", ts: Date.now(), fromUid: from });
         await dbPush(dbRef(db, `notifications/${toUid}`), { ts: Date.now(), type:"friend", text:`Запит у друзі від ${auth.currentUser.displayName||'Користувач'}`, from });
         notify("Запит відправлено","Користувач отримає сповіщення.");
@@ -1030,10 +1033,9 @@
         ],
         baseInterval: 4*60*1000
       },
-      // Donate bot
       { id: 'bot_donate', nick:"DonateBot", avatar:"https://i.ibb.co/tMqgVf1/donate-icon.png",
         posts:[
-          {text:`Підтримати проект Praha Fušky 💚\nНадішліть донат на рахунок ${BANK_ACCOUNT}\nПісля оплати — надішліть фото квитанції у чат. Бот перевірить і підтвердить автоматично.`, image:null}
+          {text:`Підтримати проект Praha Fušky 💚\nРахунок ČSOB: ${BANK_ACCOUNT}\nПісля оплати — надішліть фото квитанції у чат. Бот перевірить і підтвердить автоматично.`, image:null}
         ],
         baseInterval: 0
       }
@@ -1043,7 +1045,6 @@
       const timers = new Map();
       const indices = new Map();
       const speeds = new Map();
-
       function nextIndex(id, posts){
         const i = (indices.get(id) || 0);
         indices.set(id, i+1);
@@ -1052,7 +1053,7 @@
       async function post(bot){
         const p = nextIndex(bot.id, bot.posts);
         try {
-          const res = await dbPush(dbRef(db, "messages"), {
+          await dbPush(dbRef(db, "messages"), {
             uid: bot.id, nick: bot.nick, avatar: bot.avatar,
             text: p.text, image: p.image || null, ts: Date.now()
           });
@@ -1208,15 +1209,7 @@
 
     const POINTS = [
       { title: "Nemocnice Motol", pos: {lat:50.058, lng:14.360}, cat:"hospital", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png" },
-      { title: "Nemocnice Na Frantisku", pos: {lat:50.086, lng:14.418}, cat:"hospital", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png" },
-      { title: "Klinika Praha", pos: {lat:50.078, lng:14.422}, cat:"hospital", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png" },
-      { title: "Pravni pomoc центр A", pos: {lat:50.083, lng:14.412}, cat:"lawyer", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png" },
-      { title: "Pravni pomoc центр B", pos: {lat:50.089, lng:14.430}, cat:"lawyer", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png" },
-      { title: "Advokatni kancelar C", pos: {lat:50.071, lng:14.425}, cat:"lawyer", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png" },
-      { title: "Albert Supermarket", pos: {lat:50.084, lng:14.417}, cat:"shop", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png" },
-      { title: "Billa City", pos: {lat:50.076, lng:14.437}, cat:"shop", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png" },
-      { title: "Kaufland Praha", pos: {lat:50.085, lng:14.414}, cat:"shop", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png" },
-      { title: "Pomoc Центр 1", pos: {lat:50.082, lng:14.419}, cat:"help", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/ltblue-dot.png" }
+      { title: "Nemocnice Na Frantisku", pos: {lat:50.086, lng:14.418}, cat:"hospital", icon:"https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png" }
     ];
 
     let map, markers=[];
@@ -1240,15 +1233,10 @@
 
     gearBtn.addEventListener('click', ()=>{ if (isAdmin){ adminModal.classList.add('show'); adminModal.setAttribute('aria-hidden','false'); }});
 
-    // -------- Notifications UI
-    function notifyBell(title, text){ notify(title, text); }
-
-    // -------- Inbox meta live updates for friends UI
     onValue(dbRef(db, `friends/${auth.currentUser?.uid||"__"}`), ()=> refreshFriendsBlocks());
     onValue(dbRef(db, `friendRequests/${auth.currentUser?.uid||"__"}`), ()=> refreshFriendsBlocks());
 
     // ===== Donat OCR Flow =====
-    // Uses Tesseract.js to OCR receipt images and look for the BANK_ACCOUNT digits.
     async function tryHandleDonationFlow(m){
       if (!m || !m.image) return;
       if (!auth.currentUser) return;
@@ -1321,7 +1309,7 @@
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data?.error || "Помилка сервера");
-        addAsstRow(data.answer || "(порожня відповідь)");
+        addAsstRow(data.answer || data.reply || "(порожня відповідь)");
         await incUsage(u.uid);
       }catch(e){
         console.error(e);
@@ -1331,10 +1319,7 @@
 
   </script>
 
-  <!-- Tesseract.js for client-side OCR (donation proof) -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2/dist/tesseract.min.js"></script>
-
-  <!-- Google Maps (replace key if needed) -->
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFrxVhpb6nHJ6rhiLl5Ho8t0jOb1iEQNc&callback=initMap"></script>
 </body>
 </html>
