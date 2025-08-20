@@ -839,13 +839,14 @@
   const dmTab = document.getElementById("dmTab");
   function loadDMList(){ if(!auth.currentUser){ dmList.innerHTML="<i>Увійдіть, щоб бачити ЛС</i>"; return; } dmList.innerHTML=`<p>Відкривайте ЛС через профілі або зі сповіщень 🔔.</p>`; }
   auth.onAuthStateChanged(loadDMList);
-
-  /* ===== 11) Админка: участники/бан/премиум ===== */
+/* ===== 11) Админка: участники/бан/преміум ===== */
   const SUB_PLAN = {
-    none:{ key:'none', label:'—', badge:'linear-gradient(90deg,#e5e7eb,#f8fafc)', color:'#111' },
-    trial:{ key:'trial', label:'ПРЕМІУМ • TRIAL', badge:'linear-gradient(90deg,#a78bfa,#c084fc)', color:'#fff' },
-    premium:{ key:'premium', label:'ПРЕМІУМ', badge:'linear-gradient(90deg,#22c55e,#16a34a)', color:'#fff' },
-    premiumPlus
+    none:       { key:'none',        label:'—',                 badge:'linear-gradient(90deg,#e5e7eb,#f8fafc)', color:'#111' },
+    trial:      { key:'trial',       label:'ПРЕМІУМ • TRIAL',   badge:'linear-gradient(90deg,#a78bfa,#c084fc)', color:'#fff' },
+    premium:    { key:'premium',     label:'ПРЕМІУМ',           badge:'linear-gradient(90deg,#22c55e,#16a34a)', color:'#fff' },
+    premiumPlus:{ key:'premiumPlus', label:'ПРЕМІУМ+',          badge:'linear-gradient(90deg,#06b6d4,#0ea5e9)', color:'#fff' }
+  };
+
   let _allUsers = [];        // users: [{uid, nick, email, avatar, createdAt, role?}]
   let _userFlags = {};       // settings/userFlags/{uid}: {banned, premium, premiumSince, updatedBy}
   let _presence  = {};       // presence/{uid}: {ts, nick}
@@ -966,6 +967,7 @@
       else if (act==='open'){ openProfile(uid); }
     }catch(e){ console.error(e); notify('Помилка','Дію не виконано'); }
   }
+
   async function setPlan(uid, key){
     const safe = (['none','trial','premium','premiumPlus'].includes(key)) ? key : 'none';
     await db.ref('settings/userFlags/'+uid).update({
@@ -979,7 +981,7 @@
     }
   }
 
-  /* ===== 12) Боты ===== */
+  /* ===== 12) Боти ===== */
   if (!window.BOTS_DEF){
     window.BOTS_DEF = [
       { id:'bot_1', nick:"Марина", avatar:"https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg",
@@ -1087,7 +1089,6 @@
       if (isChat) adminBar.style.display='block';
     }
   });
-
-  </script>
+</script>
 </body>
 </html>
