@@ -297,9 +297,15 @@
       </div>
     </div>
   </div>
+<!-- ==== КОНЕЦ ЧАСТИ 1 ==== -->
 
-  <!-- звуковая система -->
-  <script>window.__soundEnabled=false;</script>
+
+---
+
+✅ ЧАСТЬ 2/4 — подключение Firebase и базовая логика (авторизация, профиль, звук)
+
+<!-- звуковая система флаг -->
+  <script>window.__soundEnabled=false; window.__mapInitOnce=false;</script>
 
   <!-- Firebase compat -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -416,9 +422,7 @@
 
     gearBtn.style.display    = window.__isAdmin ? 'flex' : 'none';
     membersBtn.style.display = window.__isAdmin ? 'flex' : 'none';
-    adminBar.style.display   = (window.__isAdmin && document.getElementById('chatTab').style.display==='block') ? 'block' : 'none';
-
-    profileBtn.onclick = ()=>{ if(!auth.currentUser) showAuth(); else openProfile(auth.currentUser.uid,true); };
+    adminBar.style.display   = (window.__isAdmin && document.getElementById('chatTab').classList.contains('active')) ? 'block' : 'none';
 
     updateOnlineCount(); initHelp();
   });
@@ -430,7 +434,7 @@
   profileClose.addEventListener('click',()=> profileModal.classList.remove('show'));
 
   async function openProfile(uid,isSelf=false){
-    profileModal.style.zIndex=1600; // поверх всех
+    profileModal.style.zIndex=1600;
     profileModal.classList.add('show');
     profileContent.innerHTML = "<p>Завантаження…</p>";
     try{
@@ -439,7 +443,6 @@
       const email = user.email || "";
       const self  = auth.currentUser && auth.currentUser.uid===uid;
 
-      // премиум значок
       const flags = (await db.ref('settings/userFlags/'+uid).get()).val()||{};
       const planKey = flags.premium || 'none';
       const PLAN = {
@@ -504,6 +507,8 @@
       }
     }catch(e){ profileContent.innerHTML = "<p>Помилка завантаження профілю</p>"; }
   }
+
+  // Кнопка профиля — один обработчик
   profileBtn.addEventListener('click', ()=>{ if(!auth.currentUser) showAuth(); else openProfile(auth.currentUser.uid,true); });
 
   function fileToDataURL(file,maxW=900,quality=.85){
@@ -519,8 +524,14 @@
       r.onerror=reject; r.readAsDataURL(file);
     });
   }
+<!-- ==== КОНЕЦ ЧАСТИ 2 ==== -->
 
-  /* ===== 7) ONLINE ×10 ===== */
+
+---
+
+✅ ЧАСТЬ 3/4 — онлайн, помощь, карта, чат, ЛС, уведомления
+
+/* ===== 7) ONLINE ×10 ===== */
   function updateOnlineCount(){
     db.ref('presence').on('value', snap=>{
       const val = snap.val()||{}; const real = Object.keys(val).length;
@@ -658,7 +669,7 @@
             }
           }else if(act==='delete'){
             if(auth.currentUser.uid===msg.uid || window.__isAdmin){
-              const path = document.getElementById('rentTab').style.display==="block" ? "rentMessages" : "messages";
+              const path = activeChatPath();
               await db.ref(path+'/'+(msg.id||'')).remove();
               wrap.remove(); notify('OK','Видалено');
             }else notify('Відмова','Лише автор або адмін');
@@ -682,7 +693,10 @@
     const m=snap.val(); m.id=snap.key; renderMessage(m, rentMessagesEl);
     clearTimeout(window._scrollRentInit); window._scrollRentInit=setTimeout(()=>{scrollToBottom(chatAreaRent)},60);
   });
-  function activeChatPath(){ return document.getElementById('rentTab').style.display==="block" ? "rentMessages" : "messages"; }
+
+  function activeChatPath(){
+    return document.getElementById('rentTab').classList.contains('active') ? "rentMessages" : "messages";
+  }
 
   async function canSend(){ return !!auth.currentUser; }
   sendButton.addEventListener('click', async ()=>{
@@ -834,11 +848,19 @@
   auth.onAuthStateChanged(u=>{
     if(u){ subscribeNotifications(u.uid); refreshFriendsBlocks(); }
     else { notifList.innerHTML=""; friendRequestsEl.innerHTML=""; friendsList.innerHTML=""; }
-    adminBar.style.display = (window.__isAdmin && document.getElementById('chatTab').style.display==='block') ? 'block' : 'none';
+    adminBar.style.display = (window.__isAdmin && document.getElementById('chatTab').classList.contains('active')) ? 'block' : 'none';
   });
+
   const dmTab = document.getElementById("dmTab");
   function loadDMList(){ if(!auth.currentUser){ dmList.innerHTML="<i>Увійдіть, щоб бачити ЛС</i>"; return; } dmList.innerHTML=`<p>Відкривайте ЛС через профілі або зі сповіщень 🔔.</p>`; }
   auth.onAuthStateChanged(loadDMList);
+<!-- ==== КОНЕЦ ЧАСТИ 3 ==== -->
+
+
+---
+
+✅ ЧАСТЬ 4/4 — админ-участники, премиум/бан, боты, финал
+
 /* ===== 11) Админка: участники/бан/преміум ===== */
   const SUB_PLAN = {
     none:       { key:'none',        label:'—',                 badge:'linear-gradient(90deg,#e5e7eb,#f8fafc)', color:'#111' },
@@ -1085,10 +1107,11 @@
   // Показ админ-бара при входе админа
   auth.onAuthStateChanged(u=>{
     if (u && window.__isAdmin){
-      const isChat = document.getElementById('chatTab').style.display==='block';
+      const isChat = document.getElementById('chatTab').classList.contains('active');
       if (isChat) adminBar.style.display='block';
     }
   });
-</script>
+  </script>
 </body>
 </html>
+<!-- ==== КОНЕЦ ЧАСТИ 4 (ФИНАЛ) ==== -->
