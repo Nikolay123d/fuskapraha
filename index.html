@@ -8,9 +8,8 @@
   <!-- ШРИФТИ -->
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"/>
 
-  <!-- Leaflet (карта без ключа) -->
+  <!-- Leaflet (карта) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
     :root{
@@ -31,7 +30,7 @@
       position:absolute;top:8px;width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.9);
       display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);color:#fff;background:rgba(0,0,0,.28)
     }
-    .profile-btn{left:8px;background-size:cover;background-position:center}
+    .profile-btn{left:8px;background-size:cover;background-position:center;background-image:url("https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg")}
     .gear-btn{right:112px;display:none}
     .members-btn{right:64px;display:none}
     .bell-btn{right:8px}
@@ -87,17 +86,10 @@
     /* Зеленая галка после выбора фото */
     .photo-toast{position:fixed;left:50%;transform:translateX(-50%);bottom:86px;background:#dcfce7;border:1px solid #16a34a;color:#065f46;padding:8px 12px;border-radius:12px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.15);display:none;z-index:1300}
 
-    /* Тост для звука */
-    .sound-toast{position:fixed;left:50%;transform:translateX(-50%);bottom:140px;background:#fff;border:1px solid #e2e8f0;color:#0b1220;padding:10px 12px;border-radius:12px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.15);display:none;z-index:1300}
-
     @media (max-width:640px){
       .chat-area{height:calc(100vh - 360px)}
       .chat-image{max-width:200px}
     }
-
-    .btn-mini{border:none;border-radius:10px;padding:6px 10px;background:#eef2ff;cursor:pointer}
-    .notif-item{position:relative}
-    .notif-x{position:absolute;right:6px;top:6px;border:none;background:#f1f5f9;border-radius:8px;cursor:pointer}
   </style>
 </head>
 <body>
@@ -122,6 +114,7 @@
         <button class="tab-button" data-target="mapTab">🗺️ Карта</button>
         <button class="tab-button" data-target="friendsTab">👥 Друзі</button>
         <button class="tab-button" data-target="dmTab">✉️ Особисті</button>
+        <button class="tab-button" data-target="helpTab">🆘 Допомога</button>
       </nav>
       <div class="online-neon" id="onlineNeon">Онлайн (прибл.): 0</div>
     </div>
@@ -133,11 +126,10 @@
     <div id="adminBar" style="display:none; margin-bottom:8px; background:rgba(255,255,255,.86); border:1px solid #e5e7eb; border-radius:12px; padding:8px; box-shadow:var(--shadow)">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
         <div style="font-weight:900">Адмін • Боти</div>
-        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <div style="display:flex;gap:6px;align-items:center">
           <button id="startAll" class="tab-button" style="padding:6px 10px">▶️ Запустити всіх</button>
           <button id="stopAll" class="tab-button"  style="padding:6px 10px;background:#ffe1e1">⏹ Зупинити всіх</button>
           <button id="postOnceAll" class="tab-button" style="padding:6px 10px;background:#fff3cd">⚡️ Пост разом</button>
-          <button id="editBots" class="tab-button" style="padding:6px 10px;background:#e0e7ff">🛠 Редагувати бота</button>
         </div>
       </div>
       <div class="pill-title">Профілі «активістів»:</div>
@@ -164,6 +156,7 @@
         <button class="tab-button" data-f="volunteer">Волонтери</button>
         <button class="tab-button" data-f="aid">Допомога</button>
         <button class="tab-button" data-f="pharmacy">Аптеки</button>
+        <button class="tab-button" data-f="shop">Магазини</button>
         <button id="centerBtn" class="tab-button" style="padding:6px 10px">Центрувати</button>
       </div>
       <div id="map" style="width:100%;height:60vh;border-radius:10px;background:#eaf7ff"></div>
@@ -189,9 +182,28 @@
       <h2 class="pill-title" style="margin:6px 0">Мої діалоги</h2>
       <div id="dmList" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px"></div>
     </section>
+
+    <!-- ДОПОМОГА -->
+    <section id="helpTab" class="tab-content" role="region" aria-label="Термінова допомога">
+      <h2 class="pill-title" style="margin-top:0">Термінова допомога у Празі</h2>
+      <div id="helpGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+        <div style="background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08)">
+          <img src="https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp" style="width:100%;height:140px;object-fit:cover;border-radius:8px" alt="">
+          <h3>Nemocnice Motol</h3><p>V Úvalu 84</p>
+        </div>
+        <div style="background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08)">
+          <img src="https://i.ibb.co/0gWD5wW/images-5.jpg" style="width:100%;height:140px;object-fit:cover;border-radius:8px" alt="">
+          <h3>Юридична допомога</h3><p>Консультації</p>
+        </div>
+        <div style="background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08)">
+          <img src="https://i.ibb.co/R49shL6k/images-6.jpg" style="width:100%;height:140px;object-fit:cover;border-radius:8px" alt="">
+          <h3>Українські магазини</h3><p>Свіжі продукти</p>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- Фикс. панель ввода -->
+  <!-- Фіксована панель вводу -->
   <input id="fileInput" type="file" accept="image/*" style="display:none" />
   <div class="chat-input" role="region" aria-label="Відправка повідомлення">
     <label for="fileInput" class="camera-btn" id="cameraLabel" aria-hidden="true">
@@ -201,48 +213,142 @@
     <button id="sendButton" class="send-btn">Відправити</button>
   </div>
 
-  <!-- Плашки -->
+  <!-- Плашка після вибору фото -->
   <div id="photoToast" class="photo-toast">✔️ Фото завантажено. Напишіть СМС — фото з'явиться після відправки.</div>
-  <div id="soundToast" class="sound-toast">🔊 Натисніть, щоб увімкнути звук <button id="soundEnableBtn" class="tab-button" style="margin-left:8px;padding:4px 8px">Увімкнути</button></div>
 
-  <!-- МОДАЛКИ: auth/profile/settings/bell/admin/bots/pay -->
-  <div id="authModal" class="modal" aria-hidden="true" style="z-index:1500">…</div>
-  <div id="profileModal" class="modal" aria-hidden="true" style="z-index:1600">…</div>
-  <div id="gearModal" class="modal" aria-hidden="true" style="z-index:1500">…</div>
-  <div id="bellModal" class="modal" aria-hidden="true" style="z-index:1400">…</div>
-  <div id="adminUsersModal" class="modal full" aria-hidden="true" style="z-index:1700">…</div>
-  <div id="botsEditModal" class="modal" aria-hidden="true" style="z-index:1750">…</div>
-  <div id="payModal" class="modal" aria-hidden="true" style="z-index:1800">…</div>
+  <!-- МОДАЛКИ -->
+  <div id="authModal" class="modal" aria-hidden="true" style="z-index:1500">
+    <div class="panel" role="dialog" aria-modal="true">
+      <button class="close" id="modalClose">✖</button>
+      <h2 style="margin-top:0">Реєстрація / Вхід</h2>
 
-  <!-- звукова система -->
-  <script>window.__soundEnabled=false;</script>
+      <form id="registerForm" onsubmit="return false;">
+        <input id="nickInput" type="text" placeholder="Псевдонім" required style="width:100%;padding:10px;margin:6px 0;border-radius:10px;border:1px solid #e5e7eb"/>
+        <input id="emailInput" type="email" placeholder="Email" required style="width:100%;padding:10px;margin:6px 0;border-radius:10px;border:1px solid #e5e7eb"/>
+        <input id="passwordInput" type="password" placeholder="Пароль (мін. 6)" required style="width:100%;padding:10px;margin:6px 0;border-radius:10px;border:1px solid #e5e7eb"/>
+        <div style="display:flex;gap:8px">
+          <button id="registerSubmit" type="button" class="tab-button" style="flex:1">Зареєструватися</button>
+          <button id="loginShow"    type="button" class="tab-button" style="flex:1;background:#4b5563;color:#fff">Увійти</button>
+        </div>
+        <div id="regError" style="color:#b91c1c;margin-top:6px"></div>
+      </form>
+
+      <form id="loginForm" style="display:none" onsubmit="return false;">
+        <input id="loginEmail" type="email" placeholder="Email" required style="width:100%;padding:10px;margin:6px 0;border-radius:10px;border:1px solid #e5e7eb"/>
+        <input id="loginPassword" type="password" placeholder="Пароль" required style="width:100%;padding:10px;margin:6px 0;border-radius:10px;border:1px solid #e5e7eb"/>
+        <div style="display:flex;gap:8px">
+          <button id="loginSubmit"   type="button" class="tab-button" style="flex:1">Увійти</button>
+          <button id="backToRegister"type="button" class="tab-button" style="flex:1;background:#4b5563;color:#fff">Назад</button>
+        </div>
+        <div id="loginError" style="color:#b91c1c;margin-top:6px"></div>
+      </form>
+
+      <div style="margin-top:10px">
+        <div id="recaptcha-container" style="margin-bottom:8px"></div>
+        <input id="phoneInput" type="tel" placeholder="+420… (опційно: SMS-підтвердження)" style="width:100%;padding:10px;margin:6px 0;border-radius:10px;border:1px solid #e5e7eb"/>
+        <div style="display:flex;gap:8px">
+          <button id="smsSend" class="tab-button" style="flex:1;background:#fff3cd">Надіслати код</button>
+          <input id="smsCode" placeholder="Код" style="flex:1;padding:10px;border-radius:10px;border:1px solid #e5e7eb" />
+          <button id="smsVerify" class="tab-button" style="flex:1">Підтвердити</button>
+        </div>
+      </div>
+
+      <div style="margin-top:10px">
+        <button id="enableSoundBtn" class="tab-button" style="width:100%">🔊 Включити звук сповіщень</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="profileModal" class="modal" aria-hidden="true" style="z-index:1600">
+    <div class="panel" role="dialog" aria-modal="true">
+      <button class="close" id="profileClose">✖</button>
+      <div id="profileContent"></div>
+    </div>
+  </div>
+
+  <div id="gearModal" class="modal" aria-hidden="true" style="z-index:1500">
+    <div class="panel" role="dialog" aria-modal="true">
+      <button class="close" id="gearClose">✖</button>
+      <h3 style="margin-top:0">Налаштування</h3>
+      <label class="user-badge" style="gap:8px;margin-right:8px"><input type="checkbox" id="optSound" checked> Звук сповіщень</label>
+      <label class="user-badge" style="gap:8px"><input type="checkbox" id="optAnon" checked> Дозволити гостьовий перегляд</label>
+    </div>
+  </div>
+
+  <div id="bellModal" class="modal" aria-hidden="true" style="z-index:1400">
+    <div class="panel" role="dialog" aria-modal="true">
+      <button class="close" id="bellClose">✖</button>
+      <h3 style="margin-top:0">Сповіщення</h3>
+      <div id="notifList"></div>
+    </div>
+  </div>
+
+  <div id="adminUsersModal" class="modal full" aria-hidden="true" style="z-index:1700">
+    <div class="panel" role="dialog" aria-modal="true">
+      <button class="close" id="adminUsersClose">✖</button>
+      <div class="user-badge" style="margin-bottom:8px">Список учасників</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+        <input id="userSearch" placeholder="Пошук за ніком або email…" style="flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:10px" />
+        <span class="user-badge">Усього: <b id="usersTotal">0</b></span>
+        <span class="user-badge">На екрані: <b id="usersShown">0</b></span>
+      </div>
+      <div style="flex:1;overflow:auto;border:1px solid #e5e7eb;border-radius:10px;background:#fff">
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr><th style="text-align:left;padding:10px">Користувач</th><th style="text-align:left;padding:10px">Email</th><th style="text-align:left;padding:10px">Статус</th><th style="text-align:left;padding:10px">Преміум</th><th style="text-align:left;padding:10px">Дії</th></tr></thead>
+          <tbody id="usersTBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модалка підтвердження оплати -->
+  <div id="payModal" class="modal" aria-hidden="true" style="z-index:1750">
+    <div class="panel" role="dialog" aria-modal="true">
+      <button class="close" id="payClose">✖</button>
+      <h3 style="margin-top:0">Ліміт вичерпано</h3>
+      <p>Ви надіслали максимум: <b>200</b> повідомлень без фото або <b>100</b> з фото.<br>Щоб продовжити — завантажте фото/скрин чеку оплати.</p>
+      <input id="payProofFile" type="file" accept="image/*" />
+      <button id="paySubmit" class="tab-button" style="margin-top:8px">Відправити підтвердження</button>
+      <div id="payMsg" style="margin-top:6px;color:#16a34a;font-weight:700"></div>
+    </div>
+  </div>
+html
+Копировать
+Редактировать
+<!-- === PART 2/3 — скрипты библиотек и начало логики (инит, UI, авторизація, профілі, карта) === -->
+  <!-- звук увімкнено за замовчуванням; браузер попросить «жест» -->
+  <script>window.__soundEnabled=true;</script>
 
   <!-- Firebase compat -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
+  <!-- Leaflet JS -->
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <script>
   /* =========================
-     ЧАСТИНА 1/3 — Firebase init, UI, звук, авторизація
+     ЧАСТИНА 1 — Firebase init, вкладки, звук, авторизація
      ========================= */
   const firebaseConfig = {
-    apiKey: "AIzaSyDw_bVibsVyZegH7OJyZ_yRjI3uLhroVBk",
-    authDomain: "praga-4baee.firebaseapp.com",
-    databaseURL: "https://praga-4baee-default-rtdb.firebaseio.com",
-    projectId: "praga-4baee",
-    storageBucket: "praga-4baee.firebasestorage.app",
-    messagingSenderId: "336023952536",
-    appId: "1:336023952536:web:f7437feaa25b6eadcd04ed",
-    measurementId: "G-BGDJD6R12N"
+    apiKey: "AIzaSyDV2BslF-Ll37a1XO3GEfzNMXa7YsSXL1o",
+    authDomain: "web-app-b4633.firebaseapp.com",
+    databaseURL: "https://web-app-b4633-default-rtdb.firebaseio.com",
+    projectId: "web-app-b4633",
+    storageBucket: "web-app-b4633.firebasestorage.app",
+    messagingSenderId: "1041887915171",
+    appId: "1:1041887915171:web:84d62eae54e9291b47a316",
+    measurementId: "G-C65BPE81SJ"
   };
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db   = firebase.database();
 
   const DEFAULT_AVATAR = "https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg";
-  const ADMIN_EMAIL    = "urciknikolaj642@gmail.com"; // объявляем ОДИН раз
+  const ADMIN_EMAIL    = "urciknikolaj642@gmail.com";
 
+  // Вкладки
   const tabButtons   = document.querySelectorAll('.tab-button');
   const tabContents  = document.querySelectorAll('.tab-content');
   const profileBtn   = document.getElementById('profileBtn');
@@ -253,55 +359,112 @@
 
   function setActiveTab(id){
     tabButtons.forEach(b=>b.classList.toggle('active', b.dataset.target===id));
-    tabContents.forEach(c=> c.classList.toggle('active', c.id===id));
+    tabContents.forEach(c=> c.style.display = (c.id===id) ? 'block' : 'none');
     adminBar.style.display = (id==='chatTab' && window.__isAdmin) ? 'block' : 'none';
-    if (id==='mapTab'){
+
+    if(id==='mapTab'){
       if(!window.__mapInitOnce){ initLeaflet(); window.__mapInitOnce=true; }
-      setTimeout(()=>{ try{ map.invalidateSize(false); }catch{} }, 60);
+      setTimeout(()=>{ try{ map.invalidateSize(false); }catch{} }, 100);
     }
   }
   tabButtons.forEach(btn=> btn.addEventListener('click', ()=> setActiveTab(btn.dataset.target)));
 
-  /* ==== Звук ==== */
+  // Звук
   let audioCtx=null;
-  function ensureAudio(){ if(!audioCtx){ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } }
+  function ensureAudio(){
+    if(!audioCtx){ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+    if(audioCtx.state==='suspended'){ audioCtx.resume?.(); }
+  }
   function beep(freq=880,dur=120,type='sine',vol=0.15){
     if(!window.__soundEnabled) return;
     ensureAudio();
     const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.type=type; o.frequency.value=freq; g.gain.value=vol; o.connect(g); g.connect(audioCtx.destination); o.start();
+    o.type=type; o.frequency.value=freq; g.gain.value=vol;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
     setTimeout(()=>{ g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+0.08); o.stop(audioCtx.currentTime+0.1); }, dur);
   }
   const SND={ notify(){beep(1200,140,'triangle',0.18)}, sent(){beep(760,90,'sine',0.14)}, error(){beep(320,220,'square',0.18)} };
+  window.addEventListener('pointerdown', ()=>{ if(window.__soundEnabled) ensureAudio(); }, {once:true});
+  document.getElementById('enableSoundBtn').addEventListener('click',()=>{ window.__soundEnabled=true; ensureAudio(); SND.notify(); document.getElementById('optSound').checked=true; });
 
-  const soundToast=document.getElementById('soundToast');
-  const soundEnableBtn=document.getElementById('soundEnableBtn');
-  function askEnableSoundOnce(){ if(!window.__soundEnabled) soundToast.style.display='block'; }
-  soundEnableBtn.addEventListener('click',()=>{ window.__soundEnabled=true; ensureAudio(); SND.notify(); soundToast.style.display='none'; document.getElementById('optSound').checked=true; });
-  document.body.addEventListener('click',()=>{ if(!window.__soundEnabled){ askEnableSoundOnce(); } },{ once:true });
-  document.getElementById('enableSoundBtn')?.addEventListener('click',()=>{ window.__soundEnabled=true; ensureAudio(); SND.notify(); document.getElementById('optSound').checked=true; });
-
-  const gearModal=document.getElementById('gearModal'); const gearClose=document.getElementById('gearClose');
-  const optSound=document.getElementById('optSound'); const optAnon=document.getElementById('optAnon');
+  // Налаштування
+  const gearModal=document.getElementById('gearModal');
+  const gearClose=document.getElementById('gearClose');
+  const optSound=document.getElementById('optSound');
+  const optAnon=document.getElementById('optAnon');
   gearBtn.addEventListener('click',()=> gearModal.classList.add('show'));
   gearClose.addEventListener('click',()=> gearModal.classList.remove('show'));
   optSound.onchange=()=>{ window.__soundEnabled=!!optSound.checked; if(optSound.checked) SND.notify(); };
   optAnon.onchange = ()=> localStorage.setItem('allow_guest', optAnon.checked?'1':'0');
 
-  // … модалки логина/регистрации (как в твоём коде; без изменений по разметке)
+  // Авторизація
+  const authModal=document.getElementById('authModal');
+  const modalClose=document.getElementById('modalClose');
+  const registerForm=document.getElementById('registerForm');
+  const loginForm=document.getElementById('loginForm');
+  const loginShow=document.getElementById('loginShow');
+  const backToRegister=document.getElementById('backToRegister');
+  const registerSubmit=document.getElementById('registerSubmit');
+  const loginSubmit=document.getElementById('loginSubmit');
+  const regError=document.getElementById('regError');
+  const loginError=document.getElementById('loginError');
 
-  let _smsConfirmer=null; function initRecaptcha(){ try{ _smsConfirmer = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size:'invisible' }); }catch{} }
+  function showAuth(){ authModal.classList.add('show'); regError.textContent=''; loginError.textContent=''; }
+  function hideAuth(){ authModal.classList.remove('show'); }
+  modalClose.addEventListener('click', hideAuth);
+  loginShow.addEventListener('click',()=>{ registerForm.style.display='none'; loginForm.style.display='block'; });
+  backToRegister.addEventListener('click',()=>{ registerForm.style.display='block'; loginForm.style.display='none'; });
+
+  registerSubmit.addEventListener('click', async ()=>{
+    regError.textContent='';
+    const nick=document.getElementById('nickInput').value.trim();
+    const email=document.getElementById('emailInput').value.trim();
+    const pass=document.getElementById('passwordInput').value.trim();
+    if(!nick || !email || pass.length<6){ regError.textContent='Заповніть поля (пароль ≥ 6)'; SND.error(); return; }
+    try{
+      const cred=await auth.createUserWithEmailAndPassword(email,pass);
+      await cred.user.updateProfile({ displayName:nick, photoURL:DEFAULT_AVATAR });
+      await db.ref('users/'+cred.user.uid).set({ nick,email,avatar:DEFAULT_AVATAR,createdAt:Date.now() });
+      await db.ref('presence/'+cred.user.uid).set({ ts:Date.now(), nick });
+      hideAuth(); SND.notify();
+    }catch(e){ regError.textContent=e.message||String(e); SND.error(); }
+  });
+
+  loginSubmit.addEventListener('click', async ()=>{
+    loginError.textContent='';
+    try{
+      await auth.signInWithEmailAndPassword(
+        document.getElementById('loginEmail').value.trim(),
+        document.getElementById('loginPassword').value.trim()
+      );
+      hideAuth(); SND.notify();
+    }catch(e){ loginError.textContent=e.message||String(e); SND.error(); }
+  });
+
+  // SMS (опційно)
+  let _smsConfirmer=null;
+  function initRecaptcha(){ try{ _smsConfirmer = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size:'invisible' }); }catch{} }
   initRecaptcha();
+  document.getElementById('smsSend').onclick = async ()=>{
+    const phone=document.getElementById('phoneInput').value.trim(); if(!phone) return;
+    try{ const res=await auth.signInWithPhoneNumber(phone,_smsConfirmer); window.__smsRes=res; alert('Код надіслано'); }
+    catch(e){ alert('SMS помилка: '+(e.message||e)); }
+  };
+  document.getElementById('smsVerify').onclick = async ()=>{
+    const code=document.getElementById('smsCode').value.trim(); if(!code||!window.__smsRes) return;
+    try{ await window.__smsRes.confirm(code); alert('Номер підтверджено'); }
+    catch{ alert('Код невірний'); }
+  };
 
+  // Стан користувача
   window.__isAdmin=false;
   auth.onAuthStateChanged(async (u)=>{
-    const setBtnAvatar = (url)=>{ document.getElementById('profileBtn').style.background=`url(${url||DEFAULT_AVATAR}) center/cover`; };
-    setBtnAvatar((u&&u.photoURL)||DEFAULT_AVATAR);
+    // аватар у шапці
+    const bg = 'url("'+((u&&u.photoURL)||DEFAULT_AVATAR)+'") center/cover';
+    document.getElementById('profileBtn').style.background = bg;
 
-    if(u){
-      await db.ref('presence/'+u.uid).set({ ts:Date.now(), nick: u.displayName||u.email });
-      db.ref('users/'+u.uid+'/avatar').on('value', s=>{ const v=s.val(); if(v){ setBtnAvatar(v); } });
-    }
+    if(u){ await db.ref('presence/'+u.uid).set({ ts:Date.now(), nick: u.displayName||u.email }); }
     if(u){
       try{
         const roleSnap=await db.ref('users/'+u.uid+'/role').get();
@@ -312,173 +475,335 @@
 
     document.getElementById('gearBtn').style.display='flex';
     document.getElementById('membersBtn').style.display=window.__isAdmin?'flex':'none';
-    adminBar.style.display=(window.__isAdmin && document.getElementById('chatTab').classList.contains('active'))?'block':'none';
+    adminBar.style.display=(window.__isAdmin && document.getElementById('chatTab').style.display==='block')?'block':'none';
     document.getElementById('profileBtn').onclick=()=>{ if(!auth.currentUser) showAuth(); else openProfile(auth.currentUser.uid,true); };
-    updateOnlineCount(); initHelp();
-    if(u){ subscribeNotifications(u.uid); bindFriendsRealtime(); renderDMInbox(); }
-    else { document.getElementById('notifList').innerHTML=''; friendsList.innerHTML=''; friendRequestsEl.innerHTML=''; dmList.innerHTML=''; }
 
-    // ВАЖНО: запуск админских вотчеров и панели ботов после вычисления прав
-    if(window.__isAdmin){ watchPaymentsInFeed(); renderBotsToolbar(); }
+    updateOnlineCount();
   });
+
+  // Присутність (онлайн)
+  function updateOnlineCount(){
+    db.ref('presence').on('value', snap=>{
+      const val=snap.val()||{};
+      const real=Object.keys(val).length;
+      onlineNeon.textContent='Онлайн (прибл.): '+(real*10);
+    });
+    window.addEventListener('beforeunload', async ()=>{
+      try{ if(auth.currentUser) await db.ref('presence/'+auth.currentUser.uid).remove(); }catch{}
+    });
+  }
+
+  /* =========================
+     ЧАСТИНА 2 — Профіль, друзі/ЛС, карта, сповіщення
+     ========================= */
+  // Утиліти
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m])); }
+  function timeStr(ts){ return new Date(ts).toLocaleString(); }
+
+  // Профіль
+  const profileModal=document.getElementById('profileModal');
+  const profileClose=document.getElementById('profileClose');
+  const profileContent=document.getElementById('profileContent');
+  profileClose.addEventListener('click',()=> profileModal.classList.remove('show'));
+
+  async function openProfile(uid,isSelf=false){
+    profileModal.classList.add('show'); profileContent.innerHTML='<p>Завантаження…</p>';
+    try{
+      const s=await db.ref('users/'+uid).get();
+      const user=s.exists()?s.val():{nick:'Анонім',avatar:DEFAULT_AVATAR};
+      const email=user.email||'';
+      const self=auth.currentUser&&auth.currentUser.uid===uid;
+
+      const flags=(await db.ref('settings/userFlags/'+uid).get()).val()||{};
+      const planKey=flags.premium||'none';
+      const PLAN={none:{label:'—',bg:'#f1f5f9',col:'#111'}, trial:{label:'TRIAL',bg:'#c084fc',col:'#fff'}, premium:{label:'ПРЕМІУМ',bg:'#16a34a',col:'#fff'}, premiumPlus:{label:'ПРЕМІУМ+',bg:'#0ea5e9',col:'#fff'}}[planKey];
+
+      const about=user.about||''; const contacts=user.contacts||'';
+      profileContent.innerHTML = `
+        <div style="display:flex;gap:12px;align-items:center">
+          <img src="${user.avatar||DEFAULT_AVATAR}" style="width:84px;height:84px;border-radius:12px;object-fit:cover" alt="">
+          <div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <h3 style="margin:0;color:#0b1220;text-shadow:0 0 12px rgba(57,255,145,.7)">${escapeHtml(user.nick||'Анонім')}</h3>
+              <span class="user-badge" style="background:${PLAN.bg};color:${PLAN.col};font-weight:900">${PLAN.label}</span>
+              ${self?'<span class="user-badge">Мій профіль</span>':''}
+            </div>
+            <div style="color:${email?'#333':'#666'}">${escapeHtml(email)}</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:grid;grid-template-columns:1fr;gap:8px">
+          <div><b>Про себе:</b><br>${about?escapeHtml(about):'<i>не вказано</i>'}</div>
+          <div><b>Контакти:</b><br>${contacts?escapeHtml(contacts):'<i>не вказано</i>'}</div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          ${self?`
+            <label class="tab-button" style="cursor:pointer"><input type="file" id="avatarFile" accept="image/*" style="display:none">Змінити аватар</label>
+            <button id="editAbout" class="tab-button">✏️ Редагувати профіль</button>
+            <button id="signOutBtn" class="tab-button" style="background:#ffe1e1">Вийти</button>
+          `:`
+            <button id="pmBtn" class="tab-button">Написати ЛС</button>
+            <button id="addFriendBtn" class="tab-button">Додати в друзі</button>
+          `}
+        </div>
+        <div id="profileMsg" style="margin-top:8px;color:#16a34a;font-weight:700"></div>`;
+
+      if(self){
+        document.getElementById('avatarFile').addEventListener('change', async (e)=>{
+          const f=e.target.files[0]; if(!f) return;
+          const url=await fileToDataURL(f,900,.9);
+          await db.ref('users/'+uid+'/avatar').set(url);
+          await auth.currentUser.updateProfile({ photoURL:url });
+          document.getElementById('profileBtn').style.background = 'url("'+url+'") center/cover';
+          profileContent.querySelector('img').src=url; SND.notify();
+        });
+        document.getElementById('signOutBtn').onclick=async()=>{
+          try{ await db.ref('presence/'+auth.currentUser.uid).remove(); }catch{}
+          await auth.signOut(); profileModal.classList.remove('show');
+        };
+        document.getElementById('editAbout').onclick=async()=>{
+          const a=prompt('Про себе', about)||''; const c=prompt('Контакти', contacts)||'';
+          await db.ref('users/'+uid).update({ about:a, contacts:c }); openProfile(uid,true);
+        };
+      }else{
+        document.getElementById('pmBtn').onclick=()=> openPrivateChat(uid);
+        document.getElementById('addFriendBtn').onclick=()=> sendFriendRequest(uid);
+      }
+    }catch{ profileContent.innerHTML='<p>Помилка завантаження профілю</p>'; }
+  }
+
+  function fileToDataURL(file,maxW=900,quality=.85){
+    return new Promise((resolve,reject)=>{
+      const img=new Image(); const r=new FileReader();
+      r.onload=e=>{
+        img.onload=()=>{
+          const sc=Math.min(1, maxW/img.width);
+          const w=(img.width*sc)|0, h=(img.height*sc)|0;
+          const c=document.createElement('canvas'); c.width=w; c.height=h;
+          c.getContext('2d').drawImage(img,0,0,w,h);
+          resolve(c.toDataURL('image/jpeg',quality));
+        };
+        img.onerror=reject; img.src=e.target.result;
+      };
+      r.onerror=reject; r.readAsDataURL(file);
+    });
+  }
+
+  // Сповіщення (дзвіночок)
+  const bellBtn=document.getElementById('bellBtn');
+  const bellBadge=document.getElementById('bellBadge');
+  const bellModal=document.getElementById('bellModal');
+  const bellClose=document.getElementById('bellClose');
+  const notifList=document.getElementById('notifList');
+
+  function renderNotifItem(v){
+    const row=document.createElement('div');
+    row.style.cssText='padding:8px;border-bottom:1px solid #eee;display:flex;gap:8px;align-items:center';
+    row.innerHTML = `<div style="flex:1"><div style="font-weight:700">${(v.type||'info').toUpperCase()}</div><div style="font-size:13px">${escapeHtml(v.text||'')}</div></div><button aria-label="Закрити" title="Закрити" class="tab-button" style="padding:2px 8px">✖</button>`;
+    row.querySelector('button').onclick=()=> row.remove();
+    notifList.prepend(row);
+  }
+  function subscribeNotifications(uid){
+    if(!uid) return;
+    db.ref('notifications/'+uid).on('child_added',snap=>{
+      renderNotifItem(snap.val()||{});
+      bellBadge.style.display='inline-block';
+      bellBadge.textContent=String((Number(bellBadge.textContent||'0')+1));
+      SND.notify();
+    });
+  }
+  bellBtn.addEventListener('click',()=>{ bellModal.classList.add('show'); bellBadge.textContent='0'; bellBadge.style.display='none'; });
+  bellClose.addEventListener('click',()=> bellModal.classList.remove('show'));
+
+  // Карта
+  let map, markers=[], poi=[];
+  function clearMarkers(){ markers.forEach(m=>m.remove()); markers=[]; }
+  function renderPoi(list){ clearMarkers(); list.forEach(o=>{ const m=L.marker(o.p).addTo(map).bindPopup(`<b>${o.name}</b><br>${o.t}`); markers.push(m); }); }
+  function searchPoi(q){ const l=q.toLowerCase(); renderPoi(poi.filter(o=>o.name.toLowerCase().includes(l)||o.t.includes(l))); }
+  function initLeaflet(){
+    map=L.map('map').setView([50.0755,14.4378],12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+    poi=[
+      {t:'volunteer',name:'Український волонтерський центр',p:[50.087,14.43]},
+      {t:'aid',      name:'Центр допомоги UA',               p:[50.09,14.47]},
+      {t:'pharmacy', name:'Аптека Praha 1',                  p:[50.07,14.41]},
+      {t:'pharmacy', name:'Аптека Praha 3',                  p:[50.084,14.45]},
+      {t:'volunteer',name:'Volunteers Hub',                  p:[50.08,14.50]},
+      {t:'aid',      name:'Пункт видачі гуманітарки',        p:[50.095,14.39]},
+      {t:'shop',     name:'UA магазин «Калина»',             p:[50.084,14.47]},
+      {t:'shop',     name:'UA маркет «Смакота»',             p:[50.072,14.44]}
+    ];
+    renderPoi(poi);
+    document.getElementById('centerBtn').onclick=()=> map.setView([50.0755,14.4378],12);
+    document.querySelectorAll('#mapTab button[data-f]').forEach(b=> b.onclick=()=>{
+      const list = (b.dataset.f==='all')? poi : poi.filter(o=>o.t===b.dataset.f);
+      renderPoi(list);
+    });
+    document.getElementById('mapSearch').oninput=e=> searchPoi(e.target.value.trim());
+  }
   </script>
-   const profileModal=document.getElementById('profileModal'); const profileClose=document.getElementById('profileClose'); const profileContent=document.getElementById('profileContent'); profileClose?.addEventListener('click',()=> profileModal.classList.remove('show'));
-  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m])); }
+html
+Копировать
+Редактировать
+<!-- === PART 3/3 — чат, друзі/ЛС (реал-тайм), адмінка, боти, ліміти/оплата, завершение === -->
+  <script>
+  /* =========================
+     ЧАСТИНА 3 — Чат, друзі/ЛС, адмінка, боти, ліміти/оплата
+     ========================= */
+  const messagesEl=document.getElementById('messages');
+  const rentMessagesEl=document.getElementById('rentMessages');
+  const chatAreaMain=document.getElementById('chatArea');
+  const chatAreaRent=document.getElementById('rentArea');
+  const messageInput=document.getElementById('messageInput');
+  const sendButton=document.getElementById('sendButton');
+  const fileInput=document.getElementById('fileInput');
+  const photoToast=document.getElementById('photoToast');
 
-  function showAuth(){ const m=document.getElementById('authModal'); if(m){ m.classList.add('show'); document.getElementById('regError').textContent=''; document.getElementById('loginError').textContent=''; } }
-  function hideAuth(){ document.getElementById('authModal')?.classList.remove('show'); }
+  const MSG_LIMIT_TEXT = 200;
+  const MSG_LIMIT_PHOTO= 100;
 
-  async function openProfile(uid,isSelf=false){
-    profileModal.classList.add('show'); profileContent.innerHTML='<p>Завантаження…</p>';
+  function isNearBottom(area){ return (area.scrollHeight - area.scrollTop - area.clientHeight) < 160; }
+  function scrollToBottom(area){ area.scrollTop = area.scrollHeight; }
+
+  function renderMessage(m,container){
+    if(!m||!m.ts) return;
+    const wrap=document.createElement('div');
+    wrap.className='message'+((auth.currentUser&&m.uid===auth.currentUser.uid)?' self':'');
+    const avatar=document.createElement('img');
+    avatar.className='avatar';
+    avatar.src=m.avatar||DEFAULT_AVATAR;
+    avatar.alt=m.nick||'avatar';
+    avatar.title=m.nick||'Профіль';
+    avatar.onclick=()=>openProfile(m.uid);
+    const txt=document.createElement('div');
+    txt.className='message-content';
+    const meta=document.createElement('div');
+    meta.className='message-meta';
+    meta.textContent=(m.nick||'Анонім')+' · '+timeStr(m.ts)+(m.recipientUid?' · особисте':'');
+    txt.appendChild(meta);
+    if(m.text){ const p=document.createElement('div'); p.className='text'; p.innerText=m.text; txt.appendChild(p); }
+    if(m.image){ const im=document.createElement('img'); im.src=m.image; im.className='chat-image'; im.alt='Фото'; txt.appendChild(im); }
+    const area=container.closest('.chat-area'); const stick=area?isNearBottom(area):false;
+    wrap.appendChild(avatar); wrap.appendChild(txt); container.appendChild(wrap);
+    if(area&&stick) scrollToBottom(area);
+  }
+
+  // Реал-тайм фіди
+  db.ref('messages').limitToLast(300).on('child_added',snap=>{
+    renderMessage({...snap.val(), id:snap.key}, messagesEl);
+    setTimeout(()=>scrollToBottom(chatAreaMain),40);
+  });
+  db.ref('rentMessages').limitToLast(300).on('child_added',snap=>{
+    renderMessage({...snap.val(), id:snap.key}, rentMessagesEl);
+    setTimeout(()=>scrollToBottom(chatAreaRent),40);
+  });
+
+  function activeChatPath(){ return document.getElementById('rentTab').style.display==='block' ? 'rentMessages' : 'messages'; }
+
+  // Бан
+  async function isBanned(uid){ const s=await db.ref('settings/userFlags/'+uid+'/banned').get(); return s.val()===true; }
+  async function canSend(){ return !!auth.currentUser && !(await isBanned(auth.currentUser.uid)); }
+
+  // Лічильники
+  async function getCounters(uid){
+    const s=await db.ref('counters/'+uid).get();
+    return s.exists()?s.val():{text:0,photo:0};
+  }
+  async function incCounters(uid, hasPhoto){
+    const ref=db.ref('counters/'+uid);
+    await ref.transaction(cur=>{
+      cur = cur || {text:0,photo:0};
+      if(hasPhoto) cur.photo=(cur.photo||0)+1; else cur.text=(cur.text||0)+1;
+      return cur;
+    });
+  }
+
+  // Платіжна модалка (показуємо лише коли користувач справді відправляє доказ)
+  const payModal=document.getElementById('payModal');
+  const payClose=document.getElementById('payClose');
+  const paySubmit=document.getElementById('paySubmit');
+  const payProofFile=document.getElementById('payProofFile');
+  const payMsg=document.getElementById('payMsg');
+  function showPay(){ payMsg.textContent=''; payProofFile.value=''; payModal.classList.add('show'); }
+  payClose.onclick=()=> payModal.classList.remove('show');
+  paySubmit.onclick= async ()=>{
     try{
-      const s=await db.ref('users/'+uid).get(); const user=s.exists()?s.val():{nick:'Анонім',avatar:DEFAULT_AVATAR}; const email=user.email||''; const self=auth.currentUser&&auth.currentUser.uid===uid;
-      const flags=(await db.ref('settings/userFlags/'+uid).get()).val()||{}; const planKey=flags.premium||'none';
-      const PLAN={none:{label:'—',bg:'#f1f5f9',col:'#111'}, trial:{label:'TRIAL',bg:'#c084fc',col:'#fff'}, premium:{label:'ПРЕМІУМ',bg:'#16a34a',col:'#fff'}, premiumPlus:{label:'ПРЕМІУМ+',bg:'#0ea5e9',col:'#fff'}}[planKey];
-      const about=user.about||''; const contacts=user.contacts||''; const avatar=user.avatar||DEFAULT_AVATAR;
-      profileContent.innerHTML=`
-        <div style="display:flex;gap:12px;align-items:center">
-          <img src="${avatar}" style="width:84px;height:84px;border-radius:12px;object-fit:cover">
-          <div>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <h3 style="margin:0;color:#0b1220;text-shadow:0 0 12px rgba(57,255,145,.7)">${escapeHtml(user.nick||'Анонім')}</h3>
-              <span class="user-badge" style="background:${PLAN.bg};color:${PLAN.col};font-weight:900">${PLAN.label}</span>
-              ${uid===auth.currentUser?.uid?'<span class="user-badge">Мій профіль</span>':''}
-            </div>
-            <div style="color:${email?'#333':'#666'}">${escapeHtml(email)}</div>
-          </div>
-        </div>
-        <div style="margin-top:12px;display:grid;grid-template-columns:1fr;gap:8px">
-          <div><b>Про себе:</b><br>${about?escapeHtml(about):'<i>не вказано</i>'}</div>
-          <div><b>Контакти:</b><br>${contacts?escapeHtml(contacts):'<i>не вказано</i>'}</div>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          ${self?`
-            <label class="tab-button" style="cursor:pointer"><input type="file" id="avatarFile" accept="image/*" style="display:none">Змінити аватар</label>
-            <button id="editAbout" class="tab-button">✏️ Редагувати профіль</button>
-            <button id="signOutBtn" class="tab-button" style="background:#ffe1e1">Вийти</button>
-          `:`
-            <button id="pmBtn" class="tab-button">Написати ЛС</button>
-            <button id="addFriendBtn" class="tab-button">Додати в друзі</button>
-          `}
-        </div>
-        <div id="profileMsg" style="margin-top:8px;color:#16a34a;font-weight:700"></div>`;
-
-      if(self){
-        document.getElementById('avatarFile')?.addEventListener('change', async (e)=>{ const f=e.target.files[0]; if(!f) return; const url=await fileToDataURL(f,900,.9); await db.ref('users/'+uid+'/avatar').set(url); await auth.currentUser.updateProfile({ photoURL:url }); document.getElementById('profileBtn').style.background=`url(${url}) center/cover`; profileContent.querySelector('img').src=url; SND.notify(); });
-        document.getElementById('signOutBtn').onclick=async()=>{ try{ await db.ref('presence/'+auth.currentUser.uid).remove(); }catch{} await auth.signOut(); profileModal.classList.remove('show'); };
-        document.getElementById('editAbout').onclick=async()=>{ const a=prompt('Про себе', about)||''; const c=prompt('Контакти', contacts)||''; await db.ref('users/'+uid).update({ about:a, contacts:c }); openProfile(uid,true); };
-      }else{
-        document.getElementById('pmBtn').onclick=()=> openPrivateChat(uid);
-        document.getElementById('addFriendBtn').onclick=()=> sendFriendRequest(uid);
-      }
-    }catch{ profileContent.innerHTML='<p>Помилка завантаження профілю</p>'; }
-  }
-
-  function fileToDataURL(file,maxW=900,quality=.85){ return new Promise((resolve,reject)=>{ const img=new Image(); const r=new FileReader(); r.onload=e=>{ img.onload=()=>{ const sc=Math.min(1, maxW/img.width); const w=(img.width*sc)|0, h=(img.height*sc)|0; const c=document.createElement('canvas'); c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h); resolve(c.toDataURL('image/jpeg',quality)); }; img.onerror=reject; img.src=e.target.result; }; r.onerror=reject; r.readAsDataURL(file); }); }
-
-  function updateOnlineCount(){ db.ref('presence').on('value', snap=>{ const val=snap.val()||{}; const real=Object.keys(val).length; onlineNeon.textContent=`Онлайн (прибл.): ${real*10}`; }); window.addEventListener('beforeunload', async ()=>{ try{ if(auth.currentUser) await db.ref('presence/'+auth.currentUser.uid).remove(); }catch{} }); }
-
-  // Допомога таб (как у тебя)
-  function initHelp(){ /* ... без изменений визуалки ... */ }
-
-  // Карта (как у тебя)
-  let map, markers=[], poi=[];
-  function initLeaflet(){ /* ... */ }
-  function clearMarkers(){ markers.forEach(m=>m.remove()); markers=[]; }
-  function renderPoi(list){ /* ... */ }
-  function searchPoi(q){ /* ... */ }
-
-  // ===== Сповіщення =====
-  const bellBtn=document.getElementById('bellBtn'); const bellBadge=document.getElementById('bellBadge'); const bellModal=document.getElementById('bellModal'); const bellClose=document.getElementById('bellClose'); const notifList=document.getElementById('notifList');
-  function renderNotifItem(id,v){
-    const row=document.createElement('div');
-    row.className='notif-item';
-    row.style.cssText='padding:8px;border-bottom:1px solid #eee;display:flex;gap:8px;align-items:center';
-    row.innerHTML=`<button class="notif-x" title="Прибрати">✖</button>
-                   <div style="flex:1"><div style="font-weight:700">${(v.type||'info').toUpperCase()}</div><div style="font-size:13px">${v.text||''}</div></div>`;
-    row.querySelector('.notif-x').onclick=()=> row.remove();
-    notifList.prepend(row);
-  }
-  function subscribeNotifications(uid){
-    if(!uid) return;
-    db.ref('notifications/'+uid).on('child_added',snap=>{
-      renderNotifItem(snap.key,snap.val()||{});
-      bellBadge.style.display='inline-block';
-      const n=Number(bellBadge.textContent||'0')+1; bellBadge.textContent=String(n);
+      const f=payProofFile.files?.[0]; if(!f){ payMsg.style.color='#b91c1c'; payMsg.textContent='Додайте фото чеку'; return; }
+      const url=await fileToDataURL(f,1000,.9);
+      const u=auth.currentUser;
+      const rec={ uid:u.uid, nick:u.displayName||u.email||'Користувач', image:url, ts:Date.now() };
+      await db.ref('paymentProofs').push(rec);
+      // повідомляємо адміна лише ПІСЛЯ завантаження фото (виконано твою умову)
+      const usersSnap=await db.ref('users').get(); const users=usersSnap.val()||{};
+      const adminId=Object.keys(users).find(id=> (users[id]?.email||'')===ADMIN_EMAIL ) || null;
+      if(adminId){ await db.ref('notifications/'+adminId).push({ ts:Date.now(), type:'pay', text:'Підтвердження оплати від '+(rec.nick) }); }
+      payMsg.style.color='#16a34a'; payMsg.textContent='Надіслано. Очікуйте підтвердження.';
       SND.notify();
-    });
-  }
-  bellBtn.addEventListener('click',()=>{ bellModal.classList.add('show'); bellBadge.textContent='0'; bellBadge.style.display='none'; });
-  bellClose.addEventListener('click',()=> bellModal.classList.remove('show'));
-  document.getElementById('notifClear').onclick=()=>{ notifList.innerHTML=''; };
-
-  // ===== Друзі / ЛС =====
-  const friendsList=document.getElementById('friendsList'); const friendRequestsEl=document.getElementById('friendRequests'); const friendsOnlineCountEl=document.getElementById('friendsOnlineCount'); const dmList=document.getElementById('dmList');
-  function convoIdFor(a,b){ return a<b? a+'_'+b : b+'_'+a; }
-
-  async function sendFriendRequest(toUid){
-    if(!auth.currentUser){ showAuth(); return; }
-    const from=auth.currentUser.uid; if(from===toUid) return;
-    const btn=document.getElementById('addFriendBtn'); if(btn){ btn.disabled=true; btn.textContent='⏳'; }
-    try{
-      await db.ref('friendRequests/'+toUid+'/'+from).set({ from, ts:Date.now() });
-      await db.ref('friends/'+from+'/'+toUid).set({ status:'requested', ts:Date.now(), fromUid:from });
-      await db.ref('notifications/'+toUid).push({ ts:Date.now(), type:'friend_req', text:`Запит у друзі від ${auth.currentUser.displayName||'Користувач'}`, from });
-      pushNotif('OK','Заявка успішно відправлена');
-      if(btn){ btn.textContent='✅ Заявка відправлена'; }
+      setTimeout(()=> payModal.classList.remove('show'), 900);
     }catch(e){
-      pushNotif('Помилка','Не вдалося відправити заявку');
-      if(btn){ btn.disabled=false; btn.textContent='Додати в друзі'; }
+      payMsg.style.color='#b91c1c'; payMsg.textContent='Помилка відправки';
+      SND.error();
     }
-  }
+  };
 
-  async function ensureDmAcl(cid, uid, otherUid){
-    const a = db.ref(`privateMessages/${cid}/_acl/${uid}`);
-    const b = db.ref(`privateMessages/${cid}/_acl/${otherUid}`);
-    const [as, bs] = await Promise.all([a.get(), b.get()]);
-    if(!as.exists()) await a.set(true);
-    if(!bs.exists()) await b.set(true);
-  }
+  // Фото-тост
+  fileInput.addEventListener('change',()=>{ if(fileInput.files[0]){ photoToast.style.display='block'; setTimeout(()=> photoToast.style.display='none', 3600); } });
 
-  async function openPrivateChat(otherUid){
+  // Відправка
+  sendButton.addEventListener('click', async ()=>{
     if(!auth.currentUser){ showAuth(); return; }
-    const uid=auth.currentUser.uid; const cid=convoIdFor(uid,otherUid);
+    if(!await canSend()){ pushNotif('system','Ваш акаунт обмежено (бан)'); return; }
 
-    // ACL перед подпиской
-    await ensureDmAcl(cid, uid, otherUid);
+    const text=messageInput.value.trim();
+    const file=fileInput.files[0];
+    if(!text && !file) return;
 
-    const panel=document.createElement('div'); panel.className='modal show'; panel.style.zIndex=1650;
-    panel.innerHTML=`<div class="panel"><button class="close">✖</button><h3>Діалог</h3>
-    <div id="dmThread" style="max-height:55vh;overflow:auto;border:1px solid #eee;border-radius:8px;padding:8px;margin-bottom:8px;background:#fafafa"></div>
-    <div style="display:flex;gap:6px"><input id="dmText" placeholder="Напишіть повідомлення..." style="flex:1;padding:10px;border-radius:8px;border:1px solid #ddd"><button id="dmSend" class="tab-button">Відправити</button></div></div>`;
-    document.body.appendChild(panel);
-    panel.querySelector('.close').onclick=()=>panel.remove();
-    const thread=panel.querySelector('#dmThread');
+    const u=auth.currentUser;
+    const counters=await getCounters(u.uid);
+    const willBePhoto=!!file;
 
-    db.ref('inboxMeta/'+uid+'/'+otherUid).set({ with:otherUid, ts:Date.now() });
-    db.ref('inboxMeta/'+otherUid+'/'+uid).set({ with:uid, ts:Date.now() });
+    // Перевірка ліміту
+    if((!willBePhoto && counters.text>=MSG_LIMIT_TEXT) || (willBePhoto && counters.photo>=MSG_LIMIT_PHOTO)){
+      pushNotif('limit','Ліміт досягнуто. Завантажте підтвердження оплати.');
+      showPay();
+      return;
+    }
 
-    db.ref('privateMessages/'+cid).limitToLast(200).on('child_added',snap=>{
-      if (snap.key === '_acl') return; // фильтр служебного узла
-      const m=snap.val();
-      if(!m || !m.ts || !m.text) return;
-      const row=document.createElement('div');
-      row.style.margin='6px 0'; row.style.textAlign=m.from===uid?'right':'left';
-      row.textContent=`${m.text} (${new Date(m.ts).toLocaleTimeString()})`;
-      thread.appendChild(row); thread.scrollTop=thread.scrollHeight;
-    });
+    let imageData=null;
+    if(file){
+      try{ imageData=await fileToDataURL(file,900,.9); }catch{ pushNotif('error','Фото не вдалося обробити'); return; }
+    }
 
-    panel.querySelector('#dmSend').onclick=async()=>{
-      const t=panel.querySelector('#dmText').value.trim(); if(!t) return;
-      const pm={from:uid,to:otherUid,text:t,ts:Date.now()};
-      await ensureDmAcl(cid, uid, otherUid); // гарантия перед записью
-      await db.ref('privateMessages/'+cid).push(pm);
-      await db.ref('notifications/'+otherUid).push({ ts:Date.now(), type:'dm', text:`Нове ЛС від ${auth.currentUser.displayName||'Користувач'}`, from:uid, convoId:cid });
-      await db.ref('inboxMeta/'+uid+'/'+otherUid).update({ last:t, ts:pm.ts });
-      await db.ref('inboxMeta/'+otherUid+'/'+uid).update({ last:t, ts:pm.ts });
-      panel.querySelector('#dmText').value=''; SND.sent();
+    const msg={
+      uid:u.uid,
+      nick:u.displayName||u.email||'Анонім',
+      avatar:u.photoURL||DEFAULT_AVATAR,
+      text:text||null,
+      image:imageData||null,
+      ts:Date.now()
     };
+    try{
+      await db.ref(activeChatPath()).push(msg);
+      await incCounters(u.uid, !!imageData);
+      messageInput.value=''; fileInput.value=''; SND.sent();
+    }catch{ pushNotif('error','Не вдалося відправити'); }
+  });
+  messageInput.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendButton.click(); } });
+
+  // Локальна пуш-панель у дзвонику
+  function pushNotif(type,text){
+    renderNotifItem({type,text});
+    bellBadge.style.display='inline-block';
+    bellBadge.textContent=String(Number(bellBadge.textContent||'0')+1);
+    SND.notify();
   }
+
+  // ===== ДРУЗІ / ЗАЯВКИ (реал-тайм fixed) =====
+  const friendsList=document.getElementById('friendsList');
+  const friendRequestsEl=document.getElementById('friendRequests');
+  const friendsOnlineCountEl=document.getElementById('friendsOnlineCount');
+  const dmList=document.getElementById('dmList');
+
+  function convoIdFor(a,b){ return a<b? a+'_'+b : b+'_'+a; }
 
   async function deriveDisplayName(uid){
     const us = await db.ref('users/'+uid).get();
@@ -490,208 +815,32 @@
     return (uid || 'Користувач').slice(0,8) + '…';
   }
 
-  function bindFriendsRealtime(){
-    const u=auth.currentUser; if(!u){ return; }
-    db.ref('friendRequests/'+u.uid).off();
-    db.ref('friendRequests/'+u.uid).on('value', async snap=>{
-      const container = document.getElementById('friendRequests');
-      container.innerHTML='';
-      if(snap.exists()){
-        const reqs=snap.val();
-        for(const fromUid of Object.keys(reqs)){
-          const uSnap=await db.ref('users/'+fromUid).get(); const ud=uSnap.exists()?uSnap.val():{nick:'Користувач',avatar:DEFAULT_AVATAR};
-          const item=document.createElement('div'); item.style.cssText='display:flex;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:8px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)';
-          item.innerHTML=`<img src="${ud.avatar||DEFAULT_AVATAR}" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
-          <div style="flex:1"><div style="font-weight:800;color:#0b1220">${escapeHtml(ud.nick||'Користувач')}</div><div class="muted" style="font-size:12px;color:#94a3b8">заявка у друзі</div></div>
-          <div style="display:flex;gap:6px"><button class="tab-button btn-accept">✅ Прийняти</button><button class="tab-button btn-decline" style="background:#ffe1e1">✖</button></div>`;
-          item.querySelector('.btn-accept').onclick=async()=>{
-            await db.ref('friends/'+u.uid+'/'+fromUid).set({ status:'accepted', ts:Date.now() });
-            await db.ref('friends/'+fromUid+'/'+u.uid).set({ status:'accepted', ts:Date.now() });
-            await db.ref('friendRequests/'+u.uid+'/'+fromUid).remove();
-            await db.ref('notifications/'+fromUid).push({ ts:Date.now(), type:'friend_ok', text:`${u.displayName||'Користувач'} додав(ла) вас у друзі`, from:u.uid });
-            SND.notify();
-          };
-          item.querySelector('.btn-decline').onclick=async()=>{
-            await db.ref('friendRequests/'+u.uid+'/'+fromUid).remove(); await db.ref('friends/'+fromUid+'/'+u.uid).remove();
-          };
-          container.appendChild(item);
-        }
-      }else{
-        container.innerHTML="<i style='color:#eafff3;text-shadow:0 0 8px rgba(57,255,145,.7)'>Немає заявок</i>";
-      }
-    });
-
-    db.ref('friends/'+u.uid).off();
-    db.ref('friends/'+u.uid).on('value', async frSnap=>{
-      const container = document.getElementById('friendsList');
-      container.innerHTML=''; let onlineCount=0;
-      if(frSnap.exists()){
-        const fr=frSnap.val();
-        for(const fid of Object.keys(fr)){
-          const rel=fr[fid]; if(rel.status!=='accepted') continue;
-          const [uSnap,pSnap]= await Promise.all([db.ref('users/'+fid).get(), db.ref('presence/'+fid).get()]);
-          const ud=uSnap.exists()?uSnap.val():{nick:'Користувач',avatar:DEFAULT_AVATAR};
-          const isOn=pSnap.exists(); if(isOn) onlineCount++;
-          const d=document.createElement('div'); d.style.cssText='display:flex;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:8px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)';
-          d.innerHTML=`<img src="${ud.avatar||DEFAULT_AVATAR}" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
-            <div style="flex:1"><div style="font-weight:800;color:#0b1220">${escapeHtml(ud.nick||'Користувач')}</div><div style="font-size:12px;color:${isOn?'#10b981':'#64748b'}">${isOn?'онлайн':'офлайн'}</div></div>
-            <div style="display:flex;gap:6px"><button class="tab-button btn-pm">✉️</button><button class="tab-button btn-open">👀</button></div>`;
-          d.querySelector('.btn-open').onclick=()=>openProfile(fid);
-          d.querySelector('.btn-pm').onclick=()=>openPrivateChat(fid);
-          container.appendChild(d);
-        }
-      }
-      friendsOnlineCountEl.textContent=String(onlineCount);
-    });
-  }
-
-  function renderDMInbox(){
-    const u=auth.currentUser;
-    if(!u){ dmList.innerHTML='<i>Увійдіть, щоб бачити ЛС</i>'; return; }
-    db.ref('inboxMeta/'+u.uid).off();
-    dmList.innerHTML='';
-    db.ref('inboxMeta/'+u.uid).orderByChild('ts').limitToLast(200).on('child_added', async snap=>{
-      const other=snap.key; const meta=snap.val()||{};
-      const name=await deriveDisplayName(other);
-      const avatar=(await db.ref('users/'+other+'/avatar').get()).val()||DEFAULT_AVATAR;
-      const card=document.createElement('div'); card.style.cssText='display:flex;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)';
-      card.innerHTML=`<img src="${avatar}" style="width:42px;height:42px;border-radius:10px;object-fit:cover">
-        <div style="flex:1"><div style="font-weight:800">${escapeHtml(name)}</div><div style="font-size:12px;color:#64748b">${escapeHtml(meta.last||'Без тексту')}</div></div>
-        <button class='tab-button'>Відкрити</button>`;
-      card.querySelector('button').onclick=()=> openPrivateChat(other);
-      dmList.prepend(card);
-    });
-  }
-</script>
-     const profileModal=document.getElementById('profileModal'); const profileClose=document.getElementById('profileClose'); const profileContent=document.getElementById('profileContent'); profileClose?.addEventListener('click',()=> profileModal.classList.remove('show'));
-  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m])); }
-
-  function showAuth(){ const m=document.getElementById('authModal'); if(m){ m.classList.add('show'); document.getElementById('regError').textContent=''; document.getElementById('loginError').textContent=''; } }
-  function hideAuth(){ document.getElementById('authModal')?.classList.remove('show'); }
-
-  async function openProfile(uid,isSelf=false){
-    profileModal.classList.add('show'); profileContent.innerHTML='<p>Завантаження…</p>';
-    try{
-      const s=await db.ref('users/'+uid).get(); const user=s.exists()?s.val():{nick:'Анонім',avatar:DEFAULT_AVATAR}; const email=user.email||''; const self=auth.currentUser&&auth.currentUser.uid===uid;
-      const flags=(await db.ref('settings/userFlags/'+uid).get()).val()||{}; const planKey=flags.premium||'none';
-      const PLAN={none:{label:'—',bg:'#f1f5f9',col:'#111'}, trial:{label:'TRIAL',bg:'#c084fc',col:'#fff'}, premium:{label:'ПРЕМІУМ',bg:'#16a34a',col:'#fff'}, premiumPlus:{label:'ПРЕМІУМ+',bg:'#0ea5e9',col:'#fff'}}[planKey];
-      const about=user.about||''; const contacts=user.contacts||''; const avatar=user.avatar||DEFAULT_AVATAR;
-      profileContent.innerHTML=`
-        <div style="display:flex;gap:12px;align-items:center">
-          <img src="${avatar}" style="width:84px;height:84px;border-radius:12px;object-fit:cover">
-          <div>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <h3 style="margin:0;color:#0b1220;text-shadow:0 0 12px rgba(57,255,145,.7)">${escapeHtml(user.nick||'Анонім')}</h3>
-              <span class="user-badge" style="background:${PLAN.bg};color:${PLAN.col};font-weight:900">${PLAN.label}</span>
-              ${uid===auth.currentUser?.uid?'<span class="user-badge">Мій профіль</span>':''}
-            </div>
-            <div style="color:${email?'#333':'#666'}">${escapeHtml(email)}</div>
-          </div>
-        </div>
-        <div style="margin-top:12px;display:grid;grid-template-columns:1fr;gap:8px">
-          <div><b>Про себе:</b><br>${about?escapeHtml(about):'<i>не вказано</i>'}</div>
-          <div><b>Контакти:</b><br>${contacts?escapeHtml(contacts):'<i>не вказано</i>'}</div>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          ${self?`
-            <label class="tab-button" style="cursor:pointer"><input type="file" id="avatarFile" accept="image/*" style="display:none">Змінити аватар</label>
-            <button id="editAbout" class="tab-button">✏️ Редагувати профіль</button>
-            <button id="signOutBtn" class="tab-button" style="background:#ffe1e1">Вийти</button>
-          `:`
-            <button id="pmBtn" class="tab-button">Написати ЛС</button>
-            <button id="addFriendBtn" class="tab-button">Додати в друзі</button>
-          `}
-        </div>
-        <div id="profileMsg" style="margin-top:8px;color:#16a34a;font-weight:700"></div>`;
-
-      if(self){
-        document.getElementById('avatarFile')?.addEventListener('change', async (e)=>{ const f=e.target.files[0]; if(!f) return; const url=await fileToDataURL(f,900,.9); await db.ref('users/'+uid+'/avatar').set(url); await auth.currentUser.updateProfile({ photoURL:url }); document.getElementById('profileBtn').style.background=`url(${url}) center/cover`; profileContent.querySelector('img').src=url; SND.notify(); });
-        document.getElementById('signOutBtn').onclick=async()=>{ try{ await db.ref('presence/'+auth.currentUser.uid).remove(); }catch{} await auth.signOut(); profileModal.classList.remove('show'); };
-        document.getElementById('editAbout').onclick=async()=>{ const a=prompt('Про себе', about)||''; const c=prompt('Контакти', contacts)||''; await db.ref('users/'+uid).update({ about:a, contacts:c }); openProfile(uid,true); };
-      }else{
-        document.getElementById('pmBtn').onclick=()=> openPrivateChat(uid);
-        document.getElementById('addFriendBtn').onclick=()=> sendFriendRequest(uid);
-      }
-    }catch{ profileContent.innerHTML='<p>Помилка завантаження профілю</p>'; }
-  }
-
-  function fileToDataURL(file,maxW=900,quality=.85){ return new Promise((resolve,reject)=>{ const img=new Image(); const r=new FileReader(); r.onload=e=>{ img.onload=()=>{ const sc=Math.min(1, maxW/img.width); const w=(img.width*sc)|0, h=(img.height*sc)|0; const c=document.createElement('canvas'); c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h); resolve(c.toDataURL('image/jpeg',quality)); }; img.onerror=reject; img.src=e.target.result; }; r.onerror=reject; r.readAsDataURL(file); }); }
-
-  function updateOnlineCount(){ db.ref('presence').on('value', snap=>{ const val=snap.val()||{}; const real=Object.keys(val).length; onlineNeon.textContent=`Онлайн (прибл.): ${real*10}`; }); window.addEventListener('beforeunload', async ()=>{ try{ if(auth.currentUser) await db.ref('presence/'+auth.currentUser.uid).remove(); }catch{} }); }
-
-  // Допомога таб (как у тебя)
-  function initHelp(){ /* ... без изменений визуалки ... */ }
-
-  // Карта (как у тебя)
-  let map, markers=[], poi=[];
-  function initLeaflet(){ /* ... */ }
-  function clearMarkers(){ markers.forEach(m=>m.remove()); markers=[]; }
-  function renderPoi(list){ /* ... */ }
-  function searchPoi(q){ /* ... */ }
-
-  // ===== Сповіщення =====
-  const bellBtn=document.getElementById('bellBtn'); const bellBadge=document.getElementById('bellBadge'); const bellModal=document.getElementById('bellModal'); const bellClose=document.getElementById('bellClose'); const notifList=document.getElementById('notifList');
-  function renderNotifItem(id,v){
-    const row=document.createElement('div');
-    row.className='notif-item';
-    row.style.cssText='padding:8px;border-bottom:1px solid #eee;display:flex;gap:8px;align-items:center';
-    row.innerHTML=`<button class="notif-x" title="Прибрати">✖</button>
-                   <div style="flex:1"><div style="font-weight:700">${(v.type||'info').toUpperCase()}</div><div style="font-size:13px">${v.text||''}</div></div>`;
-    row.querySelector('.notif-x').onclick=()=> row.remove();
-    notifList.prepend(row);
-  }
-  function subscribeNotifications(uid){
-    if(!uid) return;
-    db.ref('notifications/'+uid).on('child_added',snap=>{
-      renderNotifItem(snap.key,snap.val()||{});
-      bellBadge.style.display='inline-block';
-      const n=Number(bellBadge.textContent||'0')+1; bellBadge.textContent=String(n);
-      SND.notify();
-    });
-  }
-  bellBtn.addEventListener('click',()=>{ bellModal.classList.add('show'); bellBadge.textContent='0'; bellBadge.style.display='none'; });
-  bellClose.addEventListener('click',()=> bellModal.classList.remove('show'));
-  document.getElementById('notifClear').onclick=()=>{ notifList.innerHTML=''; };
-
-  // ===== Друзі / ЛС =====
-  const friendsList=document.getElementById('friendsList'); const friendRequestsEl=document.getElementById('friendRequests'); const friendsOnlineCountEl=document.getElementById('friendsOnlineCount'); const dmList=document.getElementById('dmList');
-  function convoIdFor(a,b){ return a<b? a+'_'+b : b+'_'+a; }
-
   async function sendFriendRequest(toUid){
     if(!auth.currentUser){ showAuth(); return; }
     const from=auth.currentUser.uid; if(from===toUid) return;
-    const btn=document.getElementById('addFriendBtn'); if(btn){ btn.disabled=true; btn.textContent='⏳'; }
     try{
       await db.ref('friendRequests/'+toUid+'/'+from).set({ from, ts:Date.now() });
       await db.ref('friends/'+from+'/'+toUid).set({ status:'requested', ts:Date.now(), fromUid:from });
-      await db.ref('notifications/'+toUid).push({ ts:Date.now(), type:'friend_req', text:`Запит у друзі від ${auth.currentUser.displayName||'Користувач'}`, from });
+      await db.ref('notifications/'+toUid).push({ ts:Date.now(), type:'friend_req', text:'Запит у друзі від '+(auth.currentUser.displayName||'Користувач'), from });
       pushNotif('OK','Заявка успішно відправлена');
-      if(btn){ btn.textContent='✅ Заявка відправлена'; }
     }catch(e){
-      pushNotif('Помилка','Не вдалося відправити заявку');
-      if(btn){ btn.disabled=false; btn.textContent='Додати в друзі'; }
+      pushNotif('error','Не вдалося відправити заявку');
     }
-  }
-
-  async function ensureDmAcl(cid, uid, otherUid){
-    const a = db.ref(`privateMessages/${cid}/_acl/${uid}`);
-    const b = db.ref(`privateMessages/${cid}/_acl/${otherUid}`);
-    const [as, bs] = await Promise.all([a.get(), b.get()]);
-    if(!as.exists()) await a.set(true);
-    if(!bs.exists()) await b.set(true);
   }
 
   async function openPrivateChat(otherUid){
     if(!auth.currentUser){ showAuth(); return; }
     const uid=auth.currentUser.uid; const cid=convoIdFor(uid,otherUid);
-
-    // ACL перед подпиской
-    await ensureDmAcl(cid, uid, otherUid);
-
     const panel=document.createElement('div'); panel.className='modal show'; panel.style.zIndex=1650;
-    panel.innerHTML=`<div class="panel"><button class="close">✖</button><h3>Діалог</h3>
-    <div id="dmThread" style="max-height:55vh;overflow:auto;border:1px solid #eee;border-radius:8px;padding:8px;margin-bottom:8px;background:#fafafa"></div>
-    <div style="display:flex;gap:6px"><input id="dmText" placeholder="Напишіть повідомлення..." style="flex:1;padding:10px;border-radius:8px;border:1px solid #ddd"><button id="dmSend" class="tab-button">Відправити</button></div></div>`;
+    panel.innerHTML=`
+      <div class="panel">
+        <button class="close">✖</button><h3>Діалог</h3>
+        <div id="dmThread" style="max-height:55vh;overflow:auto;border:1px solid #eee;border-radius:8px;padding:8px;margin-bottom:8px;background:#fafafa"></div>
+        <div style="display:flex;gap:6px">
+          <input id="dmText" placeholder="Напишіть повідомлення..." style="flex:1;padding:10px;border-radius:8px;border:1px solid #ddd">
+          <button id="dmSend" class="tab-button">Відправити</button>
+        </div>
+      </div>`;
     document.body.appendChild(panel);
     panel.querySelector('.close').onclick=()=>panel.remove();
     const thread=panel.querySelector('#dmThread');
@@ -700,90 +849,78 @@
     db.ref('inboxMeta/'+otherUid+'/'+uid).set({ with:uid, ts:Date.now() });
 
     db.ref('privateMessages/'+cid).limitToLast(200).on('child_added',snap=>{
-      if (snap.key === '_acl') return; // фильтр служебного узла
-      const m=snap.val();
-      if(!m || !m.ts || !m.text) return;
-      const row=document.createElement('div');
+      const m=snap.val(); const row=document.createElement('div');
       row.style.margin='6px 0'; row.style.textAlign=m.from===uid?'right':'left';
       row.textContent=`${m.text} (${new Date(m.ts).toLocaleTimeString()})`;
       thread.appendChild(row); thread.scrollTop=thread.scrollHeight;
     });
-
     panel.querySelector('#dmSend').onclick=async()=>{
       const t=panel.querySelector('#dmText').value.trim(); if(!t) return;
       const pm={from:uid,to:otherUid,text:t,ts:Date.now()};
-      await ensureDmAcl(cid, uid, otherUid); // гарантия перед записью
       await db.ref('privateMessages/'+cid).push(pm);
-      await db.ref('notifications/'+otherUid).push({ ts:Date.now(), type:'dm', text:`Нове ЛС від ${auth.currentUser.displayName||'Користувач'}`, from:uid, convoId:cid });
+      await db.ref('notifications/'+otherUid).push({ ts:Date.now(), type:'dm', text:'Нове ЛС від '+(auth.currentUser.displayName||'Користувач'), from:uid, convoId:cid });
       await db.ref('inboxMeta/'+uid+'/'+otherUid).update({ last:t, ts:pm.ts });
       await db.ref('inboxMeta/'+otherUid+'/'+uid).update({ last:t, ts:pm.ts });
       panel.querySelector('#dmText').value=''; SND.sent();
     };
   }
 
-  async function deriveDisplayName(uid){
-    const us = await db.ref('users/'+uid).get();
-    if (us.exists()){
-      const u = us.val();
-      if (u.nick)  return u.nick;
-      if (u.email) return (u.email.split('@')[0] || 'Користувач');
-    }
-    return (uid || 'Користувач').slice(0,8) + '…';
+  function renderFriendRequestsRealtime(u){
+    friendRequestsEl.innerHTML='';
+    const path='friendRequests/'+u.uid;
+    db.ref(path).off();
+    db.ref(path).on('child_added', async snap=>{
+      const fromUid=snap.key;
+      const uSnap=await db.ref('users/'+fromUid).get();
+      const ud=uSnap.exists()?uSnap.val():{nick:'Користувач',avatar:DEFAULT_AVATAR};
+      const item=document.createElement('div');
+      item.style.cssText='display:flex;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:8px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)';
+      item.innerHTML=`
+        <img src="${ud.avatar||DEFAULT_AVATAR}" style="width:48px;height:48px;border-radius:10px;object-fit:cover" alt="">
+        <div style="flex:1">
+          <div style="font-weight:800;color:#0b1220;text-shadow:0 0 8px rgba(57,255,145,.8)">${escapeHtml(ud.nick||'Користувач')}</div>
+          <div class="muted" style="font-size:12px;color:#64748b">заявка у друзі</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="tab-button btn-accept">✅ Прийняти</button>
+          <button class="tab-button btn-decline" style="background:#ffe1e1">✖</button>
+        </div>`;
+      item.querySelector('.btn-accept').onclick=async()=>{
+        await db.ref('friends/'+u.uid+'/'+fromUid).set({ status:'accepted', ts:Date.now() });
+        await db.ref('friends/'+fromUid+'/'+u.uid).set({ status:'accepted', ts:Date.now() });
+        await db.ref('friendRequests/'+u.uid+'/'+fromUid).remove();
+        await db.ref('notifications/'+fromUid).push({ ts:Date.now(), type:'friend_ok', text:(u.displayName||'Користувач')+' додав(ла) вас у друзі', from:u.uid });
+        SND.notify();
+        renderFriendsList(u);
+      };
+      item.querySelector('.btn-decline').onclick=async()=>{
+        await db.ref('friendRequests/'+u.uid+'/'+fromUid).remove();
+        await db.ref('friends/'+fromUid+'/'+u.uid).remove();
+      };
+      friendRequestsEl.prepend(item);
+    });
   }
 
-  function bindFriendsRealtime(){
-    const u=auth.currentUser; if(!u){ return; }
-    db.ref('friendRequests/'+u.uid).off();
-    db.ref('friendRequests/'+u.uid).on('value', async snap=>{
-      const container = document.getElementById('friendRequests');
-      container.innerHTML='';
-      if(snap.exists()){
-        const reqs=snap.val();
-        for(const fromUid of Object.keys(reqs)){
-          const uSnap=await db.ref('users/'+fromUid).get(); const ud=uSnap.exists()?uSnap.val():{nick:'Користувач',avatar:DEFAULT_AVATAR};
-          const item=document.createElement('div'); item.style.cssText='display:flex;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:8px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)';
-          item.innerHTML=`<img src="${ud.avatar||DEFAULT_AVATAR}" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
-          <div style="flex:1"><div style="font-weight:800;color:#0b1220">${escapeHtml(ud.nick||'Користувач')}</div><div class="muted" style="font-size:12px;color:#94a3b8">заявка у друзі</div></div>
-          <div style="display:flex;gap:6px"><button class="tab-button btn-accept">✅ Прийняти</button><button class="tab-button btn-decline" style="background:#ffe1e1">✖</button></div>`;
-          item.querySelector('.btn-accept').onclick=async()=>{
-            await db.ref('friends/'+u.uid+'/'+fromUid).set({ status:'accepted', ts:Date.now() });
-            await db.ref('friends/'+fromUid+'/'+u.uid).set({ status:'accepted', ts:Date.now() });
-            await db.ref('friendRequests/'+u.uid+'/'+fromUid).remove();
-            await db.ref('notifications/'+fromUid).push({ ts:Date.now(), type:'friend_ok', text:`${u.displayName||'Користувач'} додав(ла) вас у друзі`, from:u.uid });
-            SND.notify();
-          };
-          item.querySelector('.btn-decline').onclick=async()=>{
-            await db.ref('friendRequests/'+u.uid+'/'+fromUid).remove(); await db.ref('friends/'+fromUid+'/'+u.uid).remove();
-          };
-          container.appendChild(item);
-        }
-      }else{
-        container.innerHTML="<i style='color:#eafff3;text-shadow:0 0 8px rgba(57,255,145,.7)'>Немає заявок</i>";
+  async function renderFriendsList(u){
+    friendsList.innerHTML=''; let onlineCount=0;
+    const frSnap=await db.ref('friends/'+u.uid).get();
+    if(frSnap.exists()){
+      const fr=frSnap.val();
+      for(const fid of Object.keys(fr)){ const rel=fr[fid]; if(rel.status!=='accepted') continue;
+        const uSnap=await db.ref('users/'+fid).get(); const ud=uSnap.exists()?uSnap.val():{nick:'Користувач',avatar:DEFAULT_AVATAR};
+        const pSnap=await db.ref('presence/'+fid).get(); const isOn=pSnap.exists(); if(isOn) onlineCount++;
+        const d=document.createElement('div');
+        d.style.cssText='display:flex;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:8px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)';
+        d.innerHTML=`
+          <img src="${ud.avatar||DEFAULT_AVATAR}" style="width:48px;height:48px;border-radius:10px;object-fit:cover" alt="">
+          <div style="flex:1"><div style="font-weight:800;color:#0b1220">${escapeHtml(ud.nick||'Користувач')}</div><div style="font-size:12px;color:${isOn?'#10b981':'#64748b'}">${isOn?'онлайн':'офлайн'}</div></div>
+          <div style="display:flex;gap:6px"><button class="tab-button btn-pm">✉️</button><button class="tab-button btn-open">👀</button></div>`;
+        d.querySelector('.btn-open').onclick=()=>openProfile(fid);
+        d.querySelector('.btn-pm').onclick=()=>openPrivateChat(fid);
+        friendsList.appendChild(d);
       }
-    });
-
-    db.ref('friends/'+u.uid).off();
-    db.ref('friends/'+u.uid).on('value', async frSnap=>{
-      const container = document.getElementById('friendsList');
-      container.innerHTML=''; let onlineCount=0;
-      if(frSnap.exists()){
-        const fr=frSnap.val();
-        for(const fid of Object.keys(fr)){
-          const rel=fr[fid]; if(rel.status!=='accepted') continue;
-          const [uSnap,pSnap]= await Promise.all([db.ref('users/'+fid).get(), db.ref('presence/'+fid).get()]);
-          const ud=uSnap.exists()?uSnap.val():{nick:'Користувач',avatar:DEFAULT_AVATAR};
-          const isOn=pSnap.exists(); if(isOn) onlineCount++;
-          const d=document.createElement('div'); d.style.cssText='display:flex;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:8px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)';
-          d.innerHTML=`<img src="${ud.avatar||DEFAULT_AVATAR}" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
-            <div style="flex:1"><div style="font-weight:800;color:#0b1220">${escapeHtml(ud.nick||'Користувач')}</div><div style="font-size:12px;color:${isOn?'#10b981':'#64748b'}">${isOn?'онлайн':'офлайн'}</div></div>
-            <div style="display:flex;gap:6px"><button class="tab-button btn-pm">✉️</button><button class="tab-button btn-open">👀</button></div>`;
-          d.querySelector('.btn-open').onclick=()=>openProfile(fid);
-          d.querySelector('.btn-pm').onclick=()=>openPrivateChat(fid);
-          container.appendChild(d);
-        }
-      }
-      friendsOnlineCountEl.textContent=String(onlineCount);
-    });
+    } else friendsList.innerHTML='<i style="color:#eafff3">Додайте друзів через профілі</i>';
+    friendsOnlineCountEl.textContent=String(onlineCount);
   }
 
   function renderDMInbox(){
@@ -795,12 +932,166 @@
       const other=snap.key; const meta=snap.val()||{};
       const name=await deriveDisplayName(other);
       const avatar=(await db.ref('users/'+other+'/avatar').get()).val()||DEFAULT_AVATAR;
-      const card=document.createElement('div'); card.style.cssText='display:flex;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)';
-      card.innerHTML=`<img src="${avatar}" style="width:42px;height:42px;border-radius:10px;object-fit:cover">
+      const card=document.createElement('div');
+      card.style.cssText='display:flex;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)';
+      card.innerHTML=`
+        <img src="${avatar}" style="width:42px;height:42px;border-radius:10px;object-fit:cover" alt="">
         <div style="flex:1"><div style="font-weight:800">${escapeHtml(name)}</div><div style="font-size:12px;color:#64748b">${escapeHtml(meta.last||'Без тексту')}</div></div>
         <button class='tab-button'>Відкрити</button>`;
       card.querySelector('button').onclick=()=> openPrivateChat(other);
       dmList.prepend(card);
     });
   }
-</script>
+
+  // Підписки під користувача
+  auth.onAuthStateChanged(u=>{
+    if(u){
+      subscribeNotifications(u.uid);
+      renderFriendRequestsRealtime(u);
+      renderFriendsList(u);
+      renderDMInbox();
+    }else{
+      notifList.innerHTML=''; friendsList.innerHTML=''; friendRequestsEl.innerHTML=''; dmList.innerHTML='';
+    }
+    adminBar.style.display=(window.__isAdmin && document.getElementById('chatTab').style.display==='block')?'block':'none';
+  });
+
+  // ===== Адмінка (список користувачів) =====
+  const SUB_PLAN={ none:{label:'—',badge:'#f1f5f9',color:'#111'}, trial:{label:'TRIAL',badge:'#c084fc',color:'#fff'}, premium:{label:'ПРЕМІУМ',badge:'#16a34a',color:'#fff'}, premiumPlus:{label:'ПРЕМІУМ+',badge:'#0ea5e9',color:'#fff'} };
+  let _allUsers=[]; let _userFlags={}; let _presence={};
+  const $adminUsersModal=document.getElementById('adminUsersModal');
+  const $usersTBody=document.getElementById('usersTBody');
+  const $userSearch=document.getElementById('userSearch');
+  const $usersTotal=document.getElementById('usersTotal');
+  const $usersShown=document.getElementById('usersShown');
+
+  document.getElementById('membersBtn').addEventListener('click', ()=>{ if(!window.__isAdmin){ pushNotif('system','Тільки для адміна'); return; } $adminUsersModal.classList.add('show'); loadUsers(); });
+  document.getElementById('adminUsersClose').addEventListener('click', ()=> $adminUsersModal.classList.remove('show'));
+  $userSearch.addEventListener('input', ()=> renderUsersTable(_allUsers));
+
+  db.ref('presence').on('value', s=>{ _presence=s.val()||{}; if($adminUsersModal.classList.contains('show')) renderUsersTable(_allUsers); });
+  db.ref('settings/userFlags').on('value', s=>{ _userFlags=s.val()||{}; if($adminUsersModal.classList.contains('show')) renderUsersTable(_allUsers); });
+
+  async function loadUsers(){ const s=await db.ref('users').get(); const obj=s.val()||{}; _allUsers=Object.keys(obj).map(uid=>({uid,...obj[uid]})); $usersTotal.textContent=String(_allUsers.length); renderUsersTable(_allUsers); }
+  function renderUsersTable(list){
+    if(!$usersTBody) return;
+    const q=($userSearch.value||'').trim().toLowerCase();
+    const filtered=list.filter(u=>!q||(u.nick||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q)).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    $usersShown.textContent=String(filtered.length);
+    $usersTBody.innerHTML='';
+    filtered.forEach(u=>{
+      const flags=_userFlags[u.uid]||{};
+      const banned=!!flags.banned;
+      const premKey=flags.premium||'none';
+      const plan=SUB_PLAN[premKey]||SUB_PLAN.none;
+      const online=!!_presence[u.uid];
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td style="padding:10px">
+          <div style="display:flex;gap:10px;align-items:center">
+            <span title="${online?'Онлайн':'Офлайн'}" style="display:inline-block;width:10px;height:10px;border-radius:999px;background:${online?'#22c55e':'#94a3b8'}"></span>
+            <img src="${u.avatar||DEFAULT_AVATAR}" style="width:36px;height:36px;border-radius:10px;object-fit:cover" alt="">
+            <div><div style="font-weight:800">${escapeHtml(u.nick||'Користувач')}</div><div style="font-size:12px;color:#64748b">${u.uid.slice(0,8)}…</div></div>
+          </div>
+        </td>
+        <td style="padding:10px;color:#64748b">${escapeHtml(u.email||'')}</td>
+        <td style="padding:10px">${banned?'<span class="user-badge" style="background:#fee2e2;color:#991b1b">Забанено</span>':'<span class="user-badge">OK</span>'}</td>
+        <td style="padding:10px"><span class="user-badge" style="background:${plan.badge};color:${plan.color};font-weight:900">${plan.label}</span></td>
+        <td style="padding:10px">
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn-mini" data-act="ban" data-uid="${u.uid}">${banned?'Розбанити':'Забанити'}</button>
+            <button class="btn-mini" data-act="grant100" data-uid="${u.uid}">Донат 100</button>
+            <button class="btn-mini" data-act="grant199" data-uid="${u.uid}">Донат 199</button>
+            <button class="btn-mini" data-act="pm" data-uid="${u.uid}">✉️ ЛС</button>
+            <button class="btn-mini" data-act="open" data-uid="${u.uid}">👀 Профіль</button>
+          </div>
+        </td>`;
+      $usersTBody.appendChild(tr);
+    });
+    $usersTBody.querySelectorAll('button[data-act]').forEach(btn=> btn.onclick=()=> adminUserAction(btn.dataset.act, btn.dataset.uid));
+  }
+  async function adminUserAction(act,uid){
+    if(!window.__isAdmin){ pushNotif('system','Потрібні права адміна'); return; }
+    try{
+      const path='settings/userFlags/'+uid;
+      if(act==='ban'){
+        const cur=(await db.ref(path+'/banned').get()).val()===true;
+        await db.ref(path).update({ banned:!cur, updatedBy:auth.currentUser.uid });
+        await db.ref('notifications/'+uid).push({ ts:Date.now(), type:'system', text: cur?'Бан знято.':'Ваш акаунт заблоковано.'});
+      } else if(act==='grant100'){
+        await db.ref(path).update({ premium:'premium', premiumSince:Date.now(), updatedBy:auth.currentUser.uid });
+        await db.ref('notifications/'+uid).push({ ts:Date.now(), type:'premium', text:'Активовано план BASIC (100 Kč).' });
+      } else if(act==='grant199'){
+        await db.ref(path).update({ premium:'premiumPlus', premiumSince:Date.now(), updatedBy:auth.currentUser.uid });
+        await db.ref('notifications/'+uid).push({ ts:Date.now(), type:'premium', text:'Активовано план PRO (199 Kč).' });
+      } else if(act==='pm'){
+        openPrivateChat(uid);
+      } else if(act==='open'){
+        openProfile(uid);
+      }
+    }catch{ pushNotif('error','Помилка дії'); }
+  }
+
+  // ===== Боти (панель у адміна) =====
+  if(!window.BOTS_DEF){
+    window.BOTS_DEF=[
+      { id:'bot_1', nick:'Марина', avatar:'https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg',
+        posts:[
+          {text:'O2 СІМ КАРТА. Без ліміту інтернет, дзвінки. 699 Kč/міс. Старт 299 Kč. 607 914 467', image:'https://i.ibb.co/LH4wBMS/IMG-d8e6076e17f19db7fe3add0754738a01-V.jpg'},
+          {text:'Продаю iPhone 11 Pro Max + 26 чохлів. Пишіть у приват.', image:'https://i.ibb.co/dwcXPqDr/IMG-1954f6b56869b9817a131ae33f3a37b6-V.jpg'}
+        ], baseInterval:120000 },
+      { id:'bot_2', nick:'Антон', avatar:'https://i.ibb.co/Z11WVrVC/IMG-b83692bb79a1468af74c81620750e8c0-V.jpg',
+        posts:[
+          {text:'Шукаю моделей на перманентний макіяж. Прага.', image:'https://i.ibb.co/QFWD5wG/IMG-6748e7141906901b131b8fd5130a5c01-V.jpg'}
+        ], baseInterval:180000 }
+    ];
+  }
+  const BotController=(()=>{
+    const timers=new Map(), indices=new Map(), speeds=new Map();
+    function nextPost(id,posts){ const i=(indices.get(id)||0); indices.set(id,i+1); return posts[i%posts.length]; }
+    async function post(bot){
+      const p=nextPost(bot.id,bot.posts);
+      try{ await db.ref('messages').push({ uid:bot.id, nick:bot.nick, avatar:bot.avatar, text:p.text, image:p.image||null, ts:Date.now() }); }
+      catch(e){ console.error('bot push', e); }
+    }
+    function isRunning(id){ return timers.has(id); }
+    function computeInterval(bot){ const mult=speeds.get(bot.id)||1; const min=15000; return Math.max(min, bot.baseInterval/mult); }
+    function start(bot){ if(isRunning(bot.id)) return; const tick=async()=>{ await post(bot); schedule(); }; function schedule(){ const t=setTimeout(tick, computeInterval(bot)); timers.set(bot.id,t); updateChip(bot.id); } schedule(); }
+    function stop(id){ const t=timers.get(id); if(t){ clearTimeout(t); timers.delete(id); updateChip(id); } }
+    function setSpeed(id,m){ speeds.set(id,m); if(timers.has(id)){ clearTimeout(timers.get(id)); timers.delete(id); const b=BOTS_DEF.find(x=>x.id===id); if(b) start(b); } updateChip(id); }
+    function postOnce(bot){ return post(bot); }
+    function stopAll(){ Array.from(timers.keys()).forEach(stop); }
+    function startAll(){ BOTS_DEF.forEach(start); }
+    function postOnceAll(){ return Promise.all(BOTS_DEF.map(postOnce)); }
+    function updateChip(id){ const chip=document.querySelector(`[data-bot='${id}']`); if(!chip) return; const running=isRunning(id); chip.querySelector('.state').textContent=running?'● працює':'○ зупинено'; chip.querySelector('.toggle').textContent=running?'⏹ Зупинити':'▶️ Запустити'; }
+    return {start,stop,setSpeed,postOnce,stopAll,startAll,postOnceAll,isRunning};
+  })();
+
+  (function initAdminBotsUI(){
+    const box=document.getElementById('botsRow');
+    function chip(bot){
+      const w=document.createElement('div'); w.className='user-badge'; w.dataset.bot=bot.id; w.style.gap='8px';
+      w.innerHTML=`
+        <img src="${bot.avatar}" style="width:26px;height:26px;border-radius:6px;object-fit:cover" alt="">
+        <b>${bot.nick}</b>
+        <span class="state" style="font-size:12px;opacity:.8">○ зупинено</span>
+        <button class="toggle btn-mini">▶️ Запустити</button>
+        <button class="once btn-mini" style="background:#fff3cd">⚡️ Раз</button>
+        <label style="font-size:12px">швидк. <input type="range" min="0.5" max="3" step="0.1" value="1" class="speed"></label>
+        <span class="speedv" style="font-size:12px">1×</span>`;
+      const $toggle=w.querySelector('.toggle'); const $once=w.querySelector('.once'); const $range=w.querySelector('.speed'); const $speedv=w.querySelector('.speedv');
+      $toggle.onclick=()=>{ BotController[ BotController.isRunning(bot.id)?'stop':'start'](bot); };
+      $once.onclick=()=> BotController.postOnce(bot);
+      $range.oninput=()=>{ const v=Number($range.value)||1; $speedv.textContent=v.toFixed(1)+'×'; BotController.setSpeed(bot.id,v); localStorage.setItem('bot_speed_'+bot.id,String(v)); };
+      const saved=Number(localStorage.getItem('bot_speed_'+bot.id)||'1'); if(!Number.isNaN(saved)&&saved){ $range.value=String(saved); $speedv.textContent=saved.toFixed(1)+'×'; BotController.setSpeed(bot.id,saved); }
+      return w;
+    }
+    if(box){ box.innerHTML=''; BOTS_DEF.forEach(b=> box.appendChild(chip(b))); }
+    document.getElementById('startAll')?.addEventListener('click',()=> BotController.startAll());
+    document.getElementById('stopAll')?.addEventListener('click', ()=> BotController.stopAll());
+    document.getElementById('postOnceAll')?.addEventListener('click',()=> BotController.postOnceAll());
+  })();
+
+  </script>
+</body>
+</html>
