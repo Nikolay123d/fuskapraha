@@ -1,6 +1,0 @@
-Источники изображений (по умолчанию используются открытые ссылки):
-Prague.jpg: https://i.ibb.co/27hgtZfY/Prague.jpg
-hospital.webp: https://i.ibb.co/TqWJ9VTM/palata-vchehii-jpg.webp
-lawyers.jpg: https://i.ibb.co/0gWD5wW/images-5.jpg
-shops.jpg: https://i.ibb.co/R49shL6k/images-6.jpg
-avatar.jpg: https://i.ibb.co/Fqq6sH5q/istockphoto-1495088043-612x612.jpg
