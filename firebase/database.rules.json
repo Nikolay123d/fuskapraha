@@ -1,0 +1,84 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      "$uid": {
+        ".read": "(auth != null && auth.uid == $uid) || root.child('users').child(auth.uid).child('role').val() == 'admin'",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "presence": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "messages": {
+      ".read": "auth != null",
+      "$msg": {
+        ".write": "auth != null && newData.child('uid').val() == auth.uid"
+      }
+    },
+    "rentMessages": {
+      ".read": "auth != null",
+      "$msg": {
+        ".write": "auth != null && newData.child('uid').val() == auth.uid"
+      }
+    },
+    "friendRequests": {
+      "$to": {
+        ".read": "auth != null && auth.uid == $to",
+        "$from": {
+          ".write": "auth != null && auth.uid == $from"
+        }
+      }
+    },
+    "friends": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        "$other": {
+          ".write": "auth != null && (auth.uid == $uid || auth.uid == $other)"
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        "$n": {
+          ".write": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'admin')"
+        }
+      }
+    },
+    "privateMessages": {
+      "$cid": {
+        ".read": "auth != null && $cid.matches('^' + auth.uid + '_.+|.+_' + auth.uid + '$')",
+        "$m": {
+          ".write": "auth != null && (newData.child('from').val() == auth.uid)"
+        }
+      }
+    },
+    "inboxMeta": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        "$with": {
+          ".write": "auth != null && (auth.uid == $uid)"
+        }
+      }
+    },
+    "settings": {
+      "userFlags": {
+        "$uid": {
+          ".read": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'admin')",
+          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'admin'"
+        }
+      },
+      "paymentInboxSeen": {
+        "$msg": {
+          ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'admin'",
+          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'admin'"
+        }
+      }
+    }
+  }
+}
