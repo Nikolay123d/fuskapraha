@@ -1,5 +1,5 @@
 // ==== Режим фото: через Firebase Storage (true) или только URL (false)
-window.PF_USE_STORAGE = true;
+window.PF_USE_STORAGE = False;
 
 const DEFAULT_AVATAR = "public/images/avatar.jpg";
 const ADMIN_EMAIL    = "urciknikolaj642@gmail.com";
