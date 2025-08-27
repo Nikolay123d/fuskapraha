@@ -3,12 +3,32 @@
   --glass:rgba(255,255,255,.96); --muted:#64748b; --ink:#0b1220;
   --max:1020px; --avatar:44px; --header-h:66px;
   --shadow:0 18px 60px rgba(2,6,23,.35);
-  --wall-url:url('https://i.ibb.co/pr18RzG3/charles-bridge-prague.jpg');
+  /* ОБОИ: фиксированная картинка */
+  --wall-url: url("https://i.ibb.co/pr18RzG3/charles-bridge-prague.jpg");
 }
+
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;background:#071126;color:var(--ink);overflow-x:hidden}
+
+/* Fallback-цвет фона — на случай, если картинка не загрузится */
+html,body{
+  height:100%;
+  margin:0;
+  background:#071126;      /* запасной цвет */
+  color:var(--ink);
+  overflow-x:hidden;
+}
+
+/* КАРТИНКА-ОБОИ: стоит на месте, чат скроллится поверх */
+.chat-wallpaper{
+  position:fixed;
+  inset:0;
+  background: var(--wall-url) center/cover no-repeat fixed;
+  z-index:-1;
+  pointer-events:none;
+}
+
+/* Остальное без изменений */
 body{font-family:Poppins,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
-.chat-wallpaper{position:fixed; inset:0; background:var(--wall-url) center/cover no-repeat fixed; z-index:-1}
 .pf-header{position:sticky;top:0;z-index:10;padding:6px 8px;text-align:center;color:#fff;backdrop-filter:blur(3px)}
 .brandRow{display:flex;align-items:center;justify-content:center;gap:10px;min-height:var(--header-h);position:relative}
 .profile-btn,.bell-btn,.members-btn{position:absolute;top:8px;width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);color:#fff;background:rgba(0,0,0,.28)}
@@ -59,4 +79,7 @@ body{font-family:Poppins,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
 .dm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
 .error{color:#b91c1c;margin-top:6px}
 .photo-toast{position:fixed;left:50%;transform:translateX(-50%);bottom:86px;background:#dcfce7;border:1px solid #16a34a;color:#065f46;padding:8px 12px;border-radius:12px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.15);display:none;z-index:30}
-@media (max-width:640px){.chat-area{height:calc(100vh - 320px)}.chat-image{max-width:200px}}
+@media (max-width:640px){
+  .chat-area{height:calc(100vh - 320px)}
+  .chat-image{max-width:200px}
+}
