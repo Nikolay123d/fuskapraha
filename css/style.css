@@ -3,7 +3,7 @@
   --glass:rgba(255,255,255,.96); --muted:#64748b; --ink:#0b1220;
   --max:1020px; --avatar:44px; --header-h:66px;
   --shadow:0 18px 60px rgba(2,6,23,.35);
-  --wall-url:url('https://i.ibb.co/27hgtZfY/Prague.jpg');
+  --wall-url:url('https://i.ibb.co/pr18RzG3/charles-bridge-prague.jpg');
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background:#071126;color:var(--ink);overflow-x:hidden}
