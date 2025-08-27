@@ -1,0 +1,74 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "presence": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "messages": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "rentMessages": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "privateMessages": {
+      "$cid": {
+        ".read": "auth != null && $cid.contains(auth.uid)",
+        ".write": "auth != null && $cid.contains(auth.uid)"
+      }
+    },
+    "friendRequests": {
+      "$toUid": {
+        "$fromUid": {
+          ".read": "auth != null && (auth.uid === $toUid || auth.uid === $fromUid)",
+          ".write": "auth != null && (auth.uid === $toUid || auth.uid === $fromUid)"
+        }
+      }
+    },
+    "friends": {
+      "$uid": {
+        "$fid": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === $fid)",
+          ".write": "auth != null && (auth.uid === $uid || auth.uid === $fid)"
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "inboxMeta": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "settings": {
+      "userFlags": {
+        "$uid": {
+          ".read": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.uid === $uid)",
+          ".write": "auth != null && auth.token.email === 'urciknikolaj642@gmail.com'"
+        }
+      },
+      "paymentInboxSeen": {
+        "$msg": {
+          ".read": "auth != null && auth.token.email === 'urciknikolaj642@gmail.com'",
+          ".write": "auth != null && auth.token.email === 'urciknikolaj642@gmail.com'"
+        }
+      }
+    }
+  }
+}
