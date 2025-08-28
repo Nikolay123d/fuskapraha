@@ -1,1 +1,0 @@
-Place your sound files here (chat.mp3, dm.mp3, friend.mp3, system.mp3).
