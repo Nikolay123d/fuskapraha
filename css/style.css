@@ -6,7 +6,7 @@
   --wall-url: url("https://i.ibb.co/pr18RzG3/charles-bridge-prague.jpg");
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;background:#071126;color:var(--ink);overflow-x:hidden}
+html,body{height:100%;margin:0;background:transparent;color:var(--ink);overflow-x:hidden}
 body{font-family:Poppins,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
 .chat-wallpaper{position:fixed; inset:0; background:var(--wall-url) center/cover no-repeat fixed; z-index:-1; pointer-events:none}
 .pf-header{position:sticky;top:0;z-index:10;padding:6px 8px;text-align:center;color:#fff;backdrop-filter:blur(3px)}
