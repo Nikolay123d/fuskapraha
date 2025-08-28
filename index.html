@@ -5,12 +5,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Praha Fušky — соцчат</title>
 
+  <!-- Шрифти -->
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+
+  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Стилі -->
   <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
+  <!-- Фиксированные обои (прямой URL) -->
+  <div class="chat-wallpaper" aria-hidden="true"></div>
+
+  <!-- Хедер -->
   <header class="pf-header">
     <div class="brandRow">
       <button id="profileBtn" class="profile-btn" title="Профіль" aria-label="Профіль"></button>
@@ -20,6 +29,7 @@
     </div>
   </header>
 
+  <!-- Вкладки -->
   <div class="topBar">
     <div class="neon-wrap">
       <nav class="neon-tabs" role="tablist" aria-label="Вкладки">
@@ -34,10 +44,10 @@
     </div>
   </div>
 
+  <!-- Контент -->
   <main class="container" role="main">
     <!-- Чат -->
     <section id="chatTab" class="tab-content active" role="region" aria-label="Чат">
-      <div class="chat-wallpaper" aria-hidden="true"></div>
       <div class="chat-area" id="chatArea" aria-live="polite">
         <div id="messages" class="messages" role="log"></div>
       </div>
@@ -52,7 +62,6 @@
 
     <!-- Оренда -->
     <section id="rentTab" class="tab-content" role="region" aria-label="Оренда">
-      <div class="chat-wallpaper" aria-hidden="true"></div>
       <div class="chat-area" id="rentArea">
         <div id="rentMessages" class="messages" role="log"></div>
       </div>
@@ -164,35 +173,29 @@
     </div>
   </div>
 
-  <!-- Admin: Bot manager + Theme -->
-  <div id="adminPanel" class="modal">
-    <div class="panel">
-      <button class="close" id="adminClose">✖</button>
-      <h3 style="margin-top:0">Адмін-панель</h3>
-      <div class="admin-grid">
-        <section>
-          <h4>Тема сайту</h4>
-          <label>URL обоїв: <input id="wallUrlInput" placeholder="https://...jpg" /></label>
-          <div class="row">
-            <button id="wallSave" class="tab-button">Зберегти</button>
-            <button id="wallApplyLocal" class="tab-button alt">Тільки мені</button>
-          </div>
-        </section>
-        <section>
-          <h4>Боти</h4>
-          <div class="bot-form">
-            <input id="botNick" placeholder="Ім'я бота (нік)" />
-            <input id="botAvatar" placeholder="URL аватарки (опц.)" />
-            <textarea id="botText" placeholder="Текст повідомлення"></textarea>
-            <input id="botImage" placeholder="URL зображення (опц.)" />
-            <label>Інтервал (хв): <input id="botInterval" type="number" min="1" value="3" style="width:90px"></label>
-            <div class="row">
-              <button id="botCreate" class="tab-button">Створити/Оновити</button>
-              <button id="botPostOnce" class="tab-button alt">⚡️ Разово викласти</button>
-            </div>
-          </div>
-          <div id="botList"></div>
-        </section>
+  <!-- Адмін: таблиця учасників -->
+  <div id="adminUsersModal" class="modal">
+    <div class="panel" role="dialog" aria-modal="true">
+      <button class="close" id="adminUsersClose">✖</button>
+      <div class="user-badge" style="margin-bottom:8px">Список учасників</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+        <input id="userSearch" placeholder="Пошук за ніком або email…" style="flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:10px" />
+        <span class="user-badge">Усього: <b id="usersTotal">0</b></span>
+        <span class="user-badge">На екрані: <b id="usersShown">0</b></span>
+      </div>
+      <div style="flex:1;overflow:auto;border:1px solid #e5e7eb;border-radius:10px;background:#fff">
+        <table style="width:100%;border-collapse:collapse">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding:10px">Користувач</th>
+              <th style="text-align:left;padding:10px">Email</th>
+              <th style="text-align:left;padding:10px">Статус</th>
+              <th style="text-align:left;padding:10px">Преміум</th>
+              <th style="text-align:left;padding:10px">Дії</th>
+            </tr>
+          </thead>
+          <tbody id="usersTBody"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -201,9 +204,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
 
+  <!-- Твои ключи -->
   <script src="firebase/config.js"></script>
+
+  <!-- Логіка (существующие файлы проекта) -->
   <script src="js/app.js"></script>
   <script src="js/admin.js"></script>
   <script src="js/bots.js"></script>
