@@ -1,67 +1,80 @@
-{
+here{
   "rules": {
-    ".read": false,
+    ".read": true,
     ".write": false,
+
     "users": {
-      "$uid": {
-        ".read": "auth != null",
-        ".write": "auth != null && auth.uid === $uid"
-      }
+      "$uid": { ".read": true, ".write": "auth != null && auth.uid === $uid" }
     },
     "presence": {
-      "$uid": {
-        ".read": "auth != null",
-        ".write": "auth != null && auth.uid === $uid"
-      }
+      "$uid": { ".read": true, ".write": "auth != null && auth.uid === $uid" }
     },
+
     "messages": {
-      ".read": "auth != null",
-      ".write": "auth != null"
+      ".read": true,
+      "$mid": { ".write": "auth != null && newData.child('uid').val() === auth.uid" }
     },
     "rentMessages": {
-      ".read": "auth != null",
-      ".write": "auth != null"
+      ".read": true,
+      "$mid": { ".write": "auth != null && newData.child('uid').val() === auth.uid" }
     },
+
     "privateMessages": {
       ".read": "auth != null",
-      ".write": "auth != null"
+      "$cid": {
+        "$mid": { ".write": "auth != null && newData.child('from').val() === auth.uid" }
+      }
     },
+
     "friendRequests": {
       ".read": "auth != null",
-      ".write": "auth != null"
+      "$toUid": { "$fromUid": { ".write": "auth != null && $fromUid === auth.uid" } }
     },
     "friends": {
       ".read": "auth != null",
-      ".write": "auth != null"
+      "$uid": { "$other": { ".write": "auth != null && ($uid === auth.uid || $other === auth.uid)" } }
     },
+
     "notifications": {
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid"
+        "$nid": { ".write": "auth != null && auth.uid === $uid" }
       }
     },
     "inboxMeta": {
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid"
+        "$other": { ".write": "auth != null && auth.uid === $uid" }
       }
     },
+
+    "payments": {
+      "inbox": {
+        "$uid": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('settings/admins/' + auth.uid).val() === true || auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'darausoan@gmail.com')",
+          "$pid": { ".write": "auth != null && auth.uid === $uid" }
+        }
+      }
+    },
+
     "settings": {
-      "userFlags": {
+      "admins": {
         ".read": "auth != null",
-        ".write": "auth != null"
-      },
-      "paymentInboxSeen": {
-        ".read": "auth != null",
-        ".write": "auth != null"
+        ".write": "auth != null && (root.child('settings/admins/' + auth.uid).val() === true || auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'darausoan@gmail.com')"
       },
       "theme": {
         ".read": true,
-        ".write": "auth != null"
+        ".write": "auth != null && (root.child('settings/admins/' + auth.uid).val() === true || auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'darausoan@gmail.com')"
+      },
+      "userFlags": {
+        "$uid": {
+          ".read": "auth != null",
+          ".write": "auth != null && (auth.uid === $uid || root.child('settings/admins/' + auth.uid).val() === true || auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'darausoan@gmail.com')"
+        }
       },
       "bots": {
         ".read": "auth != null",
-        ".write": "auth != null"
+        ".write": "auth != null && (root.child('settings/admins/' + auth.uid).val() === true || auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'darausoan@gmail.com')"
       }
     }
   }
