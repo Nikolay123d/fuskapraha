@@ -15,7 +15,35 @@
   <!-- Стилі -->
   <link rel="stylesheet" href="css/style.css"/>
 </head>
-<body>
+<body><!-- Firebase compat (без ESM, работает из коробки с твоими js/*.js) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+<script>
+  // !!! ВАЖНО: databaseURL должен совпадать с инстансом, где у тебя правила !!!
+  const firebaseConfig = {
+    apiKey: "AIzaSyDw_bVibsVyZegH7OJyZ_yRjI3uLhroVBk",
+    authDomain: "praga-4baee.firebaseapp.com",
+    databaseURL: "https://praga-4baee-default-rtdb.firebaseio.com",
+    projectId: "praga-4baee",
+    storageBucket: "praga-4baee.firebasestorage.app",
+    messagingSenderId: "336023952536",
+    appId: "1:336023952536:web:f7437feaa25b6eadcd04ed",
+    measurementId: "G-BGDJD6R12N"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  // Делаем глобали, чтобы js/app.js, js/admin.js, js/bots.js их видели
+  window.auth = firebase.auth();
+  window.db   = firebase.database();
+
+  // (опционально) простая проверка соединения
+  db.ref('.info/connected').on('value', s => {
+    console.log('RTDB connected:', !!s.val());
+  });
+</script>
   <!-- Фиксированные обои (прямой URL) -->
   <div class="chat-wallpaper" aria-hidden="true"></div>
 
