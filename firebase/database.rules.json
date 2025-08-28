@@ -1,0 +1,68 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "presence": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "messages": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "rentMessages": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "privateMessages": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "friendRequests": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "friends": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "inboxMeta": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "settings": {
+      "userFlags": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      },
+      "paymentInboxSeen": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      },
+      "theme": {
+        ".read": true,
+        ".write": "auth != null"
+      },
+      "bots": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    }
+  }
+}

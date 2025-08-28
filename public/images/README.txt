@@ -1,0 +1,1 @@
+Place your images here (e.g., avatars, icons, wallpapers).
