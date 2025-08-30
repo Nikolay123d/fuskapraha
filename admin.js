@@ -1,1 +1,0 @@
-// Admin additions live inside Profile & Map/Help sections (handled in app.js)
