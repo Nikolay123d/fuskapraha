@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>PRÁCE CZ CHAT</title>
+  <link rel="stylesheet" href="style.css?v=30"/>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <script>
+    window.activateTab = (id) => {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach(p => p.hidden = true);
+      document.getElementById(id+"Tab").classList.add("active");
+      document.getElementById(id+"Panel").hidden = false;
+    };
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">PRÁCE CZ CHAT</div>
+    <div class="controls">
+      <label>Місто:
+        <select id="citySelect">
+          <option>Praha</option><option>Brno</option><option>Ostrava</option>
+          <option>Plzeň</option><option>Olomouc</option><option>Liberec</option>
+          <option>Ústí nad Labem</option><option>Hradec Králové</option>
+          <option>Pardubice</option><option>České Budějовice</option>
+        </select>
+      </label>
+      <div class="spacer"></div>
+      <button id="btnMembers" title="Учасники">👥</button>
+      <button id="btnBell" title="Сповіщення">🔔<span id="bellCount">0</span></button>
+      <button id="btnProfile" class="primary">Профіль</button>
+    </div>
+  </header>
+  <nav class="tabs">
+    <button id="chatTab" class="tab active" onclick="activateTab('chat')">💬 Чат</button>
+    <button id="rentTab" class="tab" onclick="activateTab('rent')">🏠 Оренда</button>
+    <button id="mapTab" class="tab" onclick="activateTab('map')">🗺️ Карта</button>
+    <button id="friendsTab" class="tab" onclick="activateTab('friends')">👥 Друзі</button>
+    <button id="dmTab" class="tab" onclick="activateTab('dm')">✉️ Особисті</button>
+    <button id="helpTab" class="tab" onclick="activateTab('help')">🆘 Допомога</button>
+  </nav>
+  <section id="chatPanel" class="panel">
+    <div class="chat-wrap">
+      <div id="chatList" class="chat-list"></div>
+      <div class="composer">
+        <label class="attach" for="chatPhoto">📷</label>
+        <input id="chatPhoto" type="file" accept="image/*"/>
+        <input id="chatText" placeholder="Повідомлення…"/>
+        <button id="chatSend" class="primary">Відправити</button>
+      </div>
+    </div>
+  </section>
+  <section id="rentPanel" class="panel" hidden>
+    <div class="chat-wrap">
+      <div id="rentList" class="chat-list"></div>
+      <div class="composer">
+        <label class="attach" for="rentPhoto">📷</label>
+        <input id="rentPhoto" type="file" accept="image/*"/>
+        <input id="rentText" placeholder="Оголошення…"/>
+        <button id="rentSend" class="primary">Відправити</button>
+      </div>
+    </div>
+  </section>
+  <section id="mapPanel" class="panel" hidden>
+    <div id="map" class="map"></div>
+    <details id="mapAdmin" class="adminOnly"><summary>Редактор карти (адмін)</summary>
+      <div class="grid2">
+        <input id="poiTitle" placeholder="Назва"/>
+        <select id="poiType"><option value="help">Допомога</option><option value="vol">Волонтери</option><option value="pharm">Аптека</option></select>
+        <input id="poiPhoto" placeholder="URL фото (опц.)"/><input id="poiLink" placeholder="Посилання (опц.)"/>
+      </div><button id="addPoi">Додати точку (центр)</button>
+    </details>
+  </section>
+  <section id="friendsPanel" class="panel" hidden>
+    <h3>Мої друзі</h3><div id="friendsList"></div>
+    <h3>Заявки</h3><div id="requestsList"></div>
+  </section>
+  <section id="dmPanel" class="panel" hidden>
+    <div class="dm-layout">
+      <aside id="dmSidebar"></aside>
+      <div class="dm-wrap">
+        <div id="dmList" class="dm-list"></div>
+        <div class="composer">
+          <label class="attach" for="dmPhoto">📎</label><input id="dmPhoto" type="file" accept="image/*"/>
+          <input id="dmText" placeholder="Повідомлення…"/><button id="dmSend" class="primary">Надіслати</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="helpPanel" class="panel" hidden>
+    <div id="helpList" class="cards"></div>
+    <details id="helpAdmin" class="adminOnly"><summary>Бот «Допомога» (адмін)</summary>
+      <div class="grid2"><input id="helpText" placeholder="Текст"/><input id="helpLink" placeholder="URL"/><input id="helpPhotoUrl" placeholder="URL фото"/></div>
+      <button id="helpPost">Опублікувати</button>
+    </details>
+  </section>
+  <div id="membersModal" class="modal" hidden><div class="modal-body"><div class="modal-head"><h3>Учасники</h3><button class="close">✖</button></div><div id="membersList" class="list"></div></div></div>
+  <div id="profileModal" class="modal" hidden>
+    <div class="modal-body"><div class="modal-head"><h3>Профіль</h3><button class="close">✖</button></div>
+      <div id="profileBox"></div><hr/>
+      <details><summary>Авторизація</summary>
+        <div class="grid2">
+          <input id="loginEmail" type="email" placeholder="Email"/><input id="loginPass" type="password" placeholder="Пароль"/>
+          <button id="btnLogin" class="primary">Увійти</button><button id="btnReg">Реєстрація</button><button id="btnGoogle">Google</button><button id="btnReset">Забули пароль?</button><button id="btnLogout">Вийти</button>
+        </div>
+      </details>
+      <details class="adminOnly"><summary>Обкладинки</summary><div class="grid2"><input id="bgGlobalUrl" placeholder="URL для всіх"/><button id="saveBgGlobal">Зберегти</button><input id="bgCityUrl" placeholder="URL для міста"/><button id="saveBgCity">Зберегти</button></div></details>
+    </div>
+  </div>
+  <div id="toastBox"></div>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="config.js?v=30"></script>
+  <script type="module" src="app.js?v=30"></script>
+</body></html>
