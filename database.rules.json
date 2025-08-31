@@ -1,0 +1,33 @@
+{
+  "rules": {
+    ".read": true,
+    "messages": {
+      "$city": {
+        ".read": true,
+        ".write": "auth != null"
+      }
+    },
+    "rentMessages": {
+      "$city": {
+        ".read": true,
+        ".write": "auth != null"
+      }
+    },
+    "settings": {
+      "wallpapers": {
+        ".read": true,
+        ".write": "auth != null && root.child('settings/adminEmail').val() == auth.token.email"
+      },
+      "adminEmail": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "usersPublic": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    }
+  }
+}

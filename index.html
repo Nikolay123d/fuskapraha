@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PRÁCE CZ CHAT</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">PRÁCE CZ CHAT</div>
+  <div class="controls">
+    <label>Місто:</label>
+    <select id="citySelect"></select>
+    <button id="btnProfile" class="btn ghost">Профіль</button>
+    <button id="btnAuthGoogle" class="btn">Увійти Google</button>
+    <button id="btnAuthEmail" class="btn ghost">Увійти Email</button>
+    <button id="btnLogout" class="btn warn hidden">Вийти</button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="chat">💬 Чат</button>
+  <button class="tab" data-tab="rent">🏠 Оренда</button>
+</nav>
+
+<main>
+  <!-- CHAT TAB -->
+  <section id="tab-chat" class="tabpane visible">
+    <ul id="chatList" class="feed"></ul>
+    <div class="composer">
+      <label class="photoBtn" for="chatPhoto" title="Додати фото">📷</label>
+      <input id="chatPhoto" type="file" accept="image/*" hidden />
+      <input id="chatText" type="text" placeholder="Повідомлення..." />
+      <button id="chatSend" class="btn">Відправити</button>
+    </div>
+  </section>
+
+  <!-- RENT TAB -->
+  <section id="tab-rent" class="tabpane">
+    <ul id="rentList" class="feed"></ul>
+    <div class="composer">
+      <label class="photoBtn" for="rentPhoto" title="Додати фото">📷</label>
+      <input id="rentPhoto" type="file" accept="image/*" hidden />
+      <input id="rentText" type="text" placeholder="Оголошення..." />
+      <button id="rentSend" class="btn">Відправити</button>
+    </div>
+  </section>
+</main>
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" class="modal hidden">
+  <div class="modalCard">
+    <div class="modalHead">
+      <h3>Профіль / Обої</h3>
+      <button id="profileClose" class="icon">✖</button>
+    </div>
+    <div class="modalBody">
+      <div class="grid">
+        <div>
+          <h4>Обої — для всіх</h4>
+          <input id="bgGlobal" type="url" placeholder="https://...jpg" />
+          <button id="saveBgGlobal" class="btn">Зберегти</button>
+        </div>
+        <div>
+          <h4>Обої — для міста</h4>
+          <input id="bgCity" type="url" placeholder="https://...jpg" />
+          <button id="saveBgCity" class="btn">Зберегти</button>
+        </div>
+      </div>
+      <div class="line"></div>
+      <p class="muted">Адмін-емейл має право змінювати обої: збережи свій email у <code>settings/adminEmail</code> в Realtime DB.</p>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- Firebase (compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
