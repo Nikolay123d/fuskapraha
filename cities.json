@@ -1,0 +1,16 @@
+{
+  "default": "Praha",
+  "list": [
+    "Praha",
+    "Brno",
+    "Ostrava",
+    "Plzeň",
+    "Liberec",
+    "Olomouc",
+    "České Budějovice",
+    "Hradec Králové",
+    "Pardubice",
+    "Zlín",
+    "Ústí nad Labem"
+  ]
+}
