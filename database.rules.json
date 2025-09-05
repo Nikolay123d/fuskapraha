@@ -1,83 +1,67 @@
 {
   "rules": {
     ".read": true,
-    "messages": {
-      "$city": {
-        "$msgId": {
-          ".write": "auth != null"
-        }
-      }
-    },
-    "rentMessages": {
-      "$city": {
-        "$msgId": {
-          ".write": "auth != null"
-        }
-      }
-    },
+
+    "messages": { "$city": { "$msgId": { ".write": "auth != null" } } },
+    "rentMessages": { "$city": { "$msgId": { ".write": "auth != null" } } },
+
     "dm": {
       "$dialogId": {
-        "$msgId": {
-          ".read": "auth != null && (auth.uid === $dialogId.split('_')[0] || auth.uid === $dialogId.split('_')[1])",
-          ".write": "auth != null && (auth.uid === $dialogId.split('_')[0] || auth.uid === $dialogId.split('_')[1])"
-        }
+        ".read":  "auth != null && root.child('dm/'+$dialogId+'/members/'+auth.uid).val() == true",
+        ".write": "auth != null && root.child('dm/'+$dialogId+'/members/'+auth.uid).val() == true"
       }
     },
-    "inboxMeta": { "$uid": { ".read": "auth != null && auth.uid === $uid", "$dialogId": { ".write": "auth != null && auth.uid === $uid" }}},
+
+    "inboxMeta": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        "$dialogId": { ".write": "auth != null && auth.uid == $uid" }
+      }
+    },
+
     "friends": {
       "$uid": {
         "$friendUid": {
-          ".read": "auth != null && (auth.uid === $uid || auth.uid === $friendUid)",
-          ".write": "auth != null && (auth.uid === $uid || auth.uid === $friendUid)"
+          ".read":  "auth != null && (auth.uid == $uid || auth.uid == $friendUid)",
+          ".write": "auth != null && (auth.uid == $uid || auth.uid == $friendUid)"
         }
       }
     },
+
     "friendRequests": {
       "$toUid": {
         "$fromUid": {
-          ".read": "auth != null && (auth.uid === $toUid || auth.uid === $fromUid)",
-          ".write": "auth != null && (auth.uid === $toUid || auth.uid === $fromUid)"
+          ".read":  "auth != null && (auth.uid == $toUid || auth.uid == $fromUid)",
+          ".write": "auth != null && (auth.uid == $toUid || auth.uid == $fromUid)"
         }
       }
     },
-    "usersPublic": {
-      "$uid": {
-        ".read": true,
-        ".write": "auth != null && auth.uid === $uid"
-      }
-    },
+
+    "usersPublic": { "$uid": { ".read": true, ".write": "auth != null && auth.uid == $uid" } },
+
     "map": {
-      "poi": {
-        "$city": {
-          "$poiId": {
-            ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
-          }
-        }
-      }
+      "poi": { "$city": { "$poiId": {
+        ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
+      }}}
     },
-    "help": {
-      "$city": {
-        "$cardId": {
-          ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
-        }
-      }
-    },
+
+    "help": { "$city": { "$cardId": {
+      ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
+    }}},
+
     "settings": {
-      "adminEmail": {
-        ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
-      },
-      "wallpapers": {
-        ".read": true,
-        ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
-      }
+      "adminEmail":  { ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()" },
+      "wallpapers": { ".read": true, ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()" }
     },
-    "notifications": {
-      "$uid": {
-        "$notifId": {
-          ".read": "auth != null && auth.uid === $uid",
-          ".write": "auth != null && auth.uid === $uid"
-        }
-      }
-    }
+
+    "notifications": { "$uid": { "$nid": {
+      ".read":  "auth != null && auth.uid == $uid",
+      ".write": "auth != null && auth.uid == $uid"
+    }}},
+
+    "bans": { "$uid": {
+      ".read":  "auth != null",
+      ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
+    }}
   }
 }
