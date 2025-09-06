@@ -1,471 +1,396 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>PRÁCE CZ</title>
-
-  <!-- External libs -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-storage-compat.js"></script>
-
-  <style>
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;color:#eaf0ff;background:#0b0c10 url('assets/bg.jpg') center/cover fixed no-repeat;overflow-x:hidden;font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto}
-.topbar{display:flex;gap:8px;align-items:center;padding:8px 10px;background:rgba(0,0,0,.55);position:sticky;top:0;z-index:50}
-.brand{font-weight:800;letter-spacing:.4px;cursor:pointer}
-.avatar-btn{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid #2b344b;margin-right:8px;cursor:pointer;background:#0e1220}
-.city{background:#0f131b;color:#fff;border:1px solid #273045;border-radius:10px;padding:6px 8px}
-.spacer{flex:1}
-.btn{background:#1a2030;color:#eaf0ff;border:1px solid #29334a;border-radius:10px;padding:8px 12px;cursor:pointer}
-.btn.small{padding:6px 8px;border-radius:8px;font-size:12px}
-.btn.quiet{background:#121725}
-.btn.primary{background:#47a3ff;border-color:#47a3ff;color:#061423}
-.btn.danger{background:#742e2e;border-color:#8b3838}
-
-.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;padding:12px}
-.home-grid .big{padding:16px;border-radius:14px;border:1px solid #2b344b;background:#121725;color:#dfe8ff;text-align:left}
-
-.card{border:1px solid #283046;border-radius:14px;background:#121624cc;padding:12px}
-.panel-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-
-.messages{height:56vh;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid #283046;border-radius:14px;background:#0e1220cc}
-.msg{display:flex;gap:8px;padding:8px;border-radius:12px;background:#0f1422;border:1px solid #1c2335}
-.msg .meta{font-size:12px;color:#9aa3b2;margin-bottom:4px}
-.msg img.content{max-width:220px;border-radius:10px;border:1px solid #222}
-.msg .avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid #2b344b}
-
-.input-row{position:sticky;bottom:8px;display:flex;gap:8px;margin-top:8px;align-items:center;background:rgba(0,0,0,.35);padding:8px;border-radius:12px;border:1px solid #283046}
-.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;border:1px dashed #3a4259;cursor:pointer;position:relative}
-.icon-btn.ok::after{content:"✔";position:absolute;right:-6px;top:-6px;background:#2ecc71;color:#021;border-radius:50%;font-size:12px;width:16px;height:16px;display:flex;align-items:center;justify-content:center;border:1px solid #093}
-.input-row input{flex:1;padding:10px;border-radius:10px;border:1px solid #283046;background:#0c101a;color:#e7efff}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
-.grid.two{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
-
-.map{height:56vh;border:1px solid #283046;border-radius:14px}
-.mapbar{display:flex;gap:8px;align-items:center;margin-top:8px}
-.leaflet-container{max-width:100%}
-
-#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;background:#0b2036;color:#fff;border:1px solid #28507a;padding:8px 14px;border-radius:12px;opacity:0;transition:opacity .25s;z-index:60}
-#toast.show{opacity:1}
-
-dialog{border:none;padding:0;background:transparent}
-dialog::backdrop{background:rgba(0,0,0,.55)}
-dialog.md .card{width:min(92vw,720px);max-height:86vh;overflow:auto}
-dialog.lg .card{width:min(94vw,980px);max-height:86vh;overflow:auto}
-.avatar-lg{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid #2b344b}
-
-@media (max-width:860px){
-  .home-grid{grid-template-columns:repeat(2,1fr)}
-  .messages{height:62vh}
+<meta charset="UTF-8" />
+<title>PRAHA FUŠKY</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-storage-compat.js"></script>
+<style>
+:root{
+ --wall:url("https://i.ibb.co/pr18RzG3/charles-bridge-prague.jpg");
+ --header-h:52px;
 }
-  </style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:sans-serif;background:transparent}
+body{overflow:hidden}
+#walls{position:fixed;inset:0;background:var(--wall) center/cover no-repeat;z-index:0}
+#app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
+header{height:var(--header-h);display:flex;align-items:center;gap:8px;padding:4px 8px;background:rgba(0,0,0,.55);color:#fff}
+header .brand{flex:1;font-weight:bold}
+header .ava{width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid #333;cursor:pointer}
+#tabs{display:flex;gap:4px;overflow-x:auto;padding:4px;background:rgba(0,0,0,.45);color:#fff}
+#tabs button{background:#222;color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;flex:1}
+#tabs button.active{background:#0a84ff}
+main{flex:1;position:relative;overflow:hidden}
+.view{position:absolute;inset:0;display:none}
+.view.active{display:flex}
+.view-column{flex:1;display:flex;flex-direction:column}
+.feed{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:8px}
+.msg{display:flex;gap:6px;background:rgba(255,255,255,.9);border-radius:10px;padding:6px}
+.msg .ava{width:30px;height:30px;border-radius:50%;object-fit:cover}
+.msg .meta{font-size:12px;color:#666}
+.composer{display:flex;gap:4px;padding:4px;background:rgba(255,255,255,.85)}
+.composer input[type=text]{flex:1;padding:6px;border-radius:6px;border:1px solid #ccc}
+.composer input[type=file]{display:none}
+.composer label{cursor:pointer}
+#notif{position:fixed;right:10px;top:10px;background:#ffc;border:1px solid #aa9;padding:8px;border-radius:6px;display:none;z-index:5}
+#notif button{float:right;border:none;background:transparent;font-size:16px;cursor:pointer}
+#profileModal,#dmModal,#adminModal,#payModal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;justify-content:center;align-items:center;z-index:6}
+.modal-card{background:#fff;border-radius:8px;max-width:420px;max-height:90%;overflow:auto;padding:12px}
+.modal-card h3{margin-top:0}
+.list{display:flex;flex-direction:column;gap:6px}
+.friend-row,.dm-row{display:flex;align-items:center;gap:8px;padding:4px;background:#f5f5f5;border-radius:6px}
+.friend-row img,.dm-row img{width:32px;height:32px;border-radius:50%;object-fit:cover}
+#adminPanel{display:flex;flex-direction:column;gap:8px}
+#adminPanel textarea{width:100%;height:60px}
+@media(max-width:600px){
+ header .brand{font-size:14px}
+ #tabs{flex-wrap:wrap}
+}
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <img id="headerAvatar" class="avatar-btn" src="assets/avatar-default.png" alt="Профіль">
-    <div class="brand" id="openProfile">PRÁCE CZ</div>
-    <select id="citySel" class="city"></select>
-    <div class="spacer"></div>
-    <button id="btnJobsOpen" class="btn small quiet" type="button">Вакансії</button>
-    <button id="btnRegister" class="btn small" type="button">Реєстрація</button>
-    <button id="btnLoginGoogle" class="btn small" type="button">Google</button>
-    <button id="btnLoginEmail" class="btn small" type="button">Email</button>
-    <button id="btnLogout" class="btn small danger" style="display:none" type="button">Вийти</button>
-  </header>
+<div id="walls"></div>
+<div id="app">
+<header>
+ <img id="myAva" class="ava" src="https://i.pravatar.cc/64" alt="">
+ <div class="brand">PRAHA FUŠKY</div>
+ <select id="citySel">
+   <option value="praha">Praha</option><option value="brno">Brno</option>
+   <option value="ostrava">Ostrava</option><option value="plzen">Plzeň</option>
+   <option value="olomouc">Olomouc</option><option value="liberec">Liberec</option>
+   <option value="usti">Ústí n/L</option><option value="hradec">Hradec</option>
+   <option value="pardubice">Pardubice</option><option value="cbudejovice">Č. Budějовice</option>
+ </select>
+</header>
+<nav id="tabs">
+ <button data-view="chat" class="active">Чат</button>
+ <button data-view="rent">Оренда</button>
+ <button data-view="map">Карта</button>
+ <button data-view="friends">Друзі</button>
+ <button data-view="dm">Особисті</button>
+ <button data-view="help">Допомога</button>
+ <button data-view="admin" class="adminBtn" style="display:none">Адмін</button>
+</nav>
+<main>
+<section id="view-chat" class="view active">
+ <div class="view-column">
+  <div id="chatFeed" class="feed"></div>
+  <div class="composer">
+   <label>📷<input id="chatPhoto" type="file" accept="image/*"></label>
+   <input id="chatInput" type="text" placeholder="Повідомлення…">
+   <button id="chatSend">➤</button>
+  </div>
+ </div>
+</section>
+<section id="view-rent" class="view">
+ <div class="view-column">
+  <div id="rentFeed" class="feed"></div>
+  <div class="composer">
+   <label>📷<input id="rentPhoto" type="file" accept="image/*"></label>
+   <input id="rentInput" type="text" placeholder="Оголошення…">
+   <button id="rentSend">➤</button>
+  </div>
+ </div>
+</section>
+<section id="view-map" class="view"><div id="map" style="flex:1"></div></section>
+<section id="view-friends" class="view">
+ <div class="view-column">
+  <h3>Заявки</h3><div id="friendReq" class="list"></div>
+  <h3>Мої друзі</h3><div id="friendsList" class="list"></div>
+ </div>
+</section>
+<section id="view-dm" class="view">
+ <div class="view-column">
+  <aside id="dmSide" class="list" style="overflow-y:auto;height:100px"></aside>
+  <div id="dmFeed" class="feed"></div>
+  <div class="composer">
+    <label>📷<input id="dmPhoto" type="file" accept="image/*"></label>
+    <input id="dmInput" type="text" placeholder="Особисте повідомлення…">
+    <button id="dmSend">➤</button>
+  </div>
+ </div>
+</section>
+<section id="view-help" class="view"><div id="helpGrid" class="feed"></div></section>
+<section id="view-admin" class="view">
+ <div id="adminPanel">
+  <h3>Керування ботами</h3>
+  <div id="botList"></div>
+  <button id="botAdd">Новий бот</button>
+  <h3>Обої</h3>
+  <input id="wallUrlInput" placeholder="URL зображення">
+  <button id="wallSave">Зберегти</button>
+  <button id="wallLocal">Тільки мені</button>
+ </div>
+</section>
+</main>
+<footer style="text-align:center;padding:6px;background:rgba(0,0,0,.55);color:#fff">
+ 2025
+</footer>
+</div>
+<div id="notif"><button id="notifClose">✖</button><span id="notifText"></span></div>
+<div id="profileModal"><div class="modal-card">
+ <h3 id="profName"></h3>
+ <img id="profAva" src="" style="width:72px;height:72px;border-radius:50%;object-fit:cover">
+ <p id="profInfo"></p>
+ <button id="profAddFriend">+ Додати</button>
+ <button id="profMsg">Написати</button>
+ <button id="profClose">Закрити</button>
+</div></div>
+<div id="dmModal"><div class="modal-card"><h3 id="dmHeader"></h3>
+ <div id="dmThread" class="feed" style="height:200px"></div>
+ <div class="composer">
+  <label>📷<input id="dmModalPhoto" type="file" accept="image/*"></label>
+  <input id="dmModalInput" type="text" placeholder="Повідомлення…">
+  <button id="dmModalSend">➤</button>
+ </div>
+ <button id="dmClose">Закрити</button>
+</div></div>
+<div id="adminModal"><div class="modal-card"><h3>Адмін</h3><div id="adminContent"></div><button id="adminClose">Закрити</button></div></div>
+<div id="payModal"><div class="modal-card">
+ <h3>Оплата</h3>
+ <p>Надішліть фото чека/оплати.</p>
+ <input id="payFile" type="file" accept="image/*">
+ <button id="paySend">Відправити</button>
+ <button id="payClose">Закрити</button>
+</div></div>
+<audio id="snd" src="notify.mp3" preload="auto"></audio>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<title>PRAHA FUŠKY</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-storage-compat.js"></script>
+<style>
+:root{
+ --wall:url("https://i.ibb.co/pr18RzG3/charles-bridge-prague.jpg");
+ --header-h:52px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:sans-serif;background:transparent}
+body{overflow:hidden}
+#walls{position:fixed;inset:0;background:var(--wall) center/cover no-repeat;z-index:0}
+#app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
+header{height:var(--header-h);display:flex;align-items:center;gap:8px;padding:4px 8px;background:rgba(0,0,0,.55);color:#fff}
+header .brand{flex:1;font-weight:bold}
+header .ava{width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid #333;cursor:pointer}
+#tabs{display:flex;gap:4px;overflow-x:auto;padding:4px;background:rgba(0,0,0,.45);color:#fff}
+#tabs button{background:#222;color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;flex:1}
+#tabs button.active{background:#0a84ff}
+main{flex:1;position:relative;overflow:hidden}
+.view{position:absolute;inset:0;display:none}
+.view.active{display:flex}
+.view-column{flex:1;display:flex;flex-direction:column}
+.feed{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:8px}
+.msg{display:flex;gap:6px;background:rgba(255,255,255,.9);border-radius:10px;padding:6px}
+.msg .ava{width:30px;height:30px;border-radius:50%;object-fit:cover}
+.msg .meta{font-size:12px;color:#666}
+.composer{display:flex;gap:4px;padding:4px;background:rgba(255,255,255,.85)}
+.composer input[type=text]{flex:1;padding:6px;border-radius:6px;border:1px solid #ccc}
+.composer input[type=file]{display:none}
+.composer label{cursor:pointer}
+#notif{position:fixed;right:10px;top:10px;background:#ffc;border:1px solid #aa9;padding:8px;border-radius:6px;display:none;z-index:5}
+#notif button{float:right;border:none;background:transparent;font-size:16px;cursor:pointer}
+#profileModal,#dmModal,#adminModal,#payModal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;justify-content:center;align-items:center;z-index:6}
+.modal-card{background:#fff;border-radius:8px;max-width:420px;max-height:90%;overflow:auto;padding:12px}
+.modal-card h3{margin-top:0}
+.list{display:flex;flex-direction:column;gap:6px}
+.friend-row,.dm-row{display:flex;align-items:center;gap:8px;padding:4px;background:#f5f5f5;border-radius:6px}
+.friend-row img,.dm-row img{width:32px;height:32px;border-radius:50%;object-fit:cover}
+#adminPanel{display:flex;flex-direction:column;gap:8px}
+#adminPanel textarea{width:100%;height:60px}
+@media(max-width:600px){
+ header .brand{font-size:14px}
+ #tabs{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div id="walls"></div>
+<div id="app">
+<header>
+ <img id="myAva" class="ava" src="https://i.pravatar.cc/64" alt="">
+ <div class="brand">PRAHA FUŠKY</div>
+ <select id="citySel">
+   <option value="praha">Praha</option><option value="brno">Brno</option>
+   <option value="ostrava">Ostrava</option><option value="plzen">Plzeň</option>
+   <option value="olomouc">Olomouc</option><option value="liberec">Liberec</option>
+   <option value="usti">Ústí n/L</option><option value="hradec">Hradec</option>
+   <option value="pardubice">Pardubice</option><option value="cbudejovice">Č. Budějовice</option>
+ </select>
+</header>
+<nav id="tabs">
+ <button data-view="chat" class="active">Чат</button>
+ <button data-view="rent">Оренда</button>
+ <button data-view="map">Карта</button>
+ <button data-view="friends">Друзі</button>
+ <button data-view="dm">Особисті</button>
+ <button data-view="help">Допомога</button>
+ <button data-view="admin" class="adminBtn" style="display:none">Адмін</button>
+</nav>
+<main>
+<section id="view-chat" class="view active">
+ <div class="view-column">
+  <div id="chatFeed" class="feed"></div>
+  <div class="composer">
+   <label>📷<input id="chatPhoto" type="file" accept="image/*"></label>
+   <input id="chatInput" type="text" placeholder="Повідомлення…">
+   <button id="chatSend">➤</button>
+  </div>
+ </div>
+</section>
+<section id="view-rent" class="view">
+ <div class="view-column">
+  <div id="rentFeed" class="feed"></div>
+  <div class="composer">
+   <label>📷<input id="rentPhoto" type="file" accept="image/*"></label>
+   <input id="rentInput" type="text" placeholder="Оголошення…">
+   <button id="rentSend">➤</button>
+  </div>
+ </div>
+</section>
+<section id="view-map" class="view"><div id="map" style="flex:1"></div></section>
+<section id="view-friends" class="view">
+ <div class="view-column">
+  <h3>Заявки</h3><div id="friendReq" class="list"></div>
+  <h3>Мої друзі</h3><div id="friendsList" class="list"></div>
+ </div>
+</section>
+<section id="view-dm" class="view">
+ <div class="view-column">
+  <aside id="dmSide" class="list" style="overflow-y:auto;height:100px"></aside>
+  <div id="dmFeed" class="feed"></div>
+  <div class="composer">
+    <label>📷<input id="dmPhoto" type="file" accept="image/*"></label>
+    <input id="dmInput" type="text" placeholder="Особисте повідомлення…">
+    <button id="dmSend">➤</button>
+  </div>
+ </div>
+</section>
+<section id="view-help" class="view"><div id="helpGrid" class="feed"></div></section>
+<section id="view-admin" class="view">
+ <div id="adminPanel">
+  <h3>Керування ботами</h3>
+  <div id="botList"></div>
+  <button id="botAdd">Новий бот</button>
+  <h3>Обої</h3>
+  <input id="wallUrlInput" placeholder="URL зображення">
+  <button id="wallSave">Зберегти</button>
+  <button id="wallLocal">Тільки мені</button>
+ </div>
+</section>
+</main>
+<footer style="text-align:center;padding:6px;background:rgba(0,0,0,.55);color:#fff">
+ 2025
+</footer>
+</div>
+<div id="notif"><button id="notifClose">✖</button><span id="notifText"></span></div>
+<div id="profileModal"><div class="modal-card">
+ <h3 id="profName"></h3>
+ <img id="profAva" src="" style="width:72px;height:72px;border-radius:50%;object-fit:cover">
+ <p id="profInfo"></p>
+ <button id="profAddFriend">+ Додати</button>
+ <button id="profMsg">Написати</button>
+ <button id="profClose">Закрити</button>
+</div></div>
+<div id="dmModal"><div class="modal-card"><h3 id="dmHeader"></h3>
+ <div id="dmThread" class="feed" style="height:200px"></div>
+ <div class="composer">
+  <label>📷<input id="dmModalPhoto" type="file" accept="image/*"></label>
+  <input id="dmModalInput" type="text" placeholder="Повідомлення…">
+  <button id="dmModalSend">➤</button>
+ </div>
+ <button id="dmClose">Закрити</button>
+</div></div>
+<div id="adminModal"><div class="modal-card"><h3>Адмін</h3><div id="adminContent"></div><button id="adminClose">Закрити</button></div></div>
+<div id="payModal"><div class="modal-card">
+ <h3>Оплата</h3>
+ <p>Надішліть фото чека/оплати.</p>
+ <input id="payFile" type="file" accept="image/*">
+ <button id="paySend">Відправити</button>
+ <button id="payClose">Закрити</button>
+</div></div>
+<audio id="snd" src="notify.mp3" preload="auto"></audio>
+// profile modal
+chatFeed.addEventListener('click',e=>{
+ const img=e.target.closest('.msg img.ava');
+ if(!img) return;
+ const uid=img.dataset.uid; if(!uid) return;
+ openProfile(uid);
+});
+function openProfile(uid){
+ db.ref('usersPublic/'+uid).get().then(s=>{
+  const v=s.val();if(!v) return;
+  document.getElementById('profName').textContent=v.nick||'User';
+  document.getElementById('profAva').src=v.ava||'https://i.pravatar.cc/64';
+  document.getElementById('profInfo').textContent=v.role||'';
+  document.getElementById('profileModal').style.display='flex';
+  document.getElementById('profAddFriend').onclick=()=>db.ref('friendRequests/'+uid+'/'+my.uid).set(true);
+  document.getElementById('profMsg').onclick=()=>openDM(uid,v.nick);
+ });
+}
+document.getElementById('profClose').onclick=()=>document.getElementById('profileModal').style.display='none';
 
-  <nav class="home-grid">
-    <button class="big" id="openChat" type="button">💬 Чат</button>
-    <button class="big" id="openRent" type="button">🏠 Оренда</button>
-    <button class="big" id="openMembers" type="button">👥 Учасники</button>
-    <button class="big" id="openMap" type="button">🗺️ Карта</button>
-    <button class="big" id="openHelp" type="button">🆘 Допомога</button>
-    <button class="big adminOnly" id="openAdmin" type="button">🛠️ Адмін</button>
-  </nav>
+// DM
+function openDM(uid,name){
+ document.getElementById('dmHeader').textContent='Листування з '+name;
+ const tId=[my.uid,uid].sort().join('_');
+ const feed=document.getElementById('dmThread');feed.innerHTML='';
+ db.ref('privateMessages/'+tId).limitToLast(100).on('child_added',snap=>{
+  const v=snap.val();const m=document.createElement('div');m.className='msg';
+  m.innerHTML=`<img class="ava" src="${v.ava||''}"><div><div class="meta">${v.nick}</div>${v.txt||''}${v.img?'<img src="'+v.img+'" style="max-width:150px;border-radius:6px">':''}</div>`;
+  feed.appendChild(m);feed.scrollTop=feed.scrollHeight;
+ });
+ document.getElementById('dmModal').style.display='flex';
+ document.getElementById('dmModalSend').onclick=async()=>{
+  const txt=document.getElementById('dmModalInput').value.trim();const file=document.getElementById('dmModalPhoto').files[0];if(!txt&&!file)return;
+  let img=null;if(file){const id='dm_'+Date.now();await st.ref('dm/'+my.uid+'/'+id).put(file);img=await st.ref('dm/'+my.uid+'/'+id).getDownloadURL();}
+  await db.ref('privateMessages/'+tId).push({uid:my.uid,nick:my.nick,ava:my.ava,txt,img,ts:Date.now()});
+  document.getElementById('dmModalInput').value='';document.getElementById('dmModalPhoto').value='';
+ };
+}
+document.getElementById('dmClose').onclick=()=>document.getElementById('dmModal').style.display='none';
 
-  <!-- Chat -->
-  <dialog id="dlgChat" class="md" onclick="if(event.target===this)this.close()">
-    <form method="dialog" class="card">
-      <header class="panel-header"><h3>Чат — <span class="muted" id="chatCity"></span></h3><div class="spacer"></div><button class="btn" value="cancel" type="button" onclick="this.closest('dialog').close()">✕</button></header>
-      <div id="chatList" class="messages"></div>
-      <div class="input-row">
-        <label class="icon-btn" id="btnChatPhoto">📷<input type="file" id="chatPhoto" accept="image/*" hidden></label>
-        <input id="chatInput" placeholder="Напишіть повідомлення…">
-        <button id="chatSend" class="btn primary" type="button">Відправити</button>
-      </div>
-    </form>
-  </dialog>
+// admin wallpaper
+function applyWall(url){document.getElementById('walls').style.backgroundImage=`url('${url}')`;localStorage.setItem('wall',url);}
+db.ref('settings/theme/wallUrl').on('value',s=>{const u=s.val();if(u)applyWall(u);else{const c=localStorage.getItem('wall');if(c)applyWall(c);}});
+document.getElementById('wallSave').onclick=async()=>{const u=document.getElementById('wallUrlInput').value.trim();if(u)await db.ref('settings/theme').set({wallUrl:u});};
+document.getElementById('wallLocal').onclick=()=>{const u=document.getElementById('wallUrlInput').value.trim();if(u)applyWall(u);};
 
-  <!-- Rent -->
-  <dialog id="dlgRent" class="md" onclick="if(event.target===this)this.close()">
-    <form method="dialog" class="card">
-      <header class="panel-header"><h3>Оренда — <span class="muted" id="rentCity"></span></h3><div class="spacer"></div><button class="btn" value="cancel" type="button" onclick="this.closest('dialog').close()">✕</button></header>
-      <div id="rentList" class="messages"></div>
-      <div class="input-row">
-        <label class="icon-btn" id="btnRentPhoto">📷<input type="file" id="rentPhoto" accept="image/*" hidden></label>
-        <input id="rentInput" placeholder="Оголошення про оренду…">
-        <button id="rentSend" class="btn primary" type="button">Опублікувати</button>
-      </div>
-    </form>
-  </dialog>
+// admin bot panel (basic)
+const botsRef=db.ref('settings/bots');
+botsRef.on('value',s=>{
+ const data=s.val()||{};const list=document.getElementById('botList');list.innerHTML='';
+ Object.keys(data).forEach(id=>{
+  const b=data[id];
+  const div=document.createElement('div');div.innerHTML=`<textarea data-id="${id}">${b.text||''}</textarea>`;
+  list.appendChild(div);
+ });
+});
+document.getElementById('botAdd').onclick=()=>{const id=Date.now();botsRef.child(id).set({text:'Новий бот',interval:30});};
 
-  <!-- Members -->
-  <dialog id="dlgMembers" class="lg" onclick="if(event.target===this)this.close()">
-    <form method="dialog" class="card">
-      <header class="panel-header"><h3>Учасники</h3><div class="spacer"></div><button class="btn" value="cancel" type="button" onclick="this.closest('dialog').close()">✕</button></header>
-      <div class="panel-header">
-        <input id="mSearch" class="inline" placeholder="Пошук ніку…">
-        <select id="mFilterLocale" class="inline"><option value="">Мова: всі</option><option value="cs">Česky</option><option value="uk">Українська</option></select>
-        <select id="mFilterPlan" class="inline"><option value="">План: всі</option><option>VIP</option><option>Premium</option><option>Premium+</option><option>Free</option></select>
-        <div class="spacer"></div>
-        <button id="seedBtn" class="btn small adminOnly" type="button">+120 профілів</button>
-      </div>
-      <div id="membersList" class="grid"></div>
-    </form>
-  </dialog>
-
-  <!-- Map -->
-  <dialog id="dlgMap" class="lg" onclick="if(event.target===this)this.close()">
-    <form method="dialog" class="card">
-      <header class="panel-header"><h3>Карта — <span class="muted" id="mapCity"></span></h3><div class="spacer"></div><button class="btn" value="cancel" type="button" onclick="this.closest('dialog').close()">✕</button></header>
-      <div id="map" class="map"></div>
-      <div class="mapbar adminOnly">
-        <input id="poiTitle" placeholder="Назва точки">
-        <input id="poiLink" placeholder="Посилання">
-        <label class="icon-btn" id="btnPoiPhoto">📷<input type="file" id="poiPhoto" accept="image/*" hidden></label>
-        <button id="poiAdd" class="btn small" type="button">Додати</button>
-      </div>
-    </form>
-  </dialog>
-
-  <!-- Help -->
-  <dialog id="dlgHelp" class="lg" onclick="if(event.target===this)this.close()">
-    <form method="dialog" class="card">
-      <header class="panel-header"><h3>Допомога</h3><div class="spacer"></div><button class="btn" value="cancel" type="button" onclick="this.closest('dialog').close()">✕</button></header>
-      <div id="helpList" class="cards"></div>
-      <footer class="panel-header adminOnly">
-        <button id="helpAddBtn" class="btn small" type="button">+ Картка</button>
-      </footer>
-    </form>
-  </dialog>
-
-  <!-- Admin -->
-  <dialog id="dlgAdmin" class="lg" onclick="if(event.target===this)this.close()">
-    <form method="dialog" class="card">
-      <header class="panel-header"><h3>Адмін</h3><div class="spacer"></div><button class="btn" value="cancel" type="button" onclick="this.closest('dialog').close()">✕</button></header>
-      <div class="grid two">
-        <div class="card">
-          <h4>Обої</h4>
-          <input id="wallGlobal" placeholder="URL для всіх">
-          <button id="saveWallGlobal" class="btn small" type="button">Зберегти</button>
-          <div class="mt8"></div>
-          <input id="wallCity" placeholder="URL для міста">
-          <button id="saveWallCity" class="btn small" type="button">Зберегти</button>
-          <div class="mt8"></div>
-          <label class="icon-btn" id="btnWallFile">📷<input type="file" id="wallFile" accept="image/*" hidden></label>
-        </div>
-        <div class="card">
-          <h4>Ключ карти</h4>
-          <input id="mapsKey" placeholder="(секрет) settings/googleMapsKey">
-          <button id="saveMapsKey" class="btn small" type="button">Зберегти</button>
-        </div>
-        <div class="card">
-          <h4>Боти</h4>
-          <input id="botNick" placeholder="Нік бота">
-          <select id="botLocale"><option value="cs">Česky</option><option value="uk">Українська</option></select>
-          <button id="createBot" class="btn small" type="button">Створити бота</button>
-        </div>
-        <div class="card">
-          <h4>Масові дії</h4>
-          <button id="actionPremiumSelected" class="btn small" type="button">Premium обраним</button>
-          <button id="actionBanSelected" class="btn small danger" type="button">Бан обраним</button>
-        </div>
-      </div>
-    </form>
-  </dialog>
-
-  <!-- Jobs -->
-  <dialog id="jobsDlg" onclick="if(event.target===this)this.close()">
-    <form method="dialog" id="jobForm" class="card">
-      <header class="panel-header"><h3>Вакансії — <span id="jobsCity"></span></h3><div class="spacer"></div>
-        <button id="jobAddBtn" class="btn small adminOnly" type="button">+ Додати</button>
-        <button id="jobAddBtn2" class="btn small employerOnly" style="display:none" type="button">+ Додати</button>
-        <button class="btn" value="cancel" type="button" onclick="this.closest('dialog').close()">✕</button>
-      </header>
-      <div id="jobsList" class="cards"></div>
-    </form>
-  </dialog>
-
-  <!-- New Job -->
-  <dialog id="jobNewDlg" onclick="if(event.target===this)this.close()">
-    <form method="dialog" id="jobNewForm" class="card" style="max-width:520px">
-      <h3>Нова вакансія</h3>
-      <input id="jobTitle" placeholder="Посада" required>
-      <input id="jobSalary" placeholder="Оплата (CZK/міт, договір...)">
-      <input id="jobContact" placeholder="Контакт (телеграм/тел/email)">
-      <textarea id="jobDesc" placeholder="Опис…"></textarea>
-      <label class="icon-btn" id="btnJobPhoto">📷<input type="file" id="jobPhoto" accept="image/*" hidden></label>
-      <menu>
-        <button class="btn" value="cancel" type="button" onclick="this.closest('dialog').close()">Скасувати</button>
-        <button class="btn primary" value="ok" type="button" id="jobSaveBtn">Зберегти</button>
-      </menu>
-    </form>
-  </dialog>
-
-  <!-- Profile -->
-  <dialog id="profileDlg" onclick="if(event.target===this)this.close()">
-    <form method="dialog" class="card" id="profileForm">
-      <div class="prof-header">
-        <img id="profAvatar" class="avatar-lg" src="assets/avatar-default.png" alt="">
-        <div><h3 id="profNick">Профіль</h3><div id="profMeta" class="muted"></div></div>
-      </div>
-      <div class="panel-header">
-        <button class="btn" id="btnProfAdd" type="button">Додати в друзі</button>
-        <div class="spacer"></div>
-        <button class="btn" value="cancel" type="button" onclick="this.closest('dialog').close()">✕</button>
-      </div>
-      <section class="card" style="margin-bottom:10px">
-        <div class="grid two">
-          <input id="profAvatarUrl" placeholder="URL аватарки (jpg/png)">
-          <button id="btnSaveAvatar" class="btn small" type="button">Зберегти аватар</button>
-        </div>
-        <p class="muted">Після збереження оновіть сторінку, якщо фото відразу не змінилося.</p>
-      </section>
-      <h4>ЛС</h4>
-      <div id="dmThread" class="messages"></div>
-      <div class="input-row">
-        <label class="icon-btn" id="btnDmPhoto">📎<input type="file" id="dmPhoto" accept="image/*" hidden></label>
-        <input id="dmInput" placeholder="Ваше повідомлення…">
-        <button id="dmSend" class="btn primary" type="button">Надіслати</button>
-      </div>
-    </form>
-  </dialog>
-
-  <!-- Register -->
-  <dialog id="regDlg" onclick="if(event.target===this)this.close()">
-    <form method="dialog" id="regForm" class="card" style="max-width:520px">
-      <h3>Швидка реєстрація</h3>
-      <p class="muted">Лист із активацією може потрапити у <b style="color:#ff6b6b">СПАМ</b>.</p>
-      <div class="grid two">
-        <select id="regRole" required><option value="seeker">Шукаю роботу</option><option value="employer">Роботодавець</option></select>
-        <select id="regLocale" required><option value="uk">Українська</option><option value="cs">Čeština</option></select>
-      </div>
-      <input id="regNick" placeholder="Нік" required>
-      <input id="regEmail" type="email" placeholder="Email" required>
-      <input id="regPass" type="password" placeholder="Пароль" required>
-      <p class="muted">Без підтвердження пошти — користування <b>6 гдин</b>, потім буде запит підтвердити email.</p>
-      <menu><button class="btn" value="cancel" type="button" onclick="this.closest('dialog').close()">Скасувати</button><button class="btn primary" value="ok" type="button" id="regSaveBtn">Зареєструватися</button></menu>
-    </form>
-  </dialog>
-
-  <audio id="sndSend" src="assets/send.wav" preload="auto"></audio>
-  <audio id="sndPing" src="assets/ping.wav" preload="auto"></audio>
-  <div id="toast"></div>
-
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <!-- Config -->
-  <script>
-window.FB_CONFIG = {
-  apiKey: "AIzaSyDw_bVibsVyZegH7OJyZ_yRjI3uLhroVBk",
-  authDomain: "praga-4baee.firebaseapp.com",
-  databaseURL: "https://praga-4baee-default-rtdb.firebaseio.com",
-  projectId: "praga-4baee",
-  storageBucket: "praga-4baee.firebasestorage.app",
-  messagingSenderId: "336023952536",
-  appId: "1:336023952536:web:f7437feaa25b6eadcd04ed",
-  measurementId: "G-BGDJD6R12N"
+// limits & payment
+let txtCount=0, imgCount=0;
+async function checkLimit(){if(txtCount>=200||imgCount>=100){document.getElementById('payModal').style.display='flex';notify('Ліміт вичерпано. Оплатіть.');return true;}return false;}
+document.getElementById('chatSend').addEventListener('click',()=>{txtCount++;checkLimit();});
+document.getElementById('chatPhoto').addEventListener('change',()=>{imgCount++;checkLimit();});
+document.getElementById('paySend').onclick=async()=>{
+ const f=document.getElementById('payFile').files[0];if(!f)return;
+ const id='pay_'+Date.now();await st.ref('payments/'+my.uid+'/'+id).put(f);
+ await db.ref('payments/inbox/'+my.uid+'/'+id).set({uid:my.uid,ts:Date.now()});
+ txtCount=0;imgCount=0;document.getElementById('payModal').style.display='none';notify('Чек надіслано. Очікуйте підтвердження.');
 };
-firebase.initializeApp(window.FB_CONFIG);
-window.auth = firebase.auth();
-window.db = firebase.database();
-window.storage = firebase.storage();
-window.ADMIN_EMAIL = "urciknikolaj642@gmail.com";
-window.SOUND_URLS = {chat:"",chat2:"",friend:"",dm:"",notif:""};
-window.DEFAULT_WALLPAPER = "https://i.ibb.co/pr18RzG3/charles-bridge-prague.jpg";
-window.CITIES = ["Praha","Brno","Ostrava","Plzen","Olomouc","Liberec","Usti","Hradec","Pardubice","CBudejovice"];
-  </script>
+document.getElementById('payClose').onclick=()=>document.getElementById('payModal').style.display='none';
 
-  <!-- App -->
-  <script>
-(function(){
-  const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
-  const auth = window.auth, db=window.db, st=window.storage;
-  const toast=(t)=>{const el=$("#toast"); el.textContent=t; el.classList.add('show'); clearTimeout(window.__t); window.__t=setTimeout(()=>el.classList.remove('show'),2400);};
-
-  // Header avatar
-  const headerAvatar = document.getElementById('headerAvatar');
-  if(headerAvatar){ headerAvatar.addEventListener('click', ()=>{
-    const u=auth.currentUser; if(!u || u.isAnonymous){ $("#regDlg").showModal(); return; }
-    openProfile(u.uid);
-  }); }
-
-  // Cities
-  let currentCity = localStorage.getItem('pf_city') || (window.CITIES?.[0] || 'Praha');
-  $("#citySel").innerHTML=(window.CITIES||["Praha"]).map(c=>`<option ${c===currentCity?'selected':''}>${c}</option>`).join('');
-  $("#citySel").addEventListener('change', ()=>{ currentCity=$("#citySel").value; localStorage.setItem('pf_city', currentCity); applyWallpaper(); });
-
-  // Auth
-  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
-  function blockedByVerification(u){
-    if(!u) return true;
-    if(u.isAnonymous) return false;
-    if(u.emailVerified) return false;
-    const created = new Date(u.metadata.creationTime||Date.now()).getTime();
-    return (Date.now()-created) > (window.GRACE_MINUTES||360)*60000;
-  }
-  async function ensureAnon(){ if(!auth.currentUser){ try{ await auth.signInAnonymously(); }catch(_){} } }
-  const gate=()=>{ const u=auth.currentUser; if(!u) return false; if(blockedByVerification(u)){ $("#verifyDlg").showModal(); return true; } return false; };
-
-  // Top buttons
-  $("#btnJobsOpen").addEventListener('click', ()=>{ $("#jobsCity").textContent=currentCity; $("#jobsDlg").showModal(); });
-  $("#btnRegister").addEventListener('click', ()=>$("#regDlg").showModal());
-  $("#btnLoginGoogle").addEventListener('click', async()=>{const p=new firebase.auth.GoogleAuthProvider(); try{await auth.signInWithPopup(p);}catch(e){await auth.signInWithRedirect(p);} });
-  $("#btnLoginEmail").addEventListener('click', async()=>{const e=prompt('Email:'), p=prompt('Пароль:'); if(!e||!p) return; try{await auth.signInWithEmailAndPassword(e,p);}catch(err){ if(confirm('Створити акаунт?')) await auth.createUserWithEmailAndPassword(e,p); else alert(err.message);} });
-  $("#btnLogout").addEventListener('click', ()=>auth.signOut());
-
-  // Registration
-  $("#regSaveBtn").addEventListener('click', async ()=>{
-    const role=$("#regRole").value, locale=$("#regLocale").value, nick=$("#regNick").value.trim(), email=$("#regEmail").value.trim(), pass=$("#regPass").value;
-    if(!email||!pass||!nick){ alert('Заповніть всі поля'); return; }
-    try{
-      await auth.createUserWithEmailAndPassword(email,pass);
-      await auth.currentUser.updateProfile({displayName:nick});
-      await db.ref('usersPublic/'+auth.currentUser.uid).set({nick,email,locale,role,isBot:false,ts:firebase.database.ServerValue.TIMESTAMP});
-      $("#regDlg").close(); toast('Зареєстровано');
-    }catch(e){ alert(e.message); }
-  });
-
-  // State listener
-  let isAdmin=false;
-  auth.onAuthStateChanged(async(u)=>{
-    const btnLogout=$("#btnLogout"), btnRegister=$("#btnRegister"), btnLoginEmail=$("#btnLoginEmail"), btnLoginGoogle=$("#btnLoginGoogle");
-    if(!u){ btnLogout.style.display='none'; btnRegister.style.display=''; btnLoginEmail.style.display=''; btnLoginGoogle.style.display=''; return; }
-    btnLogout.style.display=''; btnRegister.style.display='none'; btnLoginEmail.style.display='none'; btnLoginGoogle.style.display='none';
-    $("#headerAvatar").src=u.photoURL||'assets/avatar-default.png';
-    isAdmin = !!(u && u.email && u.email.toLowerCase()===(window.ADMIN_EMAIL||'').toLowerCase());
-    const up=await db.ref('usersPublic/'+u.uid).get();
-    if(up.exists()){ const v=up.val(); my.locale=v.locale||'uk'; my.nick=v.nick||my.nick; my.role=v.role||'seeker'; my.photoURL=v.photoURL||u.photoURL||null; }
-    else { my.locale='uk'; my.nick=u.displayName||('Користувач '+(u.uid||'').slice(0,6)); my.role='seeker';
-      await db.ref('usersPublic/'+u.uid).set({nick:my.nick,email:u.email||null,photoURL:u.photoURL||null,locale:my.locale,role:my.role,isBot:false, ts:firebase.database.ServerValue.TIMESTAMP});
-    }
-    setupPresence(u);
-    if(blockedByVerification(u)) $("#verifyDlg").showModal();
-    updateRoleUI(); applyWallpaper();
-  });
-
-  async function applyWallpaper(){
-    try{
-      const s=await db.ref('settings/wallpapers/city/'+currentCity).get();
-      const url=s.val();
-      if(url){ document.body.style.backgroundImage=`url('${url}')`; return; }
-      const t=await db.ref('settings/wallpapers/global').get(); const u=t.val();
-      document.body.style.backgroundImage = u?`url('${u}')`:`url('${window.DEFAULT_WALLPAPER || "assets/bg.jpg"}')`;
-    }catch(_){
-      document.body.style.backgroundImage = `url('${window.DEFAULT_WALLPAPER || "assets/bg.jpg"}')`;
-    }
-  }
-
-  async function upFile(inputEl){
-    const f = inputEl.files[0]; if(!f) return null;
-    const id='p_'+Date.now()+'_'+Math.random().toString(36).slice(2);
-    const ref = st.ref('uploads/'+(auth.currentUser?.uid||'anon')+'/'+id);
-    await ref.put(f); const url = await ref.getDownloadURL(); return url;
-  }
-  const esc=(s='')=>s.replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
-  function msgElement(v){
-    const uid=v.uid; const avatar = v.photoAvatar || v.avatarUrl || v.photoURL || 'assets/avatar-default.png';
-    const el=document.createElement('div'); el.className='msg';
-    const nick = v.nick || v.email || (uid?('user-'+uid.slice(0,6)):'Гість');
-    const txt = (my.locale && v.translations && v.translations[my.locale]) ? v.translations[my.locale] : (v.text||'');
-    el.innerHTML = `<img class="avatar" src="${avatar}"><div style="flex:1"><div class="meta"><a href="#" data-uid="${uid||''}" class="nick">${esc(nick)}</a> · ${new Date(v.ts||Date.now()).toLocaleString()}</div><div>${esc(txt)}</div>${v.photoUrl?`<div><img class="content" src="${v.photoUrl}" loading="lazy"></div>`:''}</div>`;
-    const a = el.querySelector('.nick'); if(uid && a){ a.addEventListener('click', (ev)=>{ev.preventDefault(); openProfile(uid);} ); }
-    return el;
-  }
-
-  // Listeners life-cycle
-  let live = { chat:null, rent:null, dm:null };
-  function clearLive(name){ try{ if(live[name]) live[name].off(); }catch(_){} live[name]=null; }
-
-  // Openers
-  $("#openChat").addEventListener('click', ()=>{ $("#chatCity").textContent=currentCity; $("#dlgChat").showModal(); loadChat(); });
-  $("#openRent").addEventListener('click', ()=>{ $("#rentCity").textContent=currentCity; $("#dlgRent").showModal(); loadRent(); });
-  $("#openMembers").addEventListener('click', ()=>{ $("#dlgMembers").showModal(); loadMembers(); });
-  $("#openMap").addEventListener('click', ()=>{ $("#mapCity").textContent=currentCity; $("#dlgMap").showModal(); openMapDlg(); });
-  $("#openHelp").addEventListener('click', ()=>{ $("#dlgHelp").showModal(); loadHelp(); });
-  $("#openAdmin").addEventListener('click', ()=>{ if(!isAdmin) return alert('Лише адмін'); $("#dlgAdmin").showModal(); });
-
-  let my={nick:'Анонім',locale:'uk',role:'seeker',photoURL:null};
-  function updateRoleUI(){
-    $$(".adminOnly").forEach(el=>el.style.display=isAdmin?'':'none');
-    $$(".employerOnly").forEach(el=>el.style.display=my.role==='employer'?'':'none');
-  }
-
-  async function setupPresence(u){
-    try{
-      const ref = db.ref('presence/'+u.uid);
-      ref.set(true);
-      ref.onDisconnect().set(false);
-    }catch(e){}
-  }
-
-  // ... (the rest of app.js remains unchanged; due to space, assume continuation with chat/rent/map/help logic, admin functions, and profile handling) ...
-  // For brevity in this answer, remaining ~120 lines of original app.js are unchanged and included in your actual file.
-
-  (async function(){ await ensureAnon(); applyWallpaper(); })();
-})();
-  </script>
-
-  <!-- Bots -->
-  <script>
-// Interval bot loop (admin only)
-let botTimer=null;
-async function startBotLoop(){
-  if(botTimer) clearInterval(botTimer);
-  const poll = async ()=>{
-    const s=await db.ref('settings/bots/chat').get(); if(!s.exists()) return;
-    const b=s.val(); if(!b.enabled) return;
-    const now=Date.now(); const last=(await db.ref('settings/bots/chatLast').get()).val()||0;
-    const mins=Math.max(1,parseInt(b.interval||30,10));
-    const city=(b.city||'praha');
-    if(now-last>mins*60*1000){ await db.ref('messages/'+city).push({text:b.text||null,photo:b.image||null,by:'__bot__',ts:now}); await db.ref('settings/bots/chatLast').set(now); }
-  };
-  botTimer=setInterval(poll, 15000); poll();
-}
-auth.onAuthStateChanged(u=>{ if(u && u.email===window.ADMIN_EMAIL) startBotLoop(); else if(botTimer){ clearInterval(botTimer); botTimer=null; } });
-
-// Quota reminder bot (admin only)
-let quotaTimer=null;
-async function startQuotaBotLoop2(){
-  if(quotaTimer) clearInterval(quotaTimer);
-  const tick = async ()=>{
-    try{
-      // Admin-only: read limits and nudge users with low quotas (≤10%)
-      const sn = await db.ref('limits').get();
-      const lims = sn.val()||{};
-      const usersSn = await db.ref('usersPublic').get();
-      const up = usersSn.val()||{};
-      for(const uid in lims){
-        const q = lims[uid]||{};
-        const low = ((q.text||0)<=20) || ((q.photo||0)<=10);
-        if(low && window.OWNER_UID){
-          const tid = [window.OWNER_UID, uid].sort().join('_');
-          await db.ref('privateMessages/'+tid).push({text:'У вас залишилось мало лімітів. Оформіть підписку у профілі → Оплати.', by:'__bot__', ts:Date.now()});
-          await db.ref('inboxMeta/'+uid+'/'+window.OWNER_UID).set({ts:Date.now()});
-          await db.ref('inboxMeta/'+window.OWNER_UID+'/'+uid).set({ts:Date.Now()});
-        }
-      }
-    }catch(e){ /* silent */ }
-  };
-  quotaTimer = setInterval(tick, 60000); // 1 хв.
-}
-auth.onAuthStateChanged(u=>{ if(u && u.email===window.ADMIN_EMAIL){ startQuotaBotLoop2(); } else if(quotaTimer){ clearInterval(quotaTimer); quotaTimer=null; } });
-  </script>
+</script>
 </body>
 </html>
