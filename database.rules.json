@@ -1,0 +1,38 @@
+{
+  "rules": {
+    ".read": true,
+    "messages": {
+      "$city": {
+        "$msgId": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    "rentMessages": {
+      "$city": {
+        "$msgId": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    "dm": {
+      "$dialogId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    "usersPublic": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "settings": {
+      ".read": true,
+      "wallpapers": {
+        ".read": true,
+        ".write": "auth != null"
+      }
+    }
+  }
+}
