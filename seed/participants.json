@@ -1,0 +1,962 @@
+[
+  {
+    "uid": "seed_000",
+    "nick": "Дмитро Shevchenko",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_001",
+    "nick": "Максим Prochazka",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_002",
+    "nick": "Tereza Bondarenko",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_003",
+    "nick": "Tereza Horak",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_004",
+    "nick": "Андрій Kovalenko",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_005",
+    "nick": "Олена Melnyk",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_006",
+    "nick": "Karel Melnyk",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_007",
+    "nick": "Martin Shevchenko",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_008",
+    "nick": "Софія Shevchenko",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_009",
+    "nick": "Андрій Horak",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_010",
+    "nick": "Олена Horak",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_011",
+    "nick": "Дмитро Melnyk",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_012",
+    "nick": "Софія Dvorak",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_013",
+    "nick": "Ірина Horak",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_014",
+    "nick": "Martin Dvorak",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_015",
+    "nick": "Martin Svoboda",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_016",
+    "nick": "Олена Horak",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_017",
+    "nick": "Barbora Bondarenko",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_018",
+    "nick": "Lukas Havlicek",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_019",
+    "nick": "Lucie Shevchenko",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_020",
+    "nick": "Jana Melnyk",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_021",
+    "nick": "Олег Svoboda",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_022",
+    "nick": "Petr Dvorak",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_023",
+    "nick": "Tomas Melnyk",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_024",
+    "nick": "Софія Dvorak",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_025",
+    "nick": "Alzbeta Kovalenko",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_026",
+    "nick": "Тарас Novak",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_027",
+    "nick": "Аліна Dvorak",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_028",
+    "nick": "Олена Horak",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_029",
+    "nick": "Tereza Horak",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_030",
+    "nick": "Дмитро Novak",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_031",
+    "nick": "Karel Havlicek",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_032",
+    "nick": "Андрій Bondarenko",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_033",
+    "nick": "Martin Havlicek",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_034",
+    "nick": "Дмитро Melnyk",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_035",
+    "nick": "Tomas Bondarenko",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_036",
+    "nick": "Lukas Prochazka",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_037",
+    "nick": "Alzbeta Svoboda",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_038",
+    "nick": "Олег Svoboda",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_039",
+    "nick": "Андрій Dvorak",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_040",
+    "nick": "Jana Horak",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_041",
+    "nick": "Karel Horak",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_042",
+    "nick": "Тарас Kovalenko",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_043",
+    "nick": "Karel Svoboda",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_044",
+    "nick": "Олена Melnyk",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_045",
+    "nick": "Дмитро Horak",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_046",
+    "nick": "Дмитро Melnyk",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_047",
+    "nick": "Олег Dvorak",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_048",
+    "nick": "Tereza Svoboda",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_049",
+    "nick": "Аліна Dvorak",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_050",
+    "nick": "Barbora Melnyk",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_051",
+    "nick": "Олена Melnyk",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_052",
+    "nick": "Tomas Prochazka",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_053",
+    "nick": "Tomas Havlicek",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_054",
+    "nick": "Lukas Dvorak",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_055",
+    "nick": "Tereza Dvorak",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_056",
+    "nick": "Андрій Prochazka",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_057",
+    "nick": "Софія Novak",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_058",
+    "nick": "Дмитро Kovalenko",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_059",
+    "nick": "Petr Bondarenko",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_060",
+    "nick": "Тарас Svoboda",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_061",
+    "nick": "Lucie Prochazka",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_062",
+    "nick": "Alzbeta Horak",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_063",
+    "nick": "Олег Shevchenko",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_064",
+    "nick": "Андрій Shevchenko",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_065",
+    "nick": "Lucie Horak",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_066",
+    "nick": "Lukas Novak",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_067",
+    "nick": "Дмитро Shevchenko",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_068",
+    "nick": "Софія Havlicek",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_069",
+    "nick": "Тарас Melnyk",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_070",
+    "nick": "Barbora Svoboda",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_071",
+    "nick": "Karel Horak",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_072",
+    "nick": "Martin Kovalenko",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_073",
+    "nick": "Jana Bondarenko",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_074",
+    "nick": "Олена Prochazka",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_075",
+    "nick": "Alzbeta Novak",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_076",
+    "nick": "Lucie Horak",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_077",
+    "nick": "Martin Melnyk",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_078",
+    "nick": "Karel Melnyk",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_079",
+    "nick": "Lucie Novak",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_080",
+    "nick": "Наталія Havlicek",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_081",
+    "nick": "Martin Svoboda",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_082",
+    "nick": "Дмитро Shevchenko",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_083",
+    "nick": "Наталія Bondarenko",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_084",
+    "nick": "Софія Horak",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_085",
+    "nick": "Олег Kovalenko",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_086",
+    "nick": "Karel Shevchenko",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_087",
+    "nick": "Олег Dvorak",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_088",
+    "nick": "Андрій Svoboda",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_089",
+    "nick": "Martin Dvorak",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_090",
+    "nick": "Олена Melnyk",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_091",
+    "nick": "Barbora Havlicek",
+    "locale": "cs",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_092",
+    "nick": "Lukas Prochazka",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_093",
+    "nick": "Lukas Melnyk",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_094",
+    "nick": "Андрій Horak",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_095",
+    "nick": "Наталія Kovalenko",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_096",
+    "nick": "Petr Kovalenko",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_097",
+    "nick": "Martin Shevchenko",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_098",
+    "nick": "Barbora Bondarenko",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_099",
+    "nick": "Софія Shevchenko",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_100",
+    "nick": "Martin Bondarenko",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_101",
+    "nick": "Tomas Shevchenko",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_102",
+    "nick": "Ірина Svoboda",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_103",
+    "nick": "Ірина Dvorak",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_104",
+    "nick": "Андрій Bondarenko",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_105",
+    "nick": "Олег Havlicek",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_106",
+    "nick": "Андрій Kovalenko",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_107",
+    "nick": "Barbora Bondarenko",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_108",
+    "nick": "Олена Novak",
+    "locale": "cs",
+    "plan": "Free",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_109",
+    "nick": "Lukas Novak",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_110",
+    "nick": "Аліна Shevchenko",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_111",
+    "nick": "Андрій Prochazka",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_112",
+    "nick": "Lukas Shevchenko",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_113",
+    "nick": "Jana Melnyk",
+    "locale": "uk",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_114",
+    "nick": "Софія Havlicek",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_115",
+    "nick": "Олена Shevchenko",
+    "locale": "uk",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_116",
+    "nick": "Аліна Novak",
+    "locale": "uk",
+    "plan": "Premium+",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_117",
+    "nick": "Олег Dvorak",
+    "locale": "cs",
+    "plan": "VIP",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_118",
+    "nick": "Karel Novak",
+    "locale": "cs",
+    "plan": "Premium",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_119",
+    "nick": "Ірина Dvorak",
+    "locale": "uk",
+    "plan": "Free",
+    "isBot": false,
+    "status": "online"
+  }
+]
