@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="uk">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DIAG</title>
+<link rel="stylesheet" href="style.css">
+<div class="card" style="max-width:900px;margin:16px auto">
+  <h2>Самодіагностика</h2>
+  <div id="out"></div>
+  <div class="row">
+    <button id="btnDB" class="primary">Перевірити Realtime DB</button>
+    <button id="btnAuth" class="secondary">Google Sign-In</button>
+  </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="config.js"></script>
+<script>
+const o=document.getElementById('out');
+function log(msg){ const d=document.createElement('div'); d.textContent=msg; o.appendChild(d); }
+try{
+  firebase.initializeApp(window.APP_CONFIG.firebase);
+  log('✅ Firebase ініціалізовано');
+}catch(e){ log('❌ '+e.message); }
+
+const db=firebase.database(); const auth=firebase.auth();
+document.getElementById('btnDB').onclick=async ()=>{
+  log('Читаю settings/adminEmail...');
+  try{
+    const s=await db.ref('settings/adminEmail').get();
+    if(s.exists()) log('✅ adminEmail: '+s.val()); else log('⚠️ adminEmail поки немає');
+  }catch(e){ log('❌ DB: '+e.message); }
+};
+document.getElementById('btnAuth').onclick=async ()=>{
+  log('Cпроба входу через Google (popup→redirect)...');
+  try{
+    const p=new firebase.auth.GoogleAuthProvider();
+    try{ await auth.signInWithPopup(p); log('✅ Увійшли як '+(auth.currentUser?.email||auth.currentUser?.uid)); }
+    catch(e){ log('⚠️ Popup: '+e.message); await auth.signInWithRedirect(p); }
+  }catch(e){ log('❌ Auth: '+e.message); }
+};
+</script>
