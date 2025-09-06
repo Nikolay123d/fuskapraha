@@ -1,0 +1,51 @@
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;color:#eaf0ff;background:#0b0c10 url('assets/bg.jpg') center/cover fixed no-repeat;overflow-x:hidden;font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto}
+.topbar{display:flex;gap:8px;align-items:center;padding:8px 10px;background:rgba(0,0,0,.55);position:sticky;top:0;z-index:50}
+.brand{font-weight:800;letter-spacing:.4px;cursor:pointer}
+.avatar-btn{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid #2b344b;margin-right:8px;cursor:pointer;background:#0e1220}
+.city{background:#0f131b;color:#fff;border:1px solid #273045;border-radius:10px;padding:6px 8px}
+.spacer{flex:1}
+.btn{background:#1a2030;color:#eaf0ff;border:1px solid #29334a;border-radius:10px;padding:8px 12px;cursor:pointer}
+.btn.small{padding:6px 8px;border-radius:8px;font-size:12px}
+.btn.quiet{background:#121725}
+.btn.primary{background:#47a3ff;border-color:#47a3ff;color:#061423}
+.btn.danger{background:#742e2e;border-color:#8b3838}
+
+.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;padding:12px}
+.home-grid .big{padding:16px;border-radius:14px;border:1px solid #2b344b;background:#121725;color:#dfe8ff;text-align:left}
+
+.card{border:1px solid #283046;border-radius:14px;background:#121624cc;padding:12px}
+.panel-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+
+.messages{height:56vh;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid #283046;border-radius:14px;background:#0e1220cc}
+.msg{display:flex;gap:8px;padding:8px;border-radius:12px;background:#0f1422;border:1px solid #1c2335}
+.msg .meta{font-size:12px;color:#9aa3b2;margin-bottom:4px}
+.msg img.content{max-width:220px;border-radius:10px;border:1px solid #222}
+.msg .avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid #2b344b}
+
+.input-row{position:sticky;bottom:8px;display:flex;gap:8px;margin-top:8px;align-items:center;background:rgba(0,0,0,.35);padding:8px;border-radius:12px;border:1px solid #283046}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;border:1px dashed #3a4259;cursor:pointer;position:relative}
+.icon-btn.ok::after{content:"✔";position:absolute;right:-6px;top:-6px;background:#2ecc71;color:#021;border-radius:50%;font-size:12px;width:16px;height:16px;display:flex;align-items:center;justify-content:center;border:1px solid #093}
+.input-row input{flex:1;padding:10px;border-radius:10px;border:1px solid #283046;background:#0c101a;color:#e7efff}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.grid.two{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+
+.map{height:56vh;border:1px solid #283046;border-radius:14px}
+.mapbar{display:flex;gap:8px;align-items:center;margin-top:8px}
+.leaflet-container{max-width:100%}
+
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;background:#0b2036;color:#fff;border:1px solid #28507a;padding:8px 14px;border-radius:12px;opacity:0;transition:opacity .25s;z-index:60}
+#toast.show{opacity:1}
+
+dialog{border:none;padding:0;background:transparent}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+dialog.md .card{width:min(92vw,720px);max-height:86vh;overflow:auto}
+dialog.lg .card{width:min(94vw,980px);max-height:86vh;overflow:auto}
+.avatar-lg{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid #2b344b}
+
+@media (max-width:860px){
+  .home-grid{grid-template-columns:repeat(2,1fr)}
+  .messages{height:62vh}
+}
