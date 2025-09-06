@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PRÁCE CZ • Chat</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Firebase compat CDN (works on GitHub Pages) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+  <script defer src="config.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <button id="btnMenu" class="icon">☰</button>
+    <div class="brand">PRÁCE CZ</div>
+    <div class="spacer"></div>
+    <button id="btnBell" class="bell"><span id="bellCount">0</span> 🔔</button>
+    <button id="btnLogin" class="ghost">Увійти</button>
+    <button id="btnLogout" class="ghost hidden">Вийти</button>
+  </header>
+
+  <nav class="tabs">
+    <button data-tab="chat" class="active">Чат</button>
+    <button data-tab="rent">Оренда</button>
+    <button data-tab="dm">Особисті</button>
+    <button data-tab="people">Учасники</button>
+    <button data-tab="help">Допомога</button>
+    <button data-tab="map">Карта</button>
+    <button data-tab="admin" id="adminTab" class="hidden">Адмінка</button>
+  </nav>
+
+  <section class="cityBar">
+    <label>Місто:</label>
+    <select id="citySelect">
+      <option>Praha</option><option>Brno</option><option>Ostrava</option><option>Plzeň</option><option>Liberec</option>
+    </select>
+    <span class="hint">Фон міста змінюється в Адмінці → Обої</span>
+  </section>
+
+  <main>
+    <!-- CHAT -->
+    <div class="tab" id="tab-chat">
+      <ul id="chatList" class="feed"></ul>
+      <div class="composer">
+        <label class="iconBtn"><input type="file" id="chatPhoto" accept="image/*" hidden><span>📷</span></label>
+        <input id="chatInput" placeholder="Написати повідомлення…" />
+        <button id="chatSend" class="primary">Надіслати</button>
+      </div>
+    </div>
+
+    <!-- RENT -->
+    <div class="tab hidden" id="tab-rent">
+      <ul id="rentList" class="feed"></ul>
+      <div class="composer">
+        <label class="iconBtn"><input type="file" id="rentPhoto" accept="image/*" hidden><span>📷</span></label>
+        <input id="rentInput" placeholder="Оголошення оренди…" />
+        <button id="rentSend" class="primary">Опублікувати</button>
+      </div>
+    </div>
+
+    <!-- DM -->
+    <div class="tab hidden" id="tab-dm">
+      <div id="dmPane" class="dmPane">
+        <aside class="dmListWrap">
+          <h3>Діалоги</h3>
+          <ul id="dmList" class="list"></ul>
+        </aside>
+        <section class="dmChat">
+          <ul id="dmFeed" class="feed"></ul>
+          <div class="composer">
+            <label class="iconBtn"><input type="file" id="dmPhoto" accept="image/*" hidden><span>📎</span></label>
+            <input id="dmInput" placeholder="Ваше повідомлення…" />
+            <button id="dmSend" class="primary">Надіслати</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- PEOPLE -->
+    <div class="tab hidden" id="tab-people">
+      <ul id="peopleList" class="cards"></ul>
+    </div>
+
+    <!-- HELP -->
+    <div class="tab hidden" id="tab-help">
+      <div class="helpAdd hidden" id="helpAdminBox">
+        <h3>Додати картку</h3>
+        <input id="helpTitle" placeholder="Заголовок" />
+        <input id="helpLink" placeholder="Посилання (необов'язково)" />
+        <label class="iconBtn"><input type="file" id="helpPhoto" accept="image/*" hidden><span>📷</span></label>
+        <button id="helpAdd" class="primary">Додати</button>
+      </div>
+      <ul id="helpList" class="cards"></ul>
+    </div>
+
+    <!-- MAP -->
+    <div class="tab hidden" id="tab-map">
+      <div id="map" class="mapBox"></div>
+      <button id="mapAdd" class="primary hidden">+ Точку</button>
+      <ul id="poiList" class="cards"></ul>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="tab hidden" id="tab-admin">
+      <section class="adminBlock">
+        <h3>Обої</h3>
+        <input id="bgGlobal" placeholder="URL для всіх https://…" />
+        <input id="bgCity" placeholder="URL для міста https://…" />
+        <select id="bgCityName"><option>Praha</option><option>Brno</option><option>Ostrava</option><option>Plzeň</option><option>Liberec</option></select>
+        <button id="bgSave" class="primary">Зберегти</button>
+      </section>
+      <section class="adminBlock">
+        <h3>Преміум</h3>
+        <div class="row">
+          <button id="planFree">Free</button>
+          <button id="planPremium">Premium</button>
+          <button id="planPremiumPlus">Premium+</button>
+        </div>
+        <div>
+          <h4>Заявки на преміум</h4>
+          <ul id="payInbox" class="cards"></ul>
+        </div>
+      </section>
+      <section class="adminBlock">
+        <h3>Тести</h3>
+        <button id="botMsg">🤖 Додати тест-повідомлення</button>
+        <button id="botRent">🤖 Додати тест-оренду</button>
+        <button id="botPOI">🤖 Додати точку на карті</button>
+      </section>
+    </div>
+  </main>
+
+  <!-- PROFILE MODAL -->
+  <div id="profileModal" class="modal hidden">
+    <div class="modalCard">
+      <button class="close" id="profileClose">✖</button>
+      <div class="profileHeader">
+        <img id="profileAvatar" class="avatarxl" src="assets/img/avatar.png" alt="avatar"/>
+        <label class="iconBtn small"><input type="file" id="profileAvatarFile" accept="image/*" hidden><span>📷</span></label>
+      </div>
+      <input id="profileName" placeholder="Нік" />
+      <input id="profileEmail" placeholder="Email" disabled />
+      <select id="profileLang"><option value="uk">Українська</option><option value="cs">Čeština</option></select>
+      <select id="profileCity"><option>Praha</option><option>Brno</option><option>Ostrava</option><option>Plzeň</option><option>Liberec</option></select>
+      <div class="row">
+        <button id="profileSave" class="primary">Зберегти профіль</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+</body>
+</html>
