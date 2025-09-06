@@ -1,0 +1,1202 @@
+[
+  {
+    "uid": "seed_000",
+    "nick": "Alžběta Kovalenko",
+    "email": null,
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_001",
+    "nick": "Ірина Dvořák",
+    "email": "user001@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_002",
+    "nick": "Ірина Bondarenko",
+    "email": "user002@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_003",
+    "nick": "Martin Novak",
+    "email": "user003@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_004",
+    "nick": "Наталія Havlíček",
+    "email": "user004@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_005",
+    "nick": "Barbora Procházka",
+    "email": "user005@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_006",
+    "nick": "Олена Horák",
+    "email": "user006@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_007",
+    "nick": "Karel Horák",
+    "email": null,
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_008",
+    "nick": "Ірина Shevchenko",
+    "email": "user008@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_009",
+    "nick": "Максим Kovalenko",
+    "email": "user009@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_010",
+    "nick": "Тарас Kovalenko",
+    "email": "user010@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_011",
+    "nick": "Lukáš Svoboda",
+    "email": "user011@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_012",
+    "nick": "Alžběta Shevchenko",
+    "email": "user012@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_013",
+    "nick": "Barbora Horák",
+    "email": "user013@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_014",
+    "nick": "Аліна Novak",
+    "email": null,
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_015",
+    "nick": "Ірина Melnyk",
+    "email": "user015@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_016",
+    "nick": "Дмитро Shevchenko",
+    "email": "user016@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_017",
+    "nick": "Martin Shevchenko",
+    "email": "user017@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_018",
+    "nick": "Олена Svoboda",
+    "email": "user018@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_019",
+    "nick": "Дмитро Kovalenko",
+    "email": "user019@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_020",
+    "nick": "Тарас Dvořák",
+    "email": "user020@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_021",
+    "nick": "Barbora Kovalenko",
+    "email": null,
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_022",
+    "nick": "Тарас Dvořák",
+    "email": "user022@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_023",
+    "nick": "Barbora Svoboda",
+    "email": "user023@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_024",
+    "nick": "Barbora Procházka",
+    "email": "user024@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_025",
+    "nick": "Karel Svoboda",
+    "email": "user025@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_026",
+    "nick": "Андрій Novak",
+    "email": "user026@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_027",
+    "nick": "Tereza Horák",
+    "email": "user027@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_028",
+    "nick": "Barbora Kovalenko",
+    "email": null,
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_029",
+    "nick": "Наталія Havlíček",
+    "email": "user029@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_030",
+    "nick": "Максим Novak",
+    "email": "user030@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_031",
+    "nick": "Олег Bondarenko",
+    "email": "user031@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_032",
+    "nick": "Олег Havlíček",
+    "email": "user032@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_033",
+    "nick": "Ірина Horák",
+    "email": "user033@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_034",
+    "nick": "Ірина Dvořák",
+    "email": "user034@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_035",
+    "nick": "Олег Bondarenko",
+    "email": null,
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_036",
+    "nick": "Дмитро Melnyk",
+    "email": "user036@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_037",
+    "nick": "Ірина Bondarenko",
+    "email": "user037@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_038",
+    "nick": "Ірина Horák",
+    "email": "user038@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_039",
+    "nick": "Софія Melnyk",
+    "email": "user039@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_040",
+    "nick": "Аліна Horák",
+    "email": "user040@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_041",
+    "nick": "Martin Horák",
+    "email": "user041@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_042",
+    "nick": "Андрій Havlíček",
+    "email": null,
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_043",
+    "nick": "Софія Novak",
+    "email": "user043@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_044",
+    "nick": "Дмитро Havlíček",
+    "email": "user044@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_045",
+    "nick": "Тарас Novak",
+    "email": "user045@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_046",
+    "nick": "Наталія Horák",
+    "email": "user046@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_047",
+    "nick": "Tereza Svoboda",
+    "email": "user047@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_048",
+    "nick": "Jana Bondarenko",
+    "email": "user048@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_049",
+    "nick": "Максим Svoboda",
+    "email": null,
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_050",
+    "nick": "Тарас Melnyk",
+    "email": "user050@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_051",
+    "nick": "Lukáš Novak",
+    "email": "user051@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_052",
+    "nick": "Андрій Melnyk",
+    "email": "user052@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_053",
+    "nick": "Олег Dvořák",
+    "email": "user053@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_054",
+    "nick": "Тарас Horák",
+    "email": "user054@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_055",
+    "nick": "Тарас Svoboda",
+    "email": "user055@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_056",
+    "nick": "Наталія Havlíček",
+    "email": null,
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_057",
+    "nick": "Tomáš Svoboda",
+    "email": "user057@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_058",
+    "nick": "Lukáš Svoboda",
+    "email": "user058@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_059",
+    "nick": "Tomáš Melnyk",
+    "email": "user059@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_060",
+    "nick": "Максим Havlíček",
+    "email": "user060@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_061",
+    "nick": "Софія Dvořák",
+    "email": "user061@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_062",
+    "nick": "Максим Novak",
+    "email": "user062@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_063",
+    "nick": "Наталія Kovalenko",
+    "email": null,
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_064",
+    "nick": "Олена Havlíček",
+    "email": "user064@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_065",
+    "nick": "Максим Kovalenko",
+    "email": "user065@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_066",
+    "nick": "Дмитро Bondarenko",
+    "email": "user066@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_067",
+    "nick": "Tereza Novak",
+    "email": "user067@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_068",
+    "nick": "Олена Bondarenko",
+    "email": "user068@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_069",
+    "nick": "Олена Havlíček",
+    "email": "user069@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_070",
+    "nick": "Tomáš Procházka",
+    "email": null,
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_071",
+    "nick": "Дмитро Kovalenko",
+    "email": "user071@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_072",
+    "nick": "Karel Havlíček",
+    "email": "user072@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_073",
+    "nick": "Martin Shevchenko",
+    "email": "user073@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_074",
+    "nick": "Barbora Dvořák",
+    "email": "user074@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_075",
+    "nick": "Martin Horák",
+    "email": "user075@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_076",
+    "nick": "Аліна Melnyk",
+    "email": "user076@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_077",
+    "nick": "Barbora Dvořák",
+    "email": null,
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_078",
+    "nick": "Barbora Dvořák",
+    "email": "user078@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_079",
+    "nick": "Ірина Shevchenko",
+    "email": "user079@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_080",
+    "nick": "Alžběta Procházka",
+    "email": "user080@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_081",
+    "nick": "Софія Havlíček",
+    "email": "user081@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_082",
+    "nick": "Олена Kovalenko",
+    "email": "user082@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_083",
+    "nick": "Ірина Novak",
+    "email": "user083@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_084",
+    "nick": "Karel Svoboda",
+    "email": null,
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_085",
+    "nick": "Jana Procházka",
+    "email": "user085@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_086",
+    "nick": "Barbora Novak",
+    "email": "user086@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_087",
+    "nick": "Alžběta Dvořák",
+    "email": "user087@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_088",
+    "nick": "Alžběta Svoboda",
+    "email": "user088@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_089",
+    "nick": "Martin Horák",
+    "email": "user089@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_090",
+    "nick": "Barbora Havlíček",
+    "email": "user090@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_091",
+    "nick": "Андрій Havlíček",
+    "email": null,
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_092",
+    "nick": "Максим Bondarenko",
+    "email": "user092@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_093",
+    "nick": "Ірина Horák",
+    "email": "user093@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_094",
+    "nick": "Олена Havlíček",
+    "email": "user094@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_095",
+    "nick": "Ірина Melnyk",
+    "email": "user095@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_096",
+    "nick": "Максим Svoboda",
+    "email": "user096@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_097",
+    "nick": "Lukáš Dvořák",
+    "email": "user097@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_098",
+    "nick": "Максим Kovalenko",
+    "email": null,
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": true,
+    "status": "online"
+  },
+  {
+    "uid": "seed_099",
+    "nick": "Аліна Horák",
+    "email": "user099@example.com",
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_100",
+    "nick": "Alžběta Procházka",
+    "email": "user100@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_101",
+    "nick": "Дмитро Horák",
+    "email": "user101@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_102",
+    "nick": "Ірина Svoboda",
+    "email": "user102@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_103",
+    "nick": "Андрій Horák",
+    "email": "user103@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_104",
+    "nick": "Ірина Shevchenko",
+    "email": "user104@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_105",
+    "nick": "Олег Svoboda",
+    "email": null,
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_106",
+    "nick": "Tomáš Dvořák",
+    "email": "user106@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_107",
+    "nick": "Наталія Novak",
+    "email": "user107@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_108",
+    "nick": "Олег Procházka",
+    "email": "user108@example.com",
+    "photoURL": null,
+    "plan": "Premium+",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_109",
+    "nick": "Barbora Melnyk",
+    "email": "user109@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_110",
+    "nick": "Petr Svoboda",
+    "email": "user110@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_111",
+    "nick": "Андрій Horák",
+    "email": "user111@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_112",
+    "nick": "Олена Novak",
+    "email": null,
+    "photoURL": null,
+    "plan": "VIP",
+    "locale": "cs",
+    "isBot": true,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_113",
+    "nick": "Petr Procházka",
+    "email": "user113@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "uk",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_114",
+    "nick": "Lukáš Kovalenko",
+    "email": "user114@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "uk",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_115",
+    "nick": "Олег Horák",
+    "email": "user115@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_116",
+    "nick": "Андрій Kovalenko",
+    "email": "user116@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "offline"
+  },
+  {
+    "uid": "seed_117",
+    "nick": "Karel Novak",
+    "email": "user117@example.com",
+    "photoURL": null,
+    "plan": "Premium",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_118",
+    "nick": "Максим Procházka",
+    "email": "user118@example.com",
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": false,
+    "status": "online"
+  },
+  {
+    "uid": "seed_119",
+    "nick": "Дмитро Procházka",
+    "email": null,
+    "photoURL": null,
+    "plan": "Free",
+    "locale": "cs",
+    "isBot": true,
+    "status": "online"
+  }
+]

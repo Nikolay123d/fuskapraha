@@ -1,0 +1,120 @@
+{
+  "rules": {
+    ".read": true,
+    "messages": {
+      "$city": {
+        "$msgId": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    "rentMessages": {
+      "$city": {
+        "$msgId": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    "jobs": {
+      "$city": {
+        "$jobId": {
+          ".read": true,
+          ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
+        }
+      }
+    },
+    "help": {
+      "$city": {
+        "$cardId": {
+          ".read": true,
+          ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
+        }
+      }
+    },
+    "map": {
+      "poi": {
+        "$city": {
+          "$poiId": {
+            ".read": true,
+            ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
+          }
+        }
+      }
+    },
+    "usersPublic": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "plans": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid == $uid || auth.token.email == root.child('settings/adminEmail').val())",
+        ".write": "auth != null && (auth.uid == $uid || auth.token.email == root.child('settings/adminEmail').val())"
+      }
+    },
+    "limits": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid == $uid || auth.token.email == root.child('settings/adminEmail').val())",
+        ".write": "auth != null && (auth.uid == $uid || auth.token.email == root.child('settings/adminEmail').val())"
+      }
+    },
+    "dm": {
+      "$dialogId": {
+        ".read": "auth != null && root.child('dm/'+$dialogId+'/members/'+auth.uid).val() == true",
+        ".write": "auth != null && root.child('dm/'+$dialogId+'/members/'+auth.uid).val() == true"
+      }
+    },
+    "inboxMeta": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        "$dialogId": {
+          ".write": "auth != null && auth.uid == $uid"
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        "$nid": {
+          ".read": "auth != null && auth.uid == $uid",
+          ".write": "auth != null && auth.uid == $uid"
+        }
+      }
+    },
+    "bans": {
+      "$uid": {
+        ".read": "auth != null && auth.token.email == root.child('settings/adminEmail').val()",
+        ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
+      }
+    },
+    "bots": {
+      "inbox": {
+        "$id": {
+          ".read": "auth != null && auth.token.email == root.child('settings/adminEmail').val()",
+          ".write": "auth != null"
+        }
+      }
+    },
+    "payments": {
+      "inbox": {
+        "$pid": {
+          ".read": "auth != null && auth.token.email == root.child('settings/adminEmail').val()",
+          ".write": "auth != null"
+        }
+      }
+    },
+    "settings": {
+      ".read": true,
+      "adminEmail": {
+        ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
+      },
+      "wallpapers": {
+        ".read": true,
+        ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
+      },
+      "googleMapsKey": {
+        ".write": "auth != null && auth.token.email == root.child('settings/adminEmail').val()"
+      }
+    }
+  }
+}

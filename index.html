@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>PRÁCE CZ — чати, оренда, вакансії</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Firebase compat CDN -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+  <!-- Leaflet (OSM) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="" crossorigin=""></script>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">PRÁCE CZ</div>
+      <select id="citySel" class="city"></select>
+      <div class="spacer"></div>
+      <button id="btnLoginGoogle" class="btn small">Google</button>
+      <button id="btnLoginEmail" class="btn small">Email</button>
+      <button id="btnLogout" class="btn small danger" style="display:none">Вийти</button>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="chat">Чат</button>
+      <button class="tab" data-tab="rent">Оренда</button>
+      <button class="tab" data-tab="jobs">Вакансії</button>
+      <button class="tab" data-tab="members">Учасники</button>
+      <button class="tab" data-tab="dm">ЛС</button>
+      <button class="tab" data-tab="help">Допомога</button>
+      <button class="tab" data-tab="map">Карта</button>
+      <button class="tab" data-tab="reviews">Відгуки</button>
+      <button class="tab adminOnly" data-tab="admin">Адмін</button>
+    </nav>
+
+    <!-- VIP ticker -->
+    <div id="vipTicker" class="ticker"></div>
+
+    <!-- Pages -->
+    <main>
+      <section id="tab-chat" class="page visible">
+        <div id="chatList" class="messages" data-kind="chat"></div>
+        <div class="input-row">
+          <label class="icon-btn">📷
+            <input type="file" id="chatPhoto" accept="image/*" hidden />
+          </label>
+          <input id="chatInput" placeholder="Напишіть повідомлення…" />
+          <button id="chatSend" class="btn primary">Відправити</button>
+        </div>
+      </section>
+
+      <section id="tab-rent" class="page">
+        <div id="rentList" class="messages" data-kind="rent"></div>
+        <div class="input-row">
+          <label class="icon-btn">📷
+            <input type="file" id="rentPhoto" accept="image/*" hidden />
+          </label>
+          <input id="rentInput" placeholder="Оголошення про оренду…" />
+          <button id="rentSend" class="btn primary">Опублікувати</button>
+        </div>
+      </section>
+
+      <section id="tab-jobs" class="page">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Вакансії</h3>
+            <div class="spacer"></div>
+            <button class="btn small adminOnly" id="jobAddBtn">+ Додати</button>
+          </div>
+          <div id="jobsList" class="cards"></div>
+        </div>
+        <dialog id="jobDlg">
+          <form method="dialog" id="jobForm">
+            <h3>Нова вакансія</h3>
+            <input id="jobTitle" placeholder="Посада" required />
+            <input id="jobSalary" placeholder="Оплата (CZK/міт, договір...)" />
+            <input id="jobContact" placeholder="Контакт (телеграм, тел, пошта)" />
+            <textarea id="jobDesc" placeholder="Опис…"></textarea>
+            <label class="icon-btn">📷<input type="file" id="jobPhoto" accept="image/*" hidden /></label>
+            <menu>
+              <button class="btn" value="cancel">Скасувати</button>
+              <button class="btn primary" value="ok">Зберегти</button>
+            </menu>
+          </form>
+        </dialog>
+      </section>
+
+      <section id="tab-members" class="page">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Учасники</h3>
+            <input id="mSearch" class="inline" placeholder="Пошук ніку…" />
+            <select id="mFilterLocale" class="inline">
+              <option value="">Мова: всі</option>
+              <option value="cs">Česky</option>
+              <option value="uk">Українська</option>
+            </select>
+            <select id="mFilterPlan" class="inline">
+              <option value="">План: всі</option>
+              <option>VIP</option>
+              <option>Premium</option>
+              <option>Premium+</option>
+              <option>Free</option>
+            </select>
+            <div class="spacer"></div>
+            <button class="btn small adminOnly" id="massPremiumBtn">Видати Premium</button>
+            <button class="btn small danger adminOnly" id="massBanBtn">Бан</button>
+          </div>
+          <div id="membersList" class="grid"></div>
+        </div>
+      </section>
+
+      <section id="tab-dm" class="page">
+        <div class="split">
+          <aside class="dm-list" id="dmList"></aside>
+          <div class="dm-chat">
+            <header id="dmHeader"></header>
+            <div id="dmThread" class="messages"></div>
+            <div class="input-row">
+              <label class="icon-btn">📎<input type="file" id="dmPhoto" accept="image/*" hidden /></label>
+              <input id="dmInput" placeholder="Ваше повідомлення…" />
+              <button id="dmSend" class="btn primary">Надіслати</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-help" class="page">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Допомога</h3>
+            <div class="spacer"></div>
+            <button class="btn small adminOnly" id="helpAddBtn">+ Картка</button>
+          </div>
+          <div id="helpList" class="cards"></div>
+        </div>
+        <dialog id="helpDlg">
+          <form method="dialog" id="helpForm">
+            <h3>Нова картка</h3>
+            <input id="helpTitle" placeholder="Заголовок" required />
+            <input id="helpLink" placeholder="Посилання (необов’язково)" />
+            <textarea id="helpText" placeholder="Текст…"></textarea>
+            <label class="icon-btn">📷<input type="file" id="helpPhoto" accept="image/*" hidden /></label>
+            <menu>
+              <button class="btn" value="cancel">Скасувати</button>
+              <button class="btn primary" value="ok">Зберегти</button>
+            </menu>
+          </form>
+        </dialog>
+      </section>
+
+      <section id="tab-map" class="page">
+        <div id="map" class="map"></div>
+        <div class="mapbar adminOnly">
+          <input id="poiTitle" placeholder="Назва точки" />
+          <input id="poiLink" placeholder="Посилання" />
+          <label class="icon-btn">📷<input type="file" id="poiPhoto" accept="image/*" hidden /></label>
+          <button id="poiAdd" class="btn small">Додати</button>
+        </div>
+      </section>
+
+      <section id="tab-reviews" class="page">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Відгуки</h3>
+            <div class="spacer"></div>
+            <button class="btn small adminOnly" id="reviewAddBtn">+ Додати</button>
+          </div>
+          <div id="reviewsList" class="cards"></div>
+        </div>
+        <dialog id="reviewDlg">
+          <form method="dialog" id="reviewForm">
+            <h3>Новий відгук</h3>
+            <input id="reviewNick" placeholder="Нік" required />
+            <textarea id="reviewText" placeholder="Текст…" required></textarea>
+            <label class="icon-btn">📷<input type="file" id="reviewPhoto" accept="image/*" hidden /></label>
+            <menu>
+              <button class="btn" value="cancel">Скасувати</button>
+              <button class="btn primary" value="ok">Зберегти</button>
+            </menu>
+          </form>
+        </dialog>
+      </section>
+
+      <section id="tab-admin" class="page">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Адмін</h3>
+          </div>
+          <div class="grid two">
+            <div class="card">
+              <h4>Обої</h4>
+              <input id="wallGlobal" placeholder="URL для всіх" />
+              <button class="btn small" id="saveWallGlobal">Зберегти</button>
+              <div class="mt8"></div>
+              <input id="wallCity" placeholder="URL для міста" />
+              <button class="btn small" id="saveWallCity">Зберегти</button>
+              <div class="mt8"></div>
+              <label class="icon-btn">📷 Загрузити з файлу
+                <input type="file" id="wallFile" accept="image/*" hidden />
+              </label>
+            </div>
+            <div class="card">
+              <h4>Ключ карти</h4>
+              <input id="mapsKey" placeholder="(секрет) збережеться у settings/googleMapsKey" />
+              <button class="btn small" id="saveMapsKey">Зберегти</button>
+              <p class="muted">Обмеж ключ HTTP referrers у Google Cloud.</p>
+            </div>
+            <div class="card">
+              <h4>Боти</h4>
+              <input id="botNick" placeholder="Нік бота" />
+              <select id="botLocale"><option value="cs">Česky</option><option value="uk">Українська</option></select>
+              <button class="btn small" id="createBot">Створити бота</button>
+              <button class="btn small" id="seedBtn">Завантажити 120 профілів</button>
+            </div>
+            <div class="card">
+              <h4>Масові дії</h4>
+              <button class="btn small" id="actionPremiumSelected">Premium обраним</button>
+              <button class="btn small danger" id="actionBanSelected">Бан обраним</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <audio id="sndSend" src="assets/send.wav" preload="auto"></audio>
+    <audio id="sndPing" src="assets/ping.wav" preload="auto"></audio>
+    <div id="toast"></div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
