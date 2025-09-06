@@ -1,3 +1,6 @@
++165
+-382
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -52,6 +55,42 @@ main{flex:1;position:relative;overflow:hidden}
  #tabs{flex-wrap:wrap}
 }
 </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PRAHA FUŠKY</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-storage-compat.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body,html{height:100%;margin:0;font-family:sans-serif;background:transparent;color:#111}
+    #wallpaper{position:fixed;inset:0;background:url('https://i.ibb.co/pr18RzG3/charles-bridge-prague.jpg') center/cover no-repeat;z-index:0;pointer-events:none}
+    #app{position:relative;z-index:1;display:flex;flex-direction:column;height:100%}
+    header{display:flex;align-items:center;gap:8px;padding:8px;background:rgba(0,0,0,.6);color:#fff}
+    header .brand{flex:1;font-weight:bold}
+    header img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid #333}
+    #tabs{display:flex;gap:4px;padding:4px;background:rgba(0,0,0,.5)}
+    #tabs button{flex:1;padding:6px 8px;border:none;border-radius:6px;background:#222;color:#fff;cursor:pointer}
+    #tabs button.active{background:#0a84ff}
+    main{flex:1;position:relative}
+    .view{position:absolute;inset:0;display:none}
+    .view.active{display:flex;flex-direction:column}
+    .feed{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:8px}
+    .msg{display:flex;gap:6px;background:rgba(255,255,255,.9);border-radius:8px;padding:6px}
+    .msg img.avatar{width:30px;height:30px;border-radius:50%;object-fit:cover}
+    .msg .meta{font-size:12px;color:#666}
+    .composer{display:flex;gap:4px;padding:4px;background:rgba(255,255,255,.9)}
+    .composer input[type=text]{flex:1;padding:6px;border-radius:6px;border:1px solid #ccc}
+    .composer input[type=file]{display:none}
+    #notif{position:fixed;right:10px;top:10px;background:#ffc;border:1px solid #aa9;padding:8px;border-radius:6px;display:none;z-index:10}
+    #notif button{float:right;border:none;background:transparent;font-size:16px;cursor:pointer}
+    #payment-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:20}
+    #payment-modal .card{background:#fff;padding:16px;border-radius:8px;max-width:320px}
+    #admin-panel{display:none;padding:8px;gap:8px}
+    #admin-panel textarea{width:100%;height:60px}
+  </style>
 </head>
 <body>
 <div id="walls"></div>
@@ -84,6 +123,57 @@ main{flex:1;position:relative;overflow:hidden}
    <label>📷<input id="chatPhoto" type="file" accept="image/*"></label>
    <input id="chatInput" type="text" placeholder="Повідомлення…">
    <button id="chatSend">➤</button>
+  <div id="wallpaper"></div>
+  <div id="app">
+    <header>
+      <img id="myAva" src="https://i.pravatar.cc/64" alt="ava" />
+      <div class="brand">PRAHA FUŠKY</div>
+      <select id="citySel">
+        <option value="praha">Praha</option>
+        <option value="brno">Brno</option>
+        <option value="ostrava">Ostrava</option>
+        <option value="plzen">Plzeň</option>
+        <option value="olomouc">Olomouc</option>
+        <option value="liberec">Liberec</option>
+        <option value="usti">Ústí n/L</option>
+        <option value="hradec">Hradec</option>
+        <option value="pardubice">Pardubice</option>
+        <option value="cbudejovice">Č. Будějовice</option>
+      </select>
+    </header>
+    <nav id="tabs">
+      <button data-view="chat" class="active">Чат</button>
+      <button data-view="map">Карта</button>
+      <button data-view="help">Допомога</button>
+      <button data-view="admin" class="adminBtn" style="display:none">Адмін</button>
+    </nav>
+    <main>
+      <section id="view-chat" class="view active">
+        <div id="chatFeed" class="feed"></div>
+        <div class="composer">
+          <label>📷<input id="chatPhoto" type="file" accept="image/*" /></label>
+          <input id="chatInput" type="text" placeholder="Повідомлення…" />
+          <button id="chatSend">➤</button>
+        </div>
+      </section>
+      <section id="view-map" class="view">
+        <div id="map" style="flex:1"></div>
+      </section>
+      <section id="view-help" class="view">
+        <div id="helpGrid" class="feed"></div>
+      </section>
+      <section id="view-admin" class="view">
+        <div id="admin-panel">
+          <h3>Боти</h3>
+          <div id="botList"></div>
+          <button id="botAdd">Новий бот</button>
+          <h3>Обої</h3>
+          <input id="wallUrlInput" placeholder="URL зображення" />
+          <button id="wallSave">Зберегти</button>
+          <button id="wallLocal">Тільки мені</button>
+        </div>
+      </section>
+    </main>
   </div>
  </div>
 </section>
@@ -273,6 +363,17 @@ main{flex:1;position:relative;overflow:hidden}
     <label>📷<input id="dmPhoto" type="file" accept="image/*"></label>
     <input id="dmInput" type="text" placeholder="Особисте повідомлення…">
     <button id="dmSend">➤</button>
+
+  <div id="notif"><button id="notifClose">✖</button><span id="notifText"></span></div>
+
+  <div id="payment-modal">
+    <div class="card">
+      <h3>Оплата</h3>
+      <p>Надішліть фото чека/оплати.</p>
+      <input id="payFile" type="file" accept="image/*" />
+      <button id="paySend">Відправити</button>
+      <button id="payClose">Закрити</button>
+    </div>
   </div>
  </div>
 </section>
@@ -359,12 +460,64 @@ function openDM(uid,name){
  };
 }
 document.getElementById('dmClose').onclick=()=>document.getElementById('dmModal').style.display='none';
+  <audio id="snd" src="notify.mp3" preload="auto"></audio>
+  <script>
+    const fbConfig={
+      apiKey:"AIzaSyDw_bVibsVyZegH7OJyZ_yRjI3uLhroVBk",
+      authDomain:"praga-4baee.firebaseapp.com",
+      databaseURL:"https://praga-4baee-default-rtdb.firebaseio.com",
+      projectId:"praga-4baee",
+      storageBucket:"praga-4baee.firebasestorage.app",
+      messagingSenderId:"336023952536",
+      appId:"1:336023952536:web:f7437feaa25b6eadcd04ed",
+      measurementId:"G-BGDJD6R12N"
+    };
+    firebase.initializeApp(fbConfig);
+    const auth=firebase.auth(),db=firebase.database(),st=firebase.storage();
+    const ADMIN_EMAIL="urciknikolaj642@gmail.com";
+    let my={uid:null,nick:"Гість",ava:"https://i.pravatar.cc/64"};
+    let currentCity="praha";
+    let txtCount=0,imgCount=0;
+
+    function notify(s){document.getElementById('notifText').textContent=s;document.getElementById('notif').style.display='block';document.getElementById('snd').play().catch(()=>{});}
+    document.getElementById('notifClose').onclick=()=>document.getElementById('notif').style.display='none';
+
+    document.addEventListener('DOMContentLoaded',()=>{const a=document.getElementById('snd');a.play().then(()=>a.pause()).catch(()=>{notify('Дозвольте звук у браузері');});});
+
+    auth.onAuthStateChanged(u=>{
+      if(!u){auth.signInAnonymously();return;}
+      my.uid=u.uid;my.nick=u.displayName||my.nick;my.ava=u.photoURL||my.ava;document.getElementById('myAva').src=my.ava;
+      document.querySelector('.adminBtn').style.display=(u.email===ADMIN_EMAIL)?'block':'none';
+      listenChat();
+    });
+
+    document.querySelectorAll('#tabs button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('#tabs button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+        document.getElementById('view-'+btn.dataset.view).classList.add('active');
+      });
+    });
+
+    const chatFeed=document.getElementById('chatFeed');
+    function addMsg(el){chatFeed.appendChild(el);chatFeed.scrollTop=chatFeed.scrollHeight;}
+    function msgElm(v){const d=document.createElement('div');d.className='msg';d.innerHTML=`<img class="avatar" src="${v.ava||'https://i.pravatar.cc/32'}"><div><div class="meta">${v.nick||'Anon'} · ${new Date(v.ts).toLocaleTimeString()}</div>${v.txt?'<div>'+v.txt+'</div>':''}${v.img?'<img src="'+v.img+'" style="max-width:180px;border-radius:6px">':''}</div>`;return d;}
+    function listenChat(){db.ref('messages/'+currentCity).limitToLast(50).on('child_added',s=>{addMsg(msgElm(s.val()));});}
 
 // admin wallpaper
 function applyWall(url){document.getElementById('walls').style.backgroundImage=`url('${url}')`;localStorage.setItem('wall',url);}
 db.ref('settings/theme/wallUrl').on('value',s=>{const u=s.val();if(u)applyWall(u);else{const c=localStorage.getItem('wall');if(c)applyWall(c);}});
 document.getElementById('wallSave').onclick=async()=>{const u=document.getElementById('wallUrlInput').value.trim();if(u)await db.ref('settings/theme').set({wallUrl:u});};
 document.getElementById('wallLocal').onclick=()=>{const u=document.getElementById('wallUrlInput').value.trim();if(u)applyWall(u);};
+    document.getElementById('chatSend').addEventListener('click',async()=>{
+      const txt=document.getElementById('chatInput').value.trim();const file=document.getElementById('chatPhoto').files[0];
+      if(!txt&&!file)return;
+      if(txtCount>=200||imgCount>=100){document.getElementById('payment-modal').style.display='flex';return;}
+      let img=null;if(file){const id='chat_'+Date.now();await st.ref('chat/'+my.uid+'/'+id).put(file);img=await st.ref('chat/'+my.uid+'/'+id).getDownloadURL();imgCount++;}
+      await db.ref('messages/'+currentCity).push({uid:my.uid,nick:my.nick,ava:my.ava,txt,img,ts:Date.now()});
+      txtCount++;document.getElementById('chatInput').value='';document.getElementById('chatPhoto').value='';
+    });
 
 // admin bot panel (basic)
 const botsRef=db.ref('settings/bots');
@@ -377,6 +530,13 @@ botsRef.on('value',s=>{
  });
 });
 document.getElementById('botAdd').onclick=()=>{const id=Date.now();botsRef.child(id).set({text:'Новий бот',interval:30});};
+    document.getElementById('paySend').onclick=async()=>{
+      const f=document.getElementById('payFile').files[0];if(!f)return;
+      const id='pay_'+Date.now();await st.ref('payments/'+my.uid+'/'+id).put(f);
+      await db.ref('payments/inbox/'+my.uid+'/'+id).set({uid:my.uid,ts:Date.now()});
+      txtCount=0;imgCount=0;document.getElementById('payment-modal').style.display='none';notify('Чек надіслано. Очікуйте підтвердження.');
+    };
+    document.getElementById('payClose').onclick=()=>document.getElementById('payment-modal').style.display='none';
 
 // limits & payment
 let txtCount=0, imgCount=0;
@@ -390,7 +550,15 @@ document.getElementById('paySend').onclick=async()=>{
  txtCount=0;imgCount=0;document.getElementById('payModal').style.display='none';notify('Чек надіслано. Очікуйте підтвердження.');
 };
 document.getElementById('payClose').onclick=()=>document.getElementById('payModal').style.display='none';
+    function applyWall(url){document.getElementById('wallpaper').style.backgroundImage=`url('${url}')`;localStorage.setItem('wall',url);}
+    db.ref('settings/theme/wallUrl').on('value',s=>{const u=s.val();if(u)applyWall(u);else{const c=localStorage.getItem('wall');if(c)applyWall(c);}});
+    document.getElementById('wallSave').onclick=async()=>{const u=document.getElementById('wallUrlInput').value.trim();if(u)await db.ref('settings/theme').set({wallUrl:u});};
+    document.getElementById('wallLocal').onclick=()=>{const u=document.getElementById('wallUrlInput').value.trim();if(u)applyWall(u);};
 
 </script>
+    const botsRef=db.ref('settings/bots');
+    botsRef.on('value',s=>{const data=s.val()||{};const list=document.getElementById('botList');list.innerHTML='';Object.keys(data).forEach(id=>{const b=data[id];const div=document.createElement('div');div.innerHTML=`<textarea data-id="${id}">${b.text||''}</textarea>`;list.appendChild(div);});});
+    document.getElementById('botAdd').onclick=()=>{const id=Date.now();botsRef.child(id).set({text:'Новий бот',interval:30});};
+  </script>
 </body>
 </html>
