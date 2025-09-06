@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>PRAHA FUŠKY — Super</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-storage-compat.js" defer></script>
+  <script src="config.js" defer></script>
+  <script src="bots.js" defer></script>
+  <script src="admin.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div id="walls"></div>
+  <div class="overlay"></div>
+  <div id="app">
+    <header>
+      <img id="myAva" class="ava" src="public/images/ava.png" alt="ava"/>
+      <div class="brand">PRAHA&nbsp;FUŠKY</div>
+      <select id="citySel" title="Місто">
+        <option value="praha">Praha</option>
+        <option value="brno">Brno</option>
+        <option value="ostrava">Ostrava</option>
+        <option value="plzen">Plzeň</option>
+        <option value="olomouc">Olomouc</option>
+        <option value="liberec">Liberec</option>
+        <option value="usti">Ústí n/L</option>
+        <option value="hradec">Hradec</option>
+        <option value="pardubice">Pardubice</option>
+        <option value="cbudejovice">Č. Budějовice</option>
+      </select>
+    </header>
+
+    <nav id="tabs">
+      <button data-view="chat" class="active">Чат</button>
+      <button data-view="rent">Оренда</button>
+      <button data-view="map">Карта</button>
+      <button data-view="friends">Друзі</button>
+      <button data-view="dm">Особисті</button>
+      <button data-view="help">Допомога</button>
+      <button data-view="profile">Профіль</button>
+      <button data-view="admin" class="adminBtn" style="display:none">Адмін</button>
+    </nav>
+
+    <main>
+      <section id="view-chat" class="view active">
+        <div class="feed" id="chatFeed"></div>
+        <div class="composer">
+          <label title="Фото">📷<input id="chatPhoto" type="file" accept="image/*"></label>
+          <input id="chatInput" type="text" placeholder="Повідомлення…">
+          <button id="chatSend" title="Надіслати">➤</button>
+        </div>
+      </section>
+
+      <section id="view-rent" class="view">
+        <div class="feed" id="rentFeed"></div>
+        <div class="composer">
+          <label>📷<input id="rentPhoto" type="file" accept="image/*"></label>
+          <input id="rentInput" type="text" placeholder="Оголошення…">
+          <button id="rentSend">➤</button>
+        </div>
+      </section>
+
+      <section id="view-map" class="view">
+        <div id="map"></div>
+      </section>
+
+      <section id="view-friends" class="view">
+        <div class="feed">
+          <h3>Заявки</h3>
+          <div class="list" id="friendReq"></div>
+          <hr class="sep"/>
+          <h3>Учасники</h3>
+          <div class="list" id="allUsers"></div>
+          <hr class="sep"/>
+          <h3>Мої друзі</h3>
+          <div class="list" id="friendsList"></div>
+        </div>
+      </section>
+
+      <section id="view-dm" class="view">
+        <div class="feed" id="dmFeed"></div>
+        <div class="composer">
+          <label>📷<input id="dmPhoto" type="file" accept="image/*"></label>
+          <input id="dmInput" type="text" placeholder="Особисте повідомлення…">
+          <button id="dmSend">➤</button>
+        </div>
+      </section>
+
+      <section id="view-help" class="view">
+        <div class="feed" id="helpGrid"></div>
+      </section>
+
+      <section id="view-profile" class="view">
+        <div class="feed">
+          <div class="card">
+            <h3>Мій профіль</h3>
+            <div class="prof-grid">
+              <img id="profAva" src="public/images/ava.png" alt="ava">
+              <div>
+                <div><b id="profNick">Гість</b> <span class="badge" id="vipBadge" style="display:none">VIP</span></div>
+                <div id="profEmail" style="opacity:.8;font-size:.9rem"></div>
+              </div>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+              <input id="nickInput" placeholder="Нік">
+              <input id="avaUrlInput" placeholder="URL аватарки">
+              <label class="badge" style="cursor:pointer">📁 Завантажити<input id="avaFile" type="file" accept="image/*" style="display:none"></label>
+              <button id="saveProfile">Зберегти</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Преміум</h3>
+            <p>Безлімітні повідомлення та фото. Надішліть фото квитанції — адмін підтвердить.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button id="buyVip">Купити VIP</button>
+              <button id="openPay">Надіслати чек</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-admin" class="view">
+        <div class="feed" id="adminPanel">
+          <div class="card">
+            <h3>Платежі — вхідні</h3>
+            <div id="payInbox" class="list"></div>
+          </div>
+          <div class="card">
+            <h3>Боти</h3>
+            <div id="botList"></div>
+            <button id="botAdd">Новий бот</button>
+          </div>
+          <div class="card">
+            <h3>Тема сайту</h3>
+            <input id="wallUrlInput" placeholder="URL зображення">
+            <button id="wallSave">Зберегти для всіх</button>
+          </div>
+          <div class="card">
+            <h3>Користувачі</h3>
+            <div id="adminUsers" class="list"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modals -->
+  <div id="profileModal" class="modal">
+    <div class="card">
+      <h3 id="profName"></h3>
+      <div class="prof-grid" style="margin-bottom:8px">
+        <img id="profViewAva" src="public/images/ava.png" alt="">
+        <div id="profInfo"></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="profAddFriend">+ Додати</button>
+        <button id="profMsg">Написати</button>
+        <button id="profClose">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dmModal" class="modal">
+    <div class="card" style="width:min(680px,94%)">
+      <h3 id="dmHeader"></h3>
+      <div id="dmThread" class="feed" style="max-height:300px"></div>
+      <div class="composer">
+        <label>📷<input id="dmModalPhoto" type="file" accept="image/*"></label>
+        <input id="dmModalInput" type="text" placeholder="Повідомлення…">
+        <button id="dmModalSend">➤</button>
+      </div>
+      <button id="dmClose">Закрити</button>
+    </div>
+  </div>
+
+  <div id="payModal" class="modal">
+    <div class="card">
+      <h3>Оплата</h3>
+      <p>Завантажте фото чека/оплати. Після підтвердження — ліміти скинуться.</p>
+      <input id="payFile" type="file" accept="image/*">
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button id="paySend">Відправити</button>
+        <button id="payClose">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="regModal" class="modal">
+    <div class="card">
+      <h3>Швидка реєстрація</h3>
+      <p>Щоб продовжити — створіть акаунт. Це 10 секунд.</p>
+      <input id="regNick" placeholder="Нік" />
+      <input id="regEmail" placeholder="Email" />
+      <input id="regPass" type="password" placeholder="Пароль" />
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button id="regDo">Зареєструвати</button>
+        <button id="regClose">Пізніше</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <audio id="sndPing" src="assets/ping.wav" preload="auto"></audio>
+  <audio id="sndSend" src="assets/send.wav" preload="auto"></audio>
+</body>
+</html>
