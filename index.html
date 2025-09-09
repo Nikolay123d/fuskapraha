@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Praha Fušky — соцчат</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://zvukogram.com">
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+</head>
+<body>
+  <header class="topbar no-scroll-x">
+    <div class="logo">Praha Fušky</div>
+    <select id="citySelect" class="city">
+      <option>Praha</option><option>Brno</option><option>Ostrava</option>
+      <option>Plzeň</option><option>Liberec</option><option>Olomouc</option>
+      <option>České Budějовice</option><option>Hradec Králové</option>
+    </select>
+    <div class="spacer"></div>
+    <button id="btnParticipants" class="btn small">Учасники</button>
+    <button id="btnLogin" class="btn small">Вхід</button>
+    <button id="btnProfile" class="avatar-btn hidden" title="Профіль">
+      <img id="avatarImg" src="assets/ava.png" alt="avatar">
+    </button>
+    <button id="btnBell" class="btn small" title="Сповіщення">🔔<span id="bellDot" class="dot hidden"></span></button>
+  </header>
+
+  <nav class="tabs no-scroll-x">
+    <button class="tab active" data-tab="chat">Чат</button>
+    <button class="tab" data-tab="dm">ЛС</button>
+    <button class="tab" data-tab="friends">Друзі</button>
+    <button class="tab" data-tab="map">Карта</button>
+    <button class="tab" data-tab="help">Допомога</button>
+  </nav>
+
+  <div id="wallpaper" class="wallpaper"></div>
+
+  <main class="views">
+    <!-- CHAT -->
+    <section id="view-chat" class="view active">
+      <div id="chatList" class="list"></div>
+      <div class="composer">
+        <input type="file" id="chatPhoto" accept="image/*" hidden>
+        <button id="chatPick" class="ico">📷</button>
+        <input id="chatInput" class="input" placeholder="Написати повідомлення…" />
+        <button id="chatSend" class="btn">Відправити</button>
+      </div>
+    </section>
+
+    <!-- DM -->
+    <section id="view-dm" class="view">
+      <aside id="dmSidebar" class="sidebar"></aside>
+      <div class="panel">
+        <div id="dmHeader" class="panel-header">Обери друга, щоб написати</div>
+        <div id="dmList" class="list"></div>
+        <div class="composer">
+          <input type="file" id="dmPhoto" accept="image/*" hidden>
+          <button id="dmPick" class="ico">📷</button>
+          <input id="dmInput" class="input" placeholder="Повідомлення для друга…" />
+          <button id="dmSend" class="btn">Відправити</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FRIENDS -->
+    <section id="view-friends" class="view">
+      <div class="card">
+        <h3>Додати в друзі</h3>
+        <div class="row">
+          <input id="addFriendEmail" class="input" placeholder="Email друга">
+          <button id="btnAddFriend" class="btn">Запросити</button>
+        </div>
+      </div>
+      <div class="cols">
+        <div class="card"><h3>Заявки тобі</h3><div id="incomingReqs"></div></div>
+        <div class="card"><h3>Твої заявки</h3><div id="outgoingReqs"></div></div>
+        <div class="card"><h3>Друзі</h3><div id="friendsList"></div></div>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section id="view-map" class="view">
+      <div id="map" class="map"></div>
+      <div class="composer admin-only" id="mapBotComposer">
+        <input id="mapBotTitle" class="input" placeholder="Назва точки" />
+        <input id="mapBotLat" class="input" placeholder="lat" />
+        <input id="mapBotLng" class="input" placeholder="lng" />
+        <input id="mapBotPhoto" class="input" placeholder="URL фото (іконка/прев'ю)" />
+        <button id="mapBotAdd" class="btn">Додати</button>
+      </div>
+    </section>
+
+    <!-- HELP -->
+    <section id="view-help" class="view">
+      <div class="card">
+        <h3>Стрічка допомоги</h3>
+        <div id="helpFeed" class="list"></div>
+        <div class="composer admin-only" id="helpBotComposer">
+          <input id="helpBotName" class="input" placeholder="Ім'я бота" />
+          <input id="helpBotAvatar" class="input" placeholder="URL аватарки" />
+          <input id="helpBotPhoto" class="input" placeholder="URL фото (опц.)" />
+          <input id="helpBotText" class="input" placeholder="Текст або посилання" />
+          <button id="helpBotSend" class="btn">Опублікувати</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- PARTICIPANTS MODAL -->
+  <div id="participantsModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Учасники</h2>
+      <input id="userSearch" class="input" placeholder="Пошук по ніку або email">
+      <div id="usersList" class="list" style="height:60vh;"></div>
+      <button id="closeParticipants" class="btn small outline">Закрити</button>
+    </div>
+  </div>
+
+  <!-- PROFILE / ADMIN HUB -->
+  <div id="profileModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Профіль</h2>
+      <div class="row">
+        <input id="pfNick" class="input" placeholder="Нік">
+        <input id="pfAvatar" class="input" placeholder="URL аватарки">
+      </div>
+      <div class="row">
+        <select id="pfCity" class="input">
+          <option>Praha</option><option>Brno</option><option>Ostrava</option>
+          <option>Plzeň</option><option>Liberec</option><option>Olomouc</option>
+          <option>České Budějовice</option><option>Hradec Králové</option>
+        </select>
+        <select id="pfLang" class="input"><option value="uk">Українська</option><option value="cs">Čeština</option></select>
+        <select id="pfRole" class="input"><option value="seeker">Шукаю роботу</option><option value="employer">Роботодавець</option></select>
+      </div>
+
+      <div class="row">
+        <button id="pfSave" class="btn">Зберегти</button>
+        <button id="pfClose" class="btn outline">Закрити</button>
+        <button id="pfLogout" class="btn outline">Вийти</button>
+      </div>
+
+      <hr style="border-color:#242a33;margin:.75rem 0;">
+
+      <div id="adminButtons" class="hidden">
+        <h3>Адмін-панель</h3>
+        <div class="row wrap">
+          <button class="btn" data-admin="wallpapers">Фони</button>
+          <button class="btn" data-admin="bot-chat">Бот для чату</button>
+          <button class="btn" data-admin="bot-help">Бот «Допомога»</button>
+          <button class="btn" data-admin="map">Редактор карти</button>
+          <button class="btn" data-admin="payments">Оплати</button>
+          <button class="btn" data-admin="moderation">Модерація</button>
+        </div>
+      </div>
+
+      <div id="adminPanels"></div>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="modal hidden">
+    <div class="modal-content auth">
+      <h2>Вхід / Реєстрація</h2>
+      <div class="tabs small">
+        <button class="tab small active" data-auth="login">Вхід</button>
+        <button class="tab small" data-auth="signup">Реєстрація</button>
+      </div>
+      <div id="authForms">
+        <div id="formLogin">
+          <input id="loginEmail" class="input" placeholder="Email" type="email">
+          <input id="loginPass" class="input" placeholder="Пароль" type="password">
+          <div class="row">
+            <button id="doLogin" class="btn">Увійти</button>
+            <button id="doGoogle" class="btn outline">Google</button>
+          </div>
+        </div>
+        <div id="formSignup" class="hidden">
+          <input id="suNick" class="input" placeholder="Нік" />
+          <select id="suLang" class="input"><option value="uk">Українська</option><option value="cs">Čeština</option></select>
+          <select id="suRole" class="input"><option value="seeker">Шукаю роботу</option><option value="employer">Роботодавець</option></select>
+          <input id="suEmail" class="input" placeholder="Email" type="email">
+          <input id="suPass" class="input" placeholder="Пароль" type="password">
+          <button id="doSignup" class="btn">Зареєструватися</button>
+        </div>
+      </div>
+      <button id="closeAuth" class="btn small outline">Закрити</button>
+    </div>
+  </div>
+
+  <!-- sounds -->
+  <audio id="sndChat" src="https://zvukogram.com/sounds/23792/23792.mp3" preload="none"></audio>
+  <audio id="sndAlt" src="https://zvukogram.com/sounds/44652/44652.mp3" preload="none"></audio>
+  <audio id="sndNotify" src="https://zvukogram.com/sounds/29192/29192.mp3" preload="none"></audio>
+  <audio id="sndFriend" src="https://zvukogram.com/sounds/44703/44703.mp3" preload="none"></audio>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
