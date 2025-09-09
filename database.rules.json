@@ -1,0 +1,80 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && newData.child('adminEmail').val() == auth.token.email"
+    },
+    "usersPublic": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "emailToUid": {
+      ".read": false,
+      "$emailKey": {
+        ".write": "auth != null && !data.exists() && newData.isString()"
+      }
+    },
+    "messages": {
+      "$city": {
+        ".read": true,
+        "$msgid": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    "helpFeed": {
+      ".read": true,
+      "$postid": {
+        ".write": "auth != null && root.child('settings/adminEmail').val() == auth.token.email"
+      }
+    },
+    "map": {
+      "points": {
+        ".read": true,
+        "$id": {
+          ".write": "auth != null && root.child('settings/adminEmail').val() == auth.token.email"
+        }
+      }
+    },
+    "friendRequests": {
+      "$toUid": {
+        ".read": "auth != null && (auth.uid == $toUid)",
+        "$fromUid": {
+          ".write": "auth != null && auth.uid == $fromUid"
+        }
+      }
+    },
+    "friends": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        "$friendUid": {
+          ".write": "auth != null && (auth.uid == $uid || auth.uid == $friendUid)"
+        }
+      }
+    },
+    "dms": {
+      "$pair": {
+        ".read": "auth != null && ($pair.matches('^' + auth.uid + '_.*') || $pair.matches('^.*_' + auth.uid + '$'))",
+        "$msg": {
+          ".write": "auth != null && ($pair.matches('^' + auth.uid + '_.*') || $pair.matches('^.*_' + auth.uid + '$'))"
+        }
+      }
+    },
+    "paymentsInbox": {
+      ".read": "auth != null && root.child('settings/adminEmail').val() == auth.token.email",
+      "$id": {
+        ".write": "auth != null"
+      }
+    },
+    "bans": {
+      ".read": "auth != null && root.child('settings/adminEmail').val() == auth.token.email",
+      "$uid": {
+        ".write": "auth != null && root.child('settings/adminEmail').val() == auth.token.email"
+      }
+    }
+  }
+}
