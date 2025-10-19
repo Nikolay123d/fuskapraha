@@ -1,0 +1,72 @@
+:root{--wall:url('https://i.ibb.co/pr18RzG3/charles-bridge-prague.jpg');--line:rgba(255,255,255,.12);--text:#eafff3}
+*{box-sizing:border-box}
+html,body{height:100%; overflow-x:hidden}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Noto Sans,sans-serif;color:var(--text);background:#0b1611;background-image:var(--wall);background-size:cover;background-position:center;background-attachment:fixed}
+a{color:#7dffc1}button{cursor:pointer}
+hr{border:none;border-top:1px solid var(--line);margin:8px 0}
+.pill{border:1px solid var(--line);background:rgba(0,0,0,.4);color:var(--text);border-radius:999px;padding:6px 10px}
+.pill.active{border-color:#39ff91}
+.ghost{border:1px dashed var(--line);background:rgba(0,0,0,.35);color:var(--text);border-radius:8px;padding:6px 8px}
+
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.brand{font-weight:900;letter-spacing:.5px}
+.citysel{display:inline-flex;gap:6px;align-items:center;margin-left:14px}
+.citysel select{border:1px solid var(--line);background:rgba(0,0,0,.35);color:var(--text);border-radius:10px;padding:6px 8px}
+
+.tabs{position:sticky;top:52px;z-index:25;display:flex;gap:8px;flex-wrap:wrap;padding:10px 14px;background:rgba(0,0,0,.45);border-bottom:1px solid var(--line)}
+.tabs.collapsed{display:none}
+.tab{border:1px solid var(--line);background:rgba(0,0,0,.35);color:var(--text);border-radius:10px;padding:10px 12px}
+.tab.active{border-color:#39ff91}
+
+#views{padding:14px;display:grid;gap:14px;grid-template-columns:1fr 1fr}
+@media(max-width:1024px){#views{grid-template-columns:1fr}}
+
+.view{display:none;padding:12px;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);border-radius:14px;border:1px solid var(--line)}
+.view.active{display:block}
+.feed{display:flex;flex-direction:column;gap:10px;min-height:260px;scroll-behavior:smooth}
+
+.msg{display:flex;gap:10px;align-items:flex-start}
+.msg .ava{width:38px;height:38px;border-radius:50%;background:#222;flex:0 0 38px;overflow:hidden;border:1px solid var(--line)}
+.msg .ava img{width:100%;height:100%;object-fit:cover}
+.msg .b{display:flex;flex-direction:column;gap:6px;max-width:100%}
+.msg .name{font-weight:700;font-size:12px;opacity:.9;cursor:pointer}
+.msg .text{font-size:15px;line-height:1.36;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:12px;padding:10px;max-width:720px;word-wrap:break-word}
+.msg .text img{max-width:240px;border-radius:8px;border:1px solid var(--line);display:block;margin-top:6px}
+
+.composer{display:flex;gap:8px;flex-wrap:nowrap;margin-top:8px}
+.sticky{position:sticky;bottom:8px;background:rgba(0,0,0,.35);padding:8px;border-radius:12px;border:1px solid var(--line)}
+.composer input, .composer textarea, select{flex:1;min-width:140px;padding:12px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.35);color:var(--text)}
+.composer button{padding:12px 14px;border-radius:12px;border:1px solid rgba(58,255,145,.8);background:rgba(0,0,0,.25);color:var(--text)}
+.filebtn{display:inline-flex;align-items:center;justify-content:center;border:1px dashed var(--line);border-radius:10px;width:44px;height:44px}
+.filebtn input{display:none}
+.toast{background:rgba(0,0,0,.7);border:1px solid var(--line);padding:8px 10px;border-radius:10px;margin:4px 0}
+
+.columns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:900px){.columns{grid-template-columns:1fr}}
+
+.dm{display:grid;grid-template-columns:320px 1fr;gap:12px}
+@media(max-width:900px){.dm{grid-template-columns:1fr} #dmSidebar{order:2} .dmThread{order:1} }
+.dmThread{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:8px;min-height:380px}
+#dmMessages{display:flex;flex-direction:column;gap:8px;overflow:auto;max-height:48vh}
+
+.card,.bot-card{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:12px;padding:10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.card img{width:100%;border-radius:10px;margin-bottom:8px}
+
+.panel{position:fixed;right:16px;top:72px;background:rgba(0,0,0,.8);border:1px solid var(--line);border-radius:12px;padding:10px;width:360px;max-height:70vh;overflow:auto;z-index:40}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50}
+.modal[hidden]{display:none !important}
+.modal .card{width:min(92vw,760px);background:#0f1b16;border:1px solid var(--line);border-radius:14px;padding:10px}
+.modal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.row{display:flex;gap:8px;margin:6px 0;flex-wrap:wrap}
+.muted{opacity:.7;font-size:12px}
+.admin-only{background:rgba(0,0,0,.25);border:1px dashed var(--line);padding:8px;border-radius:10px;margin-top:12px}
+.ava-lg{width:64px;height:64px;border-radius:50%;border:1px solid var(--line)}
+.google{border:1px solid #fff}
+.linklike{border:1px dashed var(--line);background:transparent}
+
+@media(max-width:720px){
+  .tabs{position:fixed;bottom:0;left:0;right:0;z-index:35;display:flex;justify-content:space-between;gap:6px;padding:8px 10px;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);border-top:1px solid var(--line);border-bottom:none;top:auto}
+  #views{padding:12px; padding-bottom:84px}
+  .tab{flex:1}
+}
