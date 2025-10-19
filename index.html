@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>PRÁCE CZ CHAT</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">PRÁCE CZ CHAT</div>
+    <div class="grow"></div>
+    <div class="right">
+      <label class="citysel">
+        <span>Місто:</span>
+        <select id="citySelect">
+          <option value="praha">Praha</option>
+          <option value="brno">Brno</option>
+          <option value="ostrava">Ostrava</option>
+          <option value="plzen">Plzeň</option>
+          <option value="olomouc">Olomouc</option>
+        </select>
+      </label>
+      <button id="btnToggleMenu" title="Сховати/показати меню">☰</button>
+      <button id="participantsBtn" title="Учасники">👥</button>
+      <button id="profileBtn" title="Профіль">Профіль</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="chat" class="tab active">💬 Чат</button>
+    <button data-tab="rent" class="tab">🏠 Оренда</button>
+    <button data-tab="map" class="tab">🗺️ Карта</button>
+    <button data-tab="dm" class="tab">✉️ Особисті</button>
+    <button data-tab="help" class="tab">🆘 Допомога</button>
+  </nav>
+
+  <main id="views">
+    <section id="view-chat" class="view active">
+      <div id="chatFeed" class="feed"></div>
+      <div class="composer">
+        <label class="filebtn" title="Фото"><input type="file" id="chatFile" accept="image/*"></label>
+        <input id="chatInput" placeholder="Напишіть повідомлення… (можна URL на фото)">
+        <button id="chatSend">Відправити</button>
+      </div>
+    </section>
+
+    <section id="view-rent" class="view">
+      <div id="rentFeed" class="feed"></div>
+      <div class="composer">
+        <label class="filebtn" title="Фото"><input type="file" id="rentFile" accept="image/*"></label>
+        <input id="rentInput" placeholder="Оголошення… (можна URL на фото)">
+        <button id="rentSend">Відправити</button>
+      </div>
+    </section>
+
+    <section id="view-map" class="view">
+      <div class="mapbar">
+        <button id="mapCenter">Центрувати</button>
+      </div>
+      <div id="map" class="map"></div>
+    </section>
+
+    <section id="view-dm" class="view">
+      <div class="dm">
+        <aside id="dmSidebar"></aside>
+        <div class="dmThread">
+          <div id="dmHeader"></div>
+          <div id="dmMessages" class="feed"></div>
+          <div class="composer">
+            <label class="filebtn"><input type="file" id="dmFile" accept="image/*"></label>
+            <input id="dmInput" placeholder="Повідомлення… (можна URL фото)">
+            <button id="dmSend">Надіслати</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-help" class="view">
+      <div class="cards" id="helpGrid"></div>
+    </section>
+  </main>
+
+  <div id="participantsPanel" class="panel" hidden>
+    <header><b>Учасники</b><button id="participantsClose">✖</button></header>
+    <div id="participantsList"></div>
+  </div>
+
+  <div id="profileModal" class="modal" hidden>
+    <div class="card">
+      <header><b>Профіль</b><button id="profileClose">✖</button></header>
+      <div id="profileContent">
+        <div class="row">
+          <img id="myAvatar" class="ava-lg" src="" alt="">
+          <div class="gcol">
+            <input id="myName" placeholder="Нік">
+            <input id="myAvatarUrl" placeholder="URL аватарки (за бажанням)">
+            <select id="myRole">
+              <option value="seeker">Шукаю роботу</option>
+              <option value="employer">Роботодавець</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <button id="btnSaveProfile">Зберегти профіль</button>
+          <button id="btnSignout">Вийти</button>
+        </div>
+        <hr>
+        <div class="admin-only" id="botsBox" hidden>
+          <h4>Мої автопости</h4>
+          <div class="row">
+            <input id="botCity" placeholder="Город (praha/brno/…)" value="praha">
+            <input id="botText" placeholder="Текст">
+            <input id="botImage" placeholder="URL фото (опц.)">
+            <input id="botInterval" type="number" min="2" value="15" title="хвилини">
+          </div>
+          <div class="row">
+            <button id="botStart">Запустити</button>
+            <button id="botStop">Зупинити</button>
+          </div>
+          <div id="botHint" class="muted"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+  <script src="./bots.js"></script>
+</body>
+</html>

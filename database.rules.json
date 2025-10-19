@@ -1,0 +1,40 @@
+{
+  "rules": {
+    "messages": {
+      ".read": true,
+      ".write": "auth!=null",
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ]
+      }
+    },
+    "rentMessages": {
+      ".read": true,
+      ".write": "auth!=null",
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ]
+      }
+    },
+    "privateMessages": {
+      ".read": "auth!=null",
+      ".write": "auth!=null"
+    },
+    "usersPublic": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth!=null && auth.uid===$uid"
+      }
+    },
+    "botConfigs": {
+      "$uid": {
+        ".read": "auth!=null && auth.uid===$uid",
+        "$bid": {
+          ".write": "auth!=null && auth.uid===$uid"
+        }
+      }
+    }
+  }
+}
