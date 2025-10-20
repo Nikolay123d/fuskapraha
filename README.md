@@ -1,0 +1,1 @@
+# PRÁCE CZ CHAT — quick drop\nТут мінімальний робочий набір. Вставте свої ключі у config.js, опублікуйте rules.\n

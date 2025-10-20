@@ -1,0 +1,64 @@
+{
+  "rules": {
+    "messages": {
+      ".read": true,
+      ".write": "auth!=null",
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".validate": "newData.hasChildren(['by','ts']) && newData.child('ts').isNumber() && ((newData.child('text').isString() && newData.child('text').val().length <= 2000) || newData.child('photo').isString())"
+        }
+      }
+    },
+    "rentMessages": {
+      ".read": true,
+      ".write": "auth!=null",
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ]
+      }
+    },
+    "usersPublic": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth!=null && auth.uid === $uid"
+      }
+    },
+    "presence": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth!=null && auth.uid === $uid"
+      }
+    },
+    "privateMessages": {
+      ".read": "auth!=null",
+      ".write": "auth!=null"
+    },
+    "help": {
+      ".read": true,
+      "$city": {
+        "cards": {
+          ".read": true,
+          ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+        }
+      }
+    },
+    "map": {
+      "poi": {
+        ".read": true,
+        ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+      }
+    },
+    "ads": {
+      ".read": true,
+      ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+    }
+  }
+}
