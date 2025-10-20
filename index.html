@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PRÁCE CZ CHAT</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="left">
+      <button id="toggleTabs" class="ghost">☰ Меню</button>
+      <div class="brand">PRÁCE CZ CHAT</div>
+      <label class="citysel">
+        <span>Місто:</span>
+        <select id="citySelect">
+          <option value="praha">Praha</option>
+          <option value="brno">Brno</option>
+          <option value="ostrava">Ostrava</option>
+          <option value="plzen">Plzeň</option>
+          <option value="olomouc">Olomouc</option>
+        </select>
+      </label>
+    </div>
+    <div class="mid"><span id="onlineCounter">Онлайн (прибл.): 0</span></div>
+    <div class="right">
+      <button id="participantsBtn" title="Учасники">👥</button>
+      <button id="profileBtn" title="Профіль">Профіль</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="chat" class="tab active">💬 Чат</button>
+    <button data-tab="rent" class="tab">🏠 Оренда</button>
+    <button data-tab="map" class="tab">🗺️ Карта</button>
+    <button data-tab="dm" class="tab">✉️ Особисті</button>
+    <button data-tab="help" class="tab">🆘 Допомога</button>
+    <button data-tab="announce" class="tab">📢 Оголошення</button>
+    <button data-tab="admin" class="tab adm-only">🛠 Адмін</button>
+  </nav>
+
+  <main id="views">
+    <!-- CHAT -->
+    <section id="view-chat" class="view active">
+      <div id="chatFeed" class="feed"></div>
+      <div id="chatToast" class="toast" hidden>✔️ Фото додано. Натисніть «Відправити».</div>
+      <div class="composer sticky">
+        <label class="filebtn" title="Фото"><input type="file" id="chatFile" accept="image/*">📷</label>
+        <input id="chatInput" placeholder="Напишіть повідомлення… (можна URL на фото)">
+        <button id="chatSend">Відправити</button>
+        <button id="clearChat" class="adm-only">🧹 Очистити</button>
+      </div>
+    </section>
+
+    <!-- RENT -->
+    <section id="view-rent" class="view">
+      <div id="rentFeed" class="feed"></div>
+      <div class="composer sticky">
+        <label class="filebtn"><input type="file" id="rentFile" accept="image/*">📷</label>
+        <input id="rentInput" placeholder="Оголошення…">
+        <button id="rentSend">Відправити</button>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section id="view-map" class="view">
+      <div class="row">
+        <button id="mapCenter">Центрувати</button>
+        <label class="filebtn adm-only" title="Фон міста (фото)"><input type="file" id="cityBgFile" accept="image/*">📷</label>
+        <input id="cityBgUrl" class="adm-only" placeholder="URL фону для міста">
+        <button id="saveCityBg" class="adm-only">Зберегти фон</button>
+      </div>
+      <div id="map" class="map"></div>
+      <div class="adm-only row">
+        <input id="poiTitle" placeholder="Назва">
+        <input id="poiType" placeholder="Тип (vol/help/pharm)">
+        <input id="poiAvatar" placeholder="URL аватарки (опц.)">
+        <input id="poiPhoto" placeholder="URL фото (опц.)">
+        <input id="poiLat" placeholder="lat (опц.)">
+        <input id="poiLng" placeholder="lng (опц.)">
+        <button id="poiAdd">Додати точку</button>
+      </div>
+    </section>
+
+    <!-- DMs -->
+    <section id="view-dm" class="view">
+      <div class="dm">
+        <aside id="dmSidebar"></aside>
+        <div class="dmThread">
+          <div id="dmHeader"></div>
+          <div id="dmMessages"></div>
+          <div id="dmToast" class="toast" hidden>✔️ Фото додано до ЛС. Натисніть «Надіслати».</div>
+          <div class="composer sticky">
+            <label class="filebtn"><input type="file" id="dmFile" accept="image/*">📷</label>
+            <input id="dmInput" placeholder="Повідомлення…">
+            <button id="dmSend">Надіслати</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HELP -->
+    <section id="view-help" class="view">
+      <div class="adm-only row">
+        <input id="helpTitle" placeholder="Заголовок">
+        <input id="helpLink" placeholder="Посилання (https://…)">
+        <input id="helpImage" placeholder="URL зображення">
+        <button id="helpPost">Опублікувати</button>
+      </div>
+      <div id="helpGrid" class="cards"></div>
+    </section>
+
+    <!-- Announce -->
+    <section id="view-announce" class="view">
+      <div class="adm-only row">
+        <input id="anTitle" placeholder="Тема">
+        <input id="anImage" placeholder="URL фото (опц.)">
+        <textarea id="anText" placeholder="Текст"></textarea>
+        <button id="anPost">Опублікувати</button>
+      </div>
+      <div id="anGrid" class="cards"></div>
+    </section>
+
+    <!-- Admin -->
+    <section id="view-admin" class="view">
+      <div class="card adm-only">
+        <h3>Ролі / Модерація</h3>
+        <div class="row">
+          <input id="roleUid" placeholder="UID користувача">
+          <button id="makeMod">+ Модератор</button>
+          <button id="removeMod">– Модератор</button>
+          <button id="ban30">⛔ Бан 30 хв</button>
+          <input id="banReason" placeholder="Причина">
+          <button id="unban">✅ Розбан</button>
+        </div>
+        <h4>Жалоби</h4>
+        <div id="reportsBox"></div>
+      </div>
+
+      <div class="card adm-only">
+        <h3>Боти</h3>
+        <div class="row">
+          <input id="botCity" placeholder="Місто (praha)">
+          <input id="botText" placeholder="Текст">
+          <input id="botImage" placeholder="URL зображення (опц.)">
+          <select id="botInterval">
+            <option value="2">кожні 2 хв</option>
+            <option value="5">кожні 5 хв</option>
+            <option value="15" selected>кожні 15 хв</option>
+          </select>
+          <button id="botStart">Старт</button>
+          <button id="botStop">Стоп</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Participants -->
+  <div id="participantsModal" class="modal" hidden>
+    <div class="card">
+      <header><b>Учасники</b><button data-close>✖</button></header>
+      <div id="participantsList"></div>
+    </div>
+  </div>
+
+  <!-- Profile -->
+  <div id="profileModal" class="modal" hidden>
+    <div class="card">
+      <header><b>Мій профіль</b><button data-close>✖</button></header>
+      <div class="row">
+        <label class="filebtn"><input type="file" id="avatarFile" accept="image/*">📷</label>
+        <img id="myAvatar" class="ava-lg" src="./img/default-avatar.svg" alt="">
+        <div>
+          <div><b id="myName">Анонім</b></div>
+          <div class="muted">Роль: <span id="myRole">seeker</span> · План: <span id="myPlan">free</span></div>
+        </div>
+      </div>
+      <div class="row">
+        <input id="setNick" placeholder="Новий нік">
+        <input id="setAvatarUrl" placeholder="URL аватарки (опц.)">
+        <select id="setRole">
+          <option value="seeker">Шукаю роботу</option>
+          <option value="employer">Роботодавець</option>
+        </select>
+        <button id="saveProfile">Зберегти</button>
+      </div>
+      <div class="row">
+        <button id="buyPremium">Купити Premium</button>
+        <button id="resetPass">Скинути пароль</button>
+        <button id="btnSignout">Вийти</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global toast -->
+  <div id="globalToast" class="toast" hidden></div>
+
+  <!-- libs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-storage-compat.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- app -->
+  <script src="./config.js"></script>
+  <script src="./bots.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
