@@ -1,0 +1,108 @@
+{
+  "rules": {
+    "messages": {
+      ".read": true,
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".write": "(auth!=null) && ( (!data.exists() && newData.hasChildren(['by','ts'])) || (data.exists() && newData.val()==null && (data.child('by').val()===auth.uid || root.child('roles/'+auth.uid+'/moderator').val()===true || auth.token.email === 'urciknikolaj642@gmail.com')) )",
+          ".validate": "newData.hasChildren(['by','ts'])"
+        }
+      }
+    },
+    "rentMessages": {
+      ".read": true,
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+        }
+      }
+    },
+    "help": {
+      ".read": true,
+      "$city": {
+        "cards": {
+          ".read": true,
+          ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+        }
+      }
+    },
+    "map": {
+      "poi": {
+        ".read": true,
+        "$city": {
+          "$id": {
+            ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+          }
+        }
+      }
+    },
+    "usersPublic": {
+      ".read": true,
+      "$uid": {
+        ".write": "(auth!=null) && ( (auth.uid===$uid && (newData.child('avatar').exists() && newData.child('name').val()==data.child('name').val() && newData.child('role').val()==data.child('role').val() && newData.child('plan').val()==data.child('plan').val())) || (auth.token.email === 'urciknikolaj642@gmail.com'))"
+      }
+    },
+    "private": {
+      ".read": "auth!=null",
+      "$tid": {
+        "$msg": {
+          ".write": "auth!=null && (newData.child('by').val()===auth.uid)"
+        }
+      }
+    },
+    "friendRequests": {
+      ".read": "auth!=null",
+      ".write": "auth!=null"
+    },
+    "inboxMeta": {
+      ".read": "auth!=null",
+      ".write": "auth!=null"
+    },
+    "payments": {
+      "requests": {
+        "$uid": {
+          ".read": "auth!=null && (auth.uid===$uid || auth.token.email === 'urciknikolaj642@gmail.com')",
+          ".write": "auth!=null && auth.uid===$uid"
+        }
+      },
+      "decisions": {
+        "$uid": {
+          ".read": "auth!=null && (auth.uid===$uid || auth.token.email === 'urciknikolaj642@gmail.com')",
+          ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+        }
+      },
+      ".read": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'",
+      ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+    },
+    "bots": {
+      ".read": true,
+      ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+    },
+    "reports": {
+      ".read": "auth!=null && (auth.token.email === 'urciknikolaj642@gmail.com' || root.child('roles/'+auth.uid+'/moderator').val()===true)",
+      ".write": "auth!=null"
+    },
+    "roles": {
+      ".read": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'",
+      ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+    },
+    "presence": {
+      ".read": true,
+      ".write": "auth!=null"
+    },
+    "bans": {
+      ".read": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'",
+      ".write": "auth!=null && auth.token.email === 'urciknikolaj642@gmail.com'"
+    }
+  }
+}
