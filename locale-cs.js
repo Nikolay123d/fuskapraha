@@ -1,0 +1,1 @@
+window.LCZ={ok:'Hotovo'};
