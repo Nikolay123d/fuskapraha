@@ -1,0 +1,173 @@
+<!doctype html><html lang="cs"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PRÁCE CZ CHAT — Stage 3</title>
+<link rel="stylesheet" href="./style.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script>try{var w=localStorage.getItem('wall');if(w){document.documentElement.style.backgroundImage='url('+w+')';document.documentElement.style.backgroundSize='cover';document.documentElement.style.backgroundAttachment='fixed';document.documentElement.style.backgroundPosition='center';}}catch(e){}</script>
+</head><body>
+<header class="topbar"><div class="brand">PRÁCE CZ CHAT</div>
+<div class="row"><label>Město: <select id="citySelect"><option value="praha">Praha</option><option value="brno">Brno</option><option value="olomouc">Olomouc</option><option value="ostrava">Ostrava</option><option value="plzen">Plzeň</option></select></label></div><div class="spacer"></div>
+<button id="toggleTop">☰</button>
+<div id="topButtons" class="row">
+  <button id="profileBtn">Profil</button>
+  <button id="buyPremiumBtn">Koupit Premium</button>
+  <button id="notifBtn">🔔 <span id="notifCount">0</span></button>
+</div></header>
+
+<nav id="tabs">
+  <button class="tab active" data-tab="chat">💬 Chat</button>
+  <button class="tab" data-tab="rent">🏠 Pronájem</button>
+  <button class="tab" data-tab="help">🤝 Pomoc</button>
+  <button class="tab" data-tab="map">🗺️ Mapa</button>
+  <button class="tab" data-tab="dm">✉️ Osobní</button>
+  <button class="tab" data-tab="friends">👥 Přátelé</button>
+  <button class="tab" data-tab="admin">🛠️ Admin</button>
+</nav>
+
+<main>
+  <!-- Chat -->
+  <section id="view-chat" class="view active">
+    <div id="chatFeed" class="feed"></div>
+    <div class="composer sticky">
+      <label class="filebtn" title="Tapeta (kamera/galerie)"><input type="file" id="bgFile" accept="image/*" capture="environment"/>📷</label>
+      <label class="filebtn" title="Obrázek do chatu"><input type="file" id="chatFile" accept="image/*" capture="environment"/>🖼️</label>
+      <input id="chatInput" placeholder="Napište zprávu…"/>
+      <button id="chatSend">Odeslat</button>
+    </div>
+  </section>
+
+  <!-- Pronajem -->
+  <section id="view-rent" class="view">
+    <div id="rentFeed" class="feed"></div>
+    <div class="composer sticky">
+      <label class="filebtn"><input type="file" id="rentFile" accept="image/*" capture="environment"/>🖼️</label>
+      <input id="rentTitle" placeholder="Nadpis (byt, pokoj…)"/>
+      <input id="rentPrice" placeholder="Cena (Kč)"/>
+      <input id="rentCity" placeholder="Město (např. Praha)"/>
+      <button id="rentPost">Přidat inzerát</button>
+    </div>
+  </section>
+
+  <!-- Help -->
+  <section id="view-help" class="view">
+    <div id="helpFeed" class="feed"></div>
+    <div class="composer sticky">
+      <label class="filebtn"><input type="file" id="helpFile" accept="image/*" capture="environment"/>🖼️</label>
+      <input id="helpTitle" placeholder="Co potřebujete / nabízíte"/>
+      <button id="helpPost">Přidat</button>
+    </div>
+  </section>
+
+  <!-- DM -->
+  <section id="view-dm" class="view two">
+    <aside class="sidebar">
+      <div class="title">Žádosti o přátelství</div>
+      <div id="friendRequests" class="feed"></div>
+      <div class="title">Uživatelé</div>
+      <div id="participantsList" class="feed"></div>
+    </aside>
+    <section class="content">
+      <div id="dmHeader" class="title">Vyberte kontakt</div>
+      <div id="dmMessages" class="feed"></div>
+      <div class="composer sticky">
+        <input id="dmInput" placeholder="Zpráva…"/>
+        <button id="dmSend">Poslat</button>
+      </div>
+    </section>
+  </section>
+
+  <!-- Friends -->
+  <section id="view-friends" class="view">
+    <div id="friendsList" class="feed"></div>
+  </section>
+
+  <!-- Map -->
+  <section id="view-map" class="view">
+    <div id="map" class="map"></div>
+    <div class="panel row"><label class="filebtn" title="Obrázek bodu"><input type="file" id="placeFile" accept="image/*" capture="environment"/>🖼️</label>
+      <button id="addPlace">Přidat bod</button>
+      <button id="editMode">Režim úprav</button>
+    </div>
+  </section>
+
+  <!-- Admin -->
+  <section id="view-admin" class="view">
+    <div class="panel">
+      <h3>Super panel — Stage 3</h3>
+      <div class="row">
+        <label>Téma: <select id="themeSelect"><option value="dark">Tmavé</option><option value="light">Světlé</option></select></label>
+        <label>Město: <input id="cityInput" value="praha"/></label>
+        <button id="cleanChat">Vyčistit chat (město)</button>
+      </div>
+      <div class="row">
+        <button id="refreshUsers">Načíst uživatele</button>
+        <button id="refreshPayments">Načíst platby</button>
+        <button id="refreshBots">Načíst rekl. účty</button>
+      </div>
+      <div class="muted">Správa rolí, ban/rozban, logy, platby, REKLAMA účty — активны.</div>
+    </div>
+
+    <div class="panel">
+      <h3>Uživatelé</h3>
+      <div class="row">
+        <input id="adminSearch" placeholder="nick/uid/email"/>
+        <select id="roleSelect"><option value="user">user</option><option value="moderator">moderator</option><option value="admin">admin</option></select>
+        <button id="applyRole">Nastavit roli</button>
+        <button id="ban30">Ban 30 min</button>
+        <button id="unban">Rozban</button>
+      </div>
+      <div id="adminUsers" class="feed"></div>
+    </div>
+
+    <div class="panel"><h3>Platby / Premium</h3><div id="paymentsBox" class="feed"></div></div>
+
+    <div class="panel">
+      <h3>Reklamní účty (max 10) — REKLAMA</h3>
+      <div class="row">
+        <button id="createAdAcc">Vytvořit</button>
+        <button id="runScheduler">Spustit plánovač (MVP)</button>
+      </div>
+      <div id="adAccounts" class="feed"></div>
+    </div>
+
+    <div class="panel"><h3>Logy</h3><div id="logsBox" class="feed"></div></div>
+  </section>
+</main>
+
+<div id="globalToast" class="toast" hidden></div>
+<div id="badge" class="badge" hidden>🔔</div>
+
+<!-- Greeting overlay only for darausoan@gmail.com -->
+<div id="greetOverlay" class="greet" hidden>
+  <div class="greet-card"><button id="greetClose" title="Zavřít" style="position:absolute;right:12px;top:12px">✖</button>
+    <img src="https://i.ibb.co/chYKyxpm/snimok-ekrana-2017-11-13-v-16-00-25.png" alt="Růže"/>
+    <h2>Ty jsi ta nejkrásnější dívka! 🌹</h2>
+    <p>Od tvůrce projektu — pro tebe.</p>
+    <div class="row">
+      <button id="greetAddFriend">Přidat do přátel</button>
+      <button id="greetWriteDM">Napsat</button>
+    </div>
+  </div>
+</div>
+
+<audio id="aNewChat" src="./sounds/new_chat.wav" preload="auto"></audio>
+<audio id="aNewDM" src="./sounds/new_dm.wav" preload="auto"></audio>
+<audio id="aOk" src="./sounds/ok.wav" preload="auto"></audio>
+<audio id="aErr" src="./sounds/err.wav" preload="auto"></audio>
+<audio id="aCeleb" src="./sounds/celebration.wav" preload="auto"></audio>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="./config.js"></script>
+<script src="./style.js"></script>
+<script src="./app.js"></script>
+<script src="./dm.js"></script>
+<script src="./admin.js"></script>
+<script src="./map.js"></script>
+<script src="./bots.js"></script>
+<script src="./sw-register.js"></script>
+<script src="./extra.js"></script>
+</body></html>
