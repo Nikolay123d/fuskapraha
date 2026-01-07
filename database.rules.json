@@ -4,12 +4,12 @@
       "$room": {
         "messages": {
           ".read": true,
-          ".write": "auth != null",
+          ".write": true,
           ".indexOn": [
             "ts"
           ],
           "$msg": {
-            ".validate": "newData.hasChildren(['text','uid','nick','ts']) && newData.child('text').isString() && newData.child('text').val().length <= 2000 && newData.child('uid').val() === auth.uid && newData.child('nick').isString() && newData.child('nick').val().length <= 40 && newData.child('ts').isNumber()"
+            ".validate": "newData.hasChildren(['text','uid','nick','ts']) && newData.child('text').isString() && newData.child('text').val().length <= 2000 && newData.child('uid').isString() && newData.child('uid').val().length <= 80 && newData.child('nick').isString() && newData.child('nick').val().length <= 40 && newData.child('ts').isNumber()"
           }
         }
       }

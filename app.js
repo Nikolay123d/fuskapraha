@@ -71,6 +71,9 @@
   // --- Chat core
   let chatUnsub = null;
   let currentRoom = null;
+  let renderedKeys = new Set();
+  const CACHE_LIMIT = 50;
+  const CACHE_PREFIX = 'chat_cache_';
 
   function renderMessage(key, m) {
     const feed = $('chatFeed');
@@ -116,6 +119,48 @@
     if (feed) feed.innerHTML = '';
   }
 
+  function readCache(room) {
+    try {
+      const raw = localStorage.getItem(`${CACHE_PREFIX}${room}`);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function writeCache(room, entries) {
+    try {
+      localStorage.setItem(`${CACHE_PREFIX}${room}`, JSON.stringify(entries));
+    } catch (e) {
+      // ignore cache write errors
+    }
+  }
+
+  function addToCache(room, key, data) {
+    const entries = readCache(room);
+    const existingIndex = entries.findIndex((entry) => entry.key === key);
+    if (existingIndex >= 0) {
+      entries[existingIndex] = { key, data };
+    } else {
+      entries.push({ key, data });
+    }
+    if (entries.length > CACHE_LIMIT) {
+      entries.splice(0, entries.length - CACHE_LIMIT);
+    }
+    writeCache(room, entries);
+  }
+
+  function loadCachedMessages(room) {
+    const entries = readCache(room);
+    entries.forEach((entry) => {
+      if (!entry || !entry.key || !entry.data) return;
+      if (renderedKeys.has(entry.key)) return;
+      renderMessage(entry.key, entry.data);
+      renderedKeys.add(entry.key);
+    });
+  }
+
   function stopChat() {
     if (typeof chatUnsub === 'function') {
       chatUnsub();
@@ -127,6 +172,9 @@
     stopChat();
     currentRoom = room;
     clearFeed();
+    renderedKeys = new Set();
+
+    loadCachedMessages(room);
 
     const feed = $('chatFeed');
     if (!feed) return;
@@ -136,7 +184,10 @@
     const handler = (snap) => {
       const val = snap.val();
       if (!val) return;
+      if (renderedKeys.has(snap.key)) return;
       renderMessage(snap.key, val);
+      renderedKeys.add(snap.key);
+      addToCache(room, snap.key, val);
     };
 
     ref.off();
