@@ -1,0 +1,15 @@
+{
+  "rules": {
+    "messages": {
+      ".read": true,
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".write": "auth != null"
+        }
+      }
+    }
+  }
+}
