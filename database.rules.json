@@ -1,0 +1,165 @@
+{
+  "rules": {
+    ".read": true,
+    "roles": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth != null && root.child('roles/'+auth.uid+'/admin').val() === true)",
+        ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true",
+        ".validate": "newData.hasChildren(['admin']) && newData.child('admin').isBoolean()"
+      }
+    },
+    "bans": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth != null && root.child('roles/'+auth.uid+'/admin').val() === true)",
+        ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true",
+        ".validate": "newData.hasChild('until') && newData.child('until').isNumber()"
+      }
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true",
+      "wallpapers": {
+        "main": {
+          ".read": true,
+          ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true"
+        },
+        "auth": {
+          ".read": true,
+          ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true"
+        }
+      }
+    },
+    "usersPublic": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "emails": {
+      "$key": {
+        ".read": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true",
+        ".write": "auth != null && newData.child('uid').val() === auth.uid"
+      }
+    },
+    "presence": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+      }
+    },
+    "messages": {
+      ".read": true,
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".write": "auth != null && !(root.child('bans/'+auth.uid+'/until').val() > now)",
+          ".validate": "newData.hasChildren(['by','ts']) && newData.child('by').val()===auth.uid && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "rentMessages": {
+      ".read": true,
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".write": "auth != null && !(root.child('bans/'+auth.uid+'/until').val() > now)",
+          ".validate": "newData.hasChildren(['by','ts']) && newData.child('by').val()===auth.uid && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "friendRequests": {
+      "$to": {
+        "$from": {
+          ".read": "auth != null && (auth.uid === $to || auth.uid === $from)",
+          ".write": "auth != null && auth.uid === $from",
+          ".validate": "newData.hasChildren(['from','ts']) && newData.child('from').val()===auth.uid && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "friends": {
+      "$a": {
+        "$b": {
+          ".read": "auth != null && (auth.uid === $a || auth.uid === $b)",
+          ".write": "auth != null && (auth.uid === $a || auth.uid === $b)"
+        }
+      }
+    },
+    "privateMembers": {
+      "$room": {
+        "$uid": {
+          ".read": "auth != null && ($room.matches('^'+auth.uid+'_.+$') || $room.matches('^.+_'+auth.uid+'$'))",
+          ".write": "auth != null && ($room.matches('^'+auth.uid+'_.+$') || $room.matches('^.+_'+auth.uid+'$')) && (auth.uid === $uid || (!data.exists() && newData.val() === true))",
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "privateMessages": {
+      "$room": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": "auth != null && ($room.matches('^'+auth.uid+'_.+$') || $room.matches('^.+_'+auth.uid+'$'))",
+          ".write": "auth != null && ($room.matches('^'+auth.uid+'_.+$') || $room.matches('^.+_'+auth.uid+'$')) && root.child('privateMembers/'+$room+'/'+auth.uid).val() === true && !(root.child('bans/'+auth.uid+'/until').val() > now)",
+          ".validate": "newData.hasChildren(['by','ts']) && newData.child('by').val()===auth.uid && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "inboxMeta": {
+      "$uid": {
+        "$room": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && (auth.uid === $uid || (auth != null && ($room.matches('^'+auth.uid+'_.+$') || $room.matches('^.+_'+auth.uid+'$')) && newData.child('from').val()===auth.uid))"
+        }
+      }
+    },
+    "payments": {
+      "requests": {
+        "$uid": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    },
+    "bots": {
+      ".read": true,
+      ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true"
+    },
+    "reportsUsers": {
+      "$uid": {
+        ".read": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true",
+        "$rid": {
+          ".write": "auth != null",
+          ".validate": "newData.hasChildren(['from','ts','text']) && newData.child('from').val()===auth.uid && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "vacancies": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "map": {
+      ".read": true,
+      "poi": {
+        "$city": {
+          "$id": {
+            ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true"
+          }
+        }
+      }
+    }
+  }
+}
