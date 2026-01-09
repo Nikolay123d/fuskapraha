@@ -1,0 +1,239 @@
+{
+  "rules": {
+    ".read": true,
+    "roles": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('roles/'+auth.uid+'/admin').val() === true)",
+        ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true"
+      }
+    },
+    "bans": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('roles/'+auth.uid+'/admin').val() === true)",
+        ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true",
+        ".validate": "newData.hasChildren(['until']) && newData.child('until').isNumber()"
+      }
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true"
+    },
+    "messages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null && !(root.child('bans/'+auth.uid+'/until').val() > now)",
+          ".validate": "newData.hasChildren(['by','ts']) && newData.child('by').isString() && (newData.child('ts').isNumber() || newData.child('ts').child('.sv').val() === 'timestamp' || newData.child('ts').child('/.sv').val() === 'timestamp') && (newData.hasChild('text') || newData.hasChild('image'))"
+        }
+      }
+    },
+    "rentMessages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null && !(root.child('bans/'+auth.uid+'/until').val() > now)",
+          ".validate": "newData.hasChildren(['by','ts']) && newData.child('by').isString() && (newData.child('ts').isNumber() || newData.child('ts').child('.sv').val() === 'timestamp' || newData.child('ts').child('/.sv').val() === 'timestamp') && (newData.hasChild('text') || newData.hasChild('image'))"
+        }
+      }
+    },
+    "presence": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChild('ts') && (newData.child('ts').isNumber() || newData.child('ts').child('.sv').val() === 'timestamp' || newData.child('ts').child('/.sv').val() === 'timestamp')"
+      }
+    },
+    "usersPublic": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "profiles": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "emails": {
+      "$key": {
+        ".read": "auth != null",
+        ".write": "auth != null && newData.child('uid').val() === auth.uid"
+      }
+    },
+    "friendRequests": {
+      "$to": {
+        "$from": {
+          ".read": "auth != null && (auth.uid === $to || auth.uid === $from)",
+          ".write": "auth != null && auth.uid === $from",
+          ".validate": "newData.hasChild('ts') && (newData.child('ts').isNumber() || newData.child('ts').child('.sv').val() === 'timestamp' || newData.child('ts').child('/.sv').val() === 'timestamp')"
+        }
+      }
+    },
+    "friends": {
+      "$a": {
+        "$b": {
+          ".read": "auth != null && (auth.uid === $a || auth.uid === $b)",
+          ".write": "auth != null && auth.uid === $a",
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "inboxMeta": {
+      "$uid": {
+        ".indexOn": [
+          "ts",
+          "lastTs"
+        ],
+        "$room": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && (auth.uid === $uid || root.child('privateMembers/'+$room+'/'+auth.uid).val() === true)",
+          ".validate": "newData.hasChildren(['ts','with']) && (newData.child('ts').isNumber() || newData.child('ts').child('.sv').val() === 'timestamp' || newData.child('ts').child('/.sv').val() === 'timestamp') && newData.child('with').isString() && (!newData.hasChild('lastTs') || (newData.child('lastTs').isNumber() || newData.child('lastTs').child('.sv').val() === 'timestamp' || newData.child('lastTs').child('/.sv').val() === 'timestamp'))"
+        }
+      }
+    },
+    "privateMembers": {
+      "$room": {
+        "$uid": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('privateMembers/'+$room+'/'+auth.uid).val() === true || root.child('roles/'+auth.uid+'/admin').val() === true)",
+          ".write": "auth != null && newData.val() === true && (auth.uid === $uid || root.child('roles/'+auth.uid+'/admin').val() === true || !data.parent().exists() || data.parent().child(auth.uid).val() === true)",
+          ".validate": "newData.val() === true"
+        }
+      }
+    },
+    "privateMessages": {
+      "$room": {
+        ".read": "auth != null && root.child('privateMembers/'+$room+'/'+auth.uid).val() === true",
+        ".write": "auth != null && root.child('privateMembers/'+$room+'/'+auth.uid).val() === true",
+        "items": {
+          "$msgId": {
+            ".validate": "newData.hasChildren(['by','ts']) && newData.child('by').val() === auth.uid && (newData.child('ts').isNumber() || newData.child('ts').child('.sv').val() === 'timestamp' || newData.child('ts').child('/.sv').val() === 'timestamp') && ((newData.child('text').isString() && newData.child('text').val().length > 0) || (newData.child('image').isString() && newData.child('image').val().length > 0))"
+          }
+        },
+        "$msgId": {
+          ".validate": "newData.hasChildren(['by','ts']) && newData.child('by').val() === auth.uid && (newData.child('ts').isNumber() || newData.child('ts').child('.sv').val() === 'timestamp' || newData.child('ts').child('/.sv').val() === 'timestamp') && ((newData.child('text').isString() && newData.child('text').val().length > 0) || (newData.child('image').isString() && newData.child('image').val().length > 0))"
+        }
+      }
+    },
+    "messageReactions": {
+      "$city": {
+        "$msgId": {
+          "$uid": {
+            ".read": true,
+            ".write": "auth != null && auth.uid === $uid",
+            ".validate": "newData.isString() || newData.isBoolean() || newData.isNumber()"
+          }
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        ".indexOn": [
+          "ts"
+        ]
+      }
+    },
+    "ratings": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null"
+      }
+    },
+    "reports": {
+      "$id": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        ".indexOn": [
+          "ts"
+        ]
+      }
+    },
+    "reportsUsers": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    "payments": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "userBots": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "userBotsLast": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "bots": {
+      "$id": {
+        ".read": true,
+        ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true"
+      }
+    },
+    "vacancies": {
+      "$id": {
+        ".read": true,
+        ".write": "auth != null"
+      }
+    },
+    "usage": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "limits": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true"
+    },
+    "siteHelperConfig": {
+      ".read": true,
+      ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true"
+    },
+    "profileChangeRequests": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": [
+        "ts"
+      ]
+    },
+    "map": {
+      "poi": {
+        ".read": true,
+        "$city": {
+          "$id": {
+            ".write": "auth != null"
+          }
+        }
+      }
+    },
+    "spamReports": {
+      "$id": {
+        ".read": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true",
+        ".write": "auth != null"
+      }
+    }
+  }
+}
