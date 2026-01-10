@@ -1,0 +1,172 @@
+{
+  "rules": {
+    ".read": true,
+    "messages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null"
+        }
+      }
+    },
+    "rentMessages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null"
+        }
+      }
+    },
+    "presence": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "usersPublic": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "emails": {
+      "$key": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    "friendRequests": {
+      "$toUid": {
+        "$fromUid": {
+          ".read": "auth != null && (auth.uid === $toUid || auth.uid === $fromUid)",
+          ".write": "auth != null"
+        }
+      }
+    },
+    "friends": {
+      "$uid": {
+        "$friendUid": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === $friendUid)",
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    },
+    "inboxMeta": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": [
+        "ts",
+        "lastTs"
+      ],
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        ".indexOn": [
+          "ts",
+          "lastTs"
+        ],
+        "$room": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    },
+    "privateMembers": {
+      "$roomId": {
+        "$uid": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      }
+    },
+    "privateMessages": {
+      "$roomId": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msgId": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        ".indexOn": [
+          "ts"
+        ]
+      }
+    },
+    "botsInbox": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        ".indexOn": [
+          "ts"
+        ]
+      }
+    },
+    "profileChangeRequests": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": [
+        "ts"
+      ]
+    },
+    "paymentRequests": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": [
+        "ts"
+      ]
+    },
+    "payments": {
+      "requests": {
+        "$uid": {
+          "$id": {
+            ".read": "auth != null && (auth.uid === $uid || root.child('settings/admins/'+auth.uid).val() === true || auth.token.email === root.child('settings/adminEmail').val())",
+            ".write": "auth != null && (auth.uid === $uid || root.child('settings/admins/'+auth.uid).val() === true || auth.token.email === root.child('settings/adminEmail').val())"
+          }
+        }
+      }
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null",
+      "admins": {
+        ".read": true,
+        "$uid": {
+          ".write": "auth != null && (root.child('settings/admins/'+auth.uid).val() === true || auth.token.email === root.child('settings/adminEmail').val())"
+        }
+      },
+      "adminEmail": {
+        ".read": true,
+        ".write": "auth != null && (root.child('settings/admins/'+auth.uid).val() === true || auth.token.email === root.child('settings/adminEmail').val())"
+      }
+    },
+    "map": {
+      "poi": {
+        ".read": true,
+        "$city": {
+          "$id": {
+            ".write": "auth != null"
+          }
+        }
+      }
+    }
+  }
+}
