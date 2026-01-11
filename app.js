@@ -1449,21 +1449,30 @@ $('#toggleTabs')?.addEventListener('click', ()=> $('#tabs').classList.toggle('hi
 
 // === Auth state ===
 
-// --- Admin role watcher (RTDB: /roles/{uid}/admin) ---
-let _roleRef = null;
-
-let _adminRefs = [];
+// --- Admin role watcher (EMAIL based, TEMP) ---
 function watchAdminRole(user){
-  const is = !!(user && user.uid === window.ADMIN_UID);
+  const ADMIN_EMAILS = [
+    'urciknikolaj642@gmail.com',
+    'urciknikolaj62@gmail.com'
+  ];
+
+  const is =
+    !!(user &&
+       user.email &&
+       ADMIN_EMAILS.includes(user.email.toLowerCase()));
+
   window.__isAdmin = is;
-  try{ document.body.classList.toggle('is-admin', is); }catch{}
-  try{ console.log('ADMIN =', is, 'UID =', user?user.uid:null); }catch{}
+
+  try {
+    document.body.classList.toggle('is-admin', is);
+  } catch {}
+
+  console.log(
+    'ADMIN =', is,
+    'UID =', user ? user.uid : null,
+    'EMAIL =', user ? user.email : null
+  );
 }
-
-auth.onAuthStateChanged(async (u)=>{
-
-  try{ if(u) await ensureUserPublic(u); }catch{}
-  try{ if(u) await enforceVerifyWindow(u); }catch{}
   // admin-only visibility (role-based)
   watchAdminRole(u);
 // profile display
@@ -2199,93 +2208,157 @@ window.startDM = startDM;
   }
 
   // --- Admin: approve requests ---
-  async function loadAdminRequests(){
-    const me=auth.currentUser; if(!isAdminUser(me)) return;
-    const box=document.getElementById('adminProfileRequests'); if(box) box.innerHTML='';
-    const snap = await db.ref('profileChangeRequests').orderByChild('ts').limitToLast(50).get();
-    const v=snap.val()||{};
-    const ids=Object.keys(v).sort((a,b)=>(v[b].ts||0)-(v[a].ts||0));
-    for(const id of ids){
-      const r=v[id]; if(!r || r.status!=='pending') continue;
-      const u=await getUser(r.uid);
-      const el=document.createElement('div'); el.className='msg';
-      el.innerHTML = `<div class="ava"><img src="${esc(u.avatar||window.DEFAULT_AVATAR)}"></div>
-        <div class="bubble" style="width:100%">
-          <div class="name" data-uid="${r.uid}"><b>${esc(u.nick||'Uživatel')}</b> · ${esc(r.type)}</div>
-          <div class="muted">${esc(String(r.from))} → <b>${esc(String(r.to))}</b></div>
-          <div class="actions">
-            <button data-act="approve">Schválit</button>
-            <button data-act="reject">Zamítnout</button>
-          </div>
-        </div>`;
-      el.addEventListener('click', async (e)=>{
-        const act=e.target?.dataset?.act; if(!act) return;
-        if(act==='approve'){
-          if(r.type==='nick') await db.ref('usersPublic/'+r.uid).update({nick:r.to});
-          if(r.type==='role') await db.ref('usersPublic/'+r.uid).update({role:r.to});
-          await db.ref('profileChangeRequests/'+id).update({status:'approved', decidedAt:Date.now()});
-          toast('Schváleno');
-          loadAdminRequests();
-        }
-        if(act==='reject'){
-          await db.ref('profileChangeRequests/'+id).update({status:'rejected', decidedAt:Date.now()});
-          toast('Zamítnuto');
-          loadAdminRequests();
-        }
-      });
-      box && box.appendChild(el);
-    }
+function isAdminUser(u){
+  const ADMIN_EMAILS = [
+    'urciknikolaj642@gmail.com',
+    'urciknikolaj62@gmail.com'
+  ];
+  return !!(u && u.email && ADMIN_EMAILS.includes(u.email.toLowerCase()));
+}
 
-    const boxP=document.getElementById('adminPremiumRequests');
-    const boxPay=document.getElementById('adminPaymentRequests'); if(boxP) boxP.innerHTML='';
-    // payments/requests/{uid}/{id}
-    const ps = await db.ref('payments/requests').get();
-    const pv = ps.val() || {};
-    // flatten
-    const all = [];
-    for(const uidKey of Object.keys(pv)){
-      const per = pv[uidKey] || {};
-      for(const id of Object.keys(per)){
-        const r = per[id];
-        if(r && r.status==='pending') all.push({id, uid: uidKey, r});
+function parsePeriodToMs(period){
+  // period может быть "7d", "30d", "1m", "90d" и т.п.
+  const s = String(period || '').trim().toLowerCase();
+  const m = s.match(/^(\d+)\s*([dhm])$/);
+  if(!m) return null;
+  const n = Number(m[1]);
+  const unit = m[2];
+  if(unit === 'h') return n * 60 * 60 * 1000;
+  if(unit === 'd') return n * 24 * 60 * 60 * 1000;
+  if(unit === 'm') return n * 30 * 24 * 60 * 60 * 1000; // упрощённо
+  return null;
+}
+
+async function loadAdminRequests(){
+  const me = auth.currentUser;
+  if(!isAdminUser(me)) return;
+
+  const box = document.getElementById('adminProfileRequests');
+  if(box) box.innerHTML = '';
+
+  const snap = await db.ref('profileChangeRequests').orderByChild('ts').limitToLast(50).get();
+  const v = snap.val() || {};
+  const ids = Object.keys(v).sort((a,b)=>(v[b].ts||0)-(v[a].ts||0));
+
+  for(const id of ids){
+    const r = v[id];
+    if(!r || r.status !== 'pending') continue;
+
+    const u = await getUser(r.uid);
+
+    const el = document.createElement('div');
+    el.className = 'msg';
+    el.innerHTML = `
+      <div class="ava"><img src="${esc(u.avatar||window.DEFAULT_AVATAR)}"></div>
+      <div class="bubble" style="width:100%">
+        <div class="name" data-uid="${esc(r.uid)}">
+          <b>${esc(u.nick||'Uživatel')}</b> · ${esc(r.type||'')}
+        </div>
+        <div class="muted">${esc(String(r.from||''))} → <b>${esc(String(r.to||''))}</b></div>
+        <div class="actions">
+          <button data-act="approve">Schválit</button>
+          <button data-act="reject">Zamítnout</button>
+        </div>
+      </div>
+    `;
+
+    el.addEventListener('click', async (e)=>{
+      const act = e.target?.dataset?.act;
+      if(!act) return;
+
+      if(act === 'approve'){
+        if(r.type === 'nick') await db.ref('usersPublic/'+r.uid).update({nick: r.to});
+        if(r.type === 'role') await db.ref('usersPublic/'+r.uid).update({role: r.to});
+        await db.ref('profileChangeRequests/'+id).update({status:'approved', decidedAt: Date.now()});
+        toast('Schváleno');
+        loadAdminRequests();
       }
-    }
-    all.sort((a,b)=>(b.r.ts||0)-(a.r.ts||0));
-    for(const item of all.slice(0,100)){
-      const r=item.r;
-      const u=await getUser(item.uid);
-      const el=document.createElement('div'); el.className='msg';
-      const planTitle = (PREMIUM_PLANS[r.plan]?.title) || r.plan || 'Premium';
-      const proof = r.proofImg ? `<div style="margin-top:6px"><img src="${esc(r.proofImg)}" style="max-width:220px;border-radius:10px"></div>` : '';
-      el.innerHTML = `<div class="ava"><img src="${esc(u.avatar||window.DEFAULT_AVATAR)}"></div>
-        <div class="bubble" style="width:100%">
-          <div class="name" data-uid="${esc(item.uid)}"><b>${esc(u.nick||'Uživatel')}</b> · ${esc(planTitle)}</div>
-          <div class="muted">${esc(r.email||'')}</div>
-          <div class="muted">Cena: ${esc(String(r.price||''))} Kč · ${esc(String(r.period||''))}</div>
-          ${proof}
-          <div class="actions">
-            <button data-act="grant">Udělit</button>
-            <button data-act="reject">Zamítnout</button>
-          </div>
-        </div>`;
-      el.addEventListener('click', async (e)=>{
-        const act=e.target?.dataset?.act; if(!act) return;
-        if(act==='grant'){
-          const plan = r.plan || 'vip';
-          await db.ref('usersPublic/'+item.uid).update({plan, premiumSince:Date.now()});
-          await db.ref('payments/requests/'+item.uid+'/'+item.id).update({status:'granted', decidedAt:Date.now()});
-          toast('Privilegium uděleno');
-          loadAdminRequests();
-        }
-        if(act==='reject'){
-          await db.ref('payments/requests/'+item.uid+'/'+item.id).update({status:'rejected', decidedAt:Date.now()});
-          toast('Zamítnuto');
-          loadAdminRequests();
-        }
-      });
-      boxP && boxP.appendChild(el);
+
+      if(act === 'reject'){
+        await db.ref('profileChangeRequests/'+id).update({status:'rejected', decidedAt: Date.now()});
+        toast('Zamítnuto');
+        loadAdminRequests();
+      }
+    });
+
+    box && box.appendChild(el);
+  }
+
+  // Premium / Payments
+  const boxP = document.getElementById('adminPremiumRequests');
+  const boxPay = document.getElementById('adminPaymentRequests');
+  if(boxP) boxP.innerHTML = '';
+  if(boxPay) boxPay.innerHTML = '';
+
+  const ps = await db.ref('payments/requests').get();
+  const pv = ps.val() || {};
+
+  const all = [];
+  for(const uidKey of Object.keys(pv)){
+    const per = pv[uidKey] || {};
+    for(const reqId of Object.keys(per)){
+      const rr = per[reqId];
+      if(rr && rr.status === 'pending') all.push({reqId, uid: uidKey, r: rr});
     }
   }
+
+  all.sort((a,b)=>(b.r.ts||0)-(a.r.ts||0));
+
+  for(const item of all.slice(0,100)){
+    const r = item.r;
+    const u = await getUser(item.uid);
+
+    const el = document.createElement('div');
+    el.className = 'msg';
+
+    const planTitle = (PREMIUM_PLANS?.[r.plan]?.title) || r.plan || 'Premium';
+    const proof = r.proofImg
+      ? `<div style="margin-top:6px"><img src="${esc(r.proofImg)}" style="max-width:220px;border-radius:10px"></div>`
+      : '';
+
+    el.innerHTML = `
+      <div class="ava"><img src="${esc(u.avatar||window.DEFAULT_AVATAR)}"></div>
+      <div class="bubble" style="width:100%">
+        <div class="name" data-uid="${esc(item.uid)}"><b>${esc(u.nick||'Uživatel')}</b> · ${esc(planTitle)}</div>
+        <div class="muted">${esc(r.email||'')}</div>
+        <div class="muted">Cena: ${esc(String(r.price||''))} Kč · ${esc(String(r.period||''))}</div>
+        ${proof}
+        <div class="actions">
+          <button data-act="grant">Udělit</button>
+          <button data-act="reject">Zamítnout</button>
+        </div>
+      </div>
+    `;
+
+    el.addEventListener('click', async (e)=>{
+      const act = e.target?.dataset?.act;
+      if(!act) return;
+
+      if(act === 'grant'){
+        const plan = r.plan || 'vip';
+        const now = Date.now();
+        const addMs = parsePeriodToMs(r.period);
+        const premiumUntil = addMs ? (now + addMs) : null;
+
+        const upd = { plan, premiumSince: now };
+        if(premiumUntil) upd.premiumUntil = premiumUntil;
+
+        await db.ref('usersPublic/'+item.uid).update(upd);
+        await db.ref('payments/requests/'+item.uid+'/'+item.reqId).update({status:'granted', decidedAt: now});
+        toast('Privilegium uděleno');
+        loadAdminRequests();
+      }
+
+      if(act === 'reject'){
+        await db.ref('payments/requests/'+item.uid+'/'+item.reqId).update({status:'rejected', decidedAt: Date.now()});
+        toast('Zamítnuto');
+        loadAdminRequests();
+      }
+    });
+
+    (boxP || boxPay)?.appendChild(el);
+  }
+}
 
   // --- Bots (MVP client scheduler for admin) ---
   let botTimer=null;
