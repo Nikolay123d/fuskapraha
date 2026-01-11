@@ -1,0 +1,176 @@
+{
+  "rules": {
+    ".read": true,
+    "roles": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === 'rN93vIzh0AUhX1YsSWb6Th6W9w82'",
+        ".write": "auth != null && auth.uid === 'rN93vIzh0AUhX1YsSWb6Th6W9w82'"
+      }
+    },
+    "bans": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === 'rN93vIzh0AUhX1YsSWb6Th6W9w82'",
+        ".write": "auth != null && auth.uid === 'rN93vIzh0AUhX1YsSWb6Th6W9w82'"
+      }
+    },
+    "mutes": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === 'rN93vIzh0AUhX1YsSWb6Th6W9w82'",
+        ".write": "auth != null && auth.uid === 'rN93vIzh0AUhX1YsSWb6Th6W9w82'"
+      }
+    },
+    "messages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null",
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "rentMessages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null",
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "presence": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "usersPublic": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "emails": {
+      "$key": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        ".validate": "newData.hasChild('uid') && newData.child('uid').val() === auth.uid"
+      }
+    },
+    "friendRequests": {
+      "$toUid": {
+        "$fromUid": {
+          ".read": "auth != null && (auth.uid === $toUid || auth.uid === $fromUid)",
+          ".write": "auth != null && auth.uid === $fromUid",
+          ".validate": "newData.hasChild('ts')"
+        }
+      }
+    },
+    "friends": {
+      "$uid": {
+        "$friendUid": {
+          ".read": "auth != null && (auth.uid === $uid || auth.uid === $friendUid)",
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    },
+    "inboxMeta": {
+      "$uid": {
+        ".indexOn": [
+          "lastTs",
+          "ts"
+        ],
+        "$roomId": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && root.child('privateMembers/'+$roomId+'/'+auth.uid).exists()",
+          ".validate": "newData.hasChildren(['with','ts','lastTs']) && newData.child('ts').isNumber() && newData.child('lastTs').isNumber()"
+        }
+      }
+    },
+    "privateMembers": {
+      "$roomId": {
+        ".read": "auth != null && root.child('privateMembers/'+$roomId+'/'+auth.uid).exists()",
+        ".write": "auth != null",
+        "$uid": {
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "privateMessages": {
+      "$roomId": {
+        ".indexOn": [
+          "ts"
+        ],
+        ".read": "auth != null && root.child('privateMembers/'+$roomId+'/'+auth.uid).exists()",
+        ".write": "auth != null && root.child('privateMembers/'+$roomId+'/'+auth.uid).exists()",
+        "$msgId": {
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber() && newData.hasChild('by')"
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".indexOn": [
+          "ts"
+        ],
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "profileChangeRequests": {
+      ".indexOn": [
+        "ts"
+      ],
+      ".read": "auth != null && auth.uid === 'rN93vIzh0AUhX1YsSWb6Th6W9w82'",
+      ".write": "auth != null",
+      "$id": {
+        ".validate": "newData.hasChild('ts')"
+      }
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && auth.uid === 'rN93vIzh0AUhX1YsSWb6Th6W9w82'"
+    },
+    "payments": {
+      ".read": "auth != null && auth.uid === 'rN93vIzh0AUhX1YsSWb6Th6W9w82'",
+      ".write": "auth != null"
+    },
+    "bots": {
+      ".read": true,
+      ".write": "auth != null && auth.uid === 'rN93vIzh0AUhX1YsSWb6Th6W9w82'"
+    },
+    "map": {
+      "poi": {
+        ".read": true,
+        "$city": {
+          "$id": {
+            ".write": "auth != null && auth.uid === 'rN93vIzh0AUhX1YsSWb6Th6W9w82'"
+          }
+        }
+      }
+    },
+    "vacancies": {
+      "$uid": {
+        ".indexOn": [
+          "ts"
+        ],
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid",
+        "$id": {
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    }
+  }
+}
