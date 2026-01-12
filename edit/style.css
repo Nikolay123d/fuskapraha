@@ -7,7 +7,7 @@ a{color:#7dffc1}
 .ghost{background:transparent;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:6px 10px}
 .citysel select{border:1px solid var(--line);background:rgba(0,0,0,.35);color:var(--text);border-radius:10px;padding:6px 8px}
 
-.tabs{display:flex;gap:8px;padding:8px 12px;overflow-x:auto;flex-wrap:nowrap;white-space:nowrap;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,.45);border-bottom:1px solid var(--line);position:sticky;top:56px;z-index:19}
+.tabs{display:flex;gap:8px;padding:8px 12px;background:rgba(0,0,0,.45);border-bottom:1px solid var(--line);position:sticky;top:56px;z-index:19}
 .tabs.hidden{display:none}
 .tab{border:1px solid var(--line);background:rgba(0,0,0,.35);color:var(--text);border-radius:10px;padding:8px 10px}
 .tab.active{border-color:#39ff91}
@@ -593,29 +593,6 @@ body.is-admin .adm-only, body.is-admin .admin-only { display:block; }
   backdrop-filter: blur(6px);
   font-weight:600;
   z-index:5;
-  /* Never block taps/clicks under the loader (mobile issue: buttons not clickable) */
-  pointer-events:none;
-}
-
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* Mobile UX: open DM room as a full-screen overlay card to avoid cramped split view */
-@media (max-width: 720px){
-  .dm{ display:block; }
-  #view-dm .dm > .card:first-child{ display:block; }
-  body.dm-room-open #view-dm .dm > .card:first-child{ display:none; }
-  #view-dm .dm > .card:last-child{ display:none; }
-  body.dm-room-open #view-dm .dm > .card:last-child{
-    display:block;
-    position:fixed;
-    inset:62px 10px 10px 10px;
-    z-index:99990;
-  }
-  body.dm-room-open #view-dm .dm > .card:last-child header{
-    position:sticky;
-    top:0;
-    z-index:2;
-  }
 }
 
 /* Scroll down button */
@@ -623,16 +600,16 @@ body.is-admin .adm-only, body.is-admin .admin-only { display:block; }
   position:absolute;
   right:14px;
   bottom:78px;
-  width:54px;
-  height:54px;
+  width:44px;
+  height:44px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.2);
-  background:rgba(0,0,0,.45);
+  background:rgba(0,0,0,.40);
   color:#fff;
-  font-size:22px;
+  font-size:18px;
   cursor:pointer;
   z-index:6;
-  box-shadow:0 12px 30px rgba(0,0,0,.45);
+  box-shadow:0 10px 26px rgba(0,0,0,.4);
 }
 .scroll-down:hover{background:rgba(0,0,0,.55)}
 
@@ -779,22 +756,14 @@ body.is-admin .adm-only, body.is-admin .admin-only { display:block; }
   .fab-menu{max-height:70vh; overflow:auto;}
 }
 
-/* Mini loaders - smoother (keep absolute overlay inside .feed-rel) */
+/* Mini loaders - smoother */
 .mini-load{
-  position:absolute;
-  left:12px;
-  right:12px;
-  top:12px;
-  padding:10px 12px;
+  padding:8px 10px;
   border:1px dashed var(--line);
   border-radius:12px;
-  background:rgba(0,0,0,.45);
-  backdrop-filter: blur(6px);
   display:flex;
   align-items:center;
   gap:10px;
-  font-weight:600;
-  z-index:6;
 }
 .mini-load:before{
   content:"";
@@ -820,8 +789,7 @@ body.is-admin .adm-only, body.is-admin .admin-only { display:block; }
 }
 
 
-.cookie-modal{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:18px;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);z-index:100005;pointer-events:auto}
-.cookie-card, .cookie-card *{pointer-events:auto}
+.cookie-modal{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:18px;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);z-index:9999}
 .cookie-card{width:min(92vw,640px);border-radius:22px;background:rgba(12,24,18,.94);border:1px solid rgba(255,255,255,.10);box-shadow:0 30px 120px rgba(0,0,0,.55)}
 .cookie-card header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 
@@ -841,35 +809,6 @@ body.is-admin .adm-only, body.is-admin .admin-only { display:block; }
 
 .auth-right input,.auth-right .inp{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.14)}
 .auth-right input::placeholder{color:rgba(255,255,255,.65)}
-
-/* v17 additions */
-.modal-card{ max-width: 920px; width: min(920px, 94vw); max-height: 86vh; overflow:auto; }
-.doc{ line-height:1.5; }
-.doc h3{ margin: 6px 0 10px; }
-.ava-lg{ width:72px; height:72px; border-radius:18px; object-fit:cover; }
-.broadcast-banner{
-  position: fixed;
-  left: 10px; right: 10px; bottom: 90px;
-  background: rgba(0,0,0,.65);
-  border: 1px solid rgba(255,255,255,.14);
-  backdrop-filter: blur(10px);
-  border-radius: 18px;
-  padding: 12px 12px;
-  display:none;
-  gap: 10px;
-  align-items: center;
-  z-index: 9999;
-}
-.broadcast-banner .bb-left{ flex:1; min-width: 180px; }
-.broadcast-banner .bb-title{ font-weight:700; }
-.broadcast-banner .bb-text{ font-size: 13px; opacity: .92; margin-top: 2px; }
-.broadcast-banner .bb-actions{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
-@media (max-width: 520px){
-  .broadcast-banner{ bottom: 70px; }
-  .broadcast-banner .bb-actions{ justify-content:flex-start; }
-}
-/* Admin buttons wrapping on mobile */
-#view-admin .row{ flex-wrap:wrap; }
 
 
 /* === v17.4 fixes: cookie clicks + mini loaders === */
@@ -892,57 +831,3 @@ body.is-admin .adm-only, body.is-admin .admin-only { display:block; }
   animation: spin 1s linear infinite;
   flex:none;
 }
-
-
-/* === v17.6 Mobile fit + real mini spinners === */
-html, body{overflow-x:hidden; max-width:100vw;}
-/* Prevent accidental horizontal scroll from panels */
-#app, .view, .modal, .sheet{max-width:100vw;}
-/* Mini loader with spinner */
-.mini-load{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 12px;
-  margin:10px 0;
-  border:1px solid var(--line);
-  border-radius:12px;
-  background:rgba(0,0,0,.28);
-  color:var(--text);
-  font-weight:600;
-}
-.mini-load::before{
-  content:"";
-  width:18px;height:18px;
-  border-radius:50%;
-  border:2px solid rgba(255,255,255,.22);
-  border-top-color: rgba(255,255,255,.85);
-  animation: mk_spin 0.9s linear infinite;
-  flex:0 0 auto;
-}
-@keyframes mk_spin{to{transform:rotate(360deg);}}
-
-/* Mobile: make main layout fit without sideways scrolling */
-@media (max-width: 520px){
-  .tabs{gap:6px; padding:8px;}
-  .tab{padding:8px 10px; font-size:12px;}
-  .topbar{padding:10px 10px;}
-  .citysel select{max-width:44vw;}
-  /* Ensure feeds scroll inside, not whole page */
-  #chatFeed, #dmFeed, #friendsList, #membersFeed{max-height: calc(100vh - 210px); overflow:auto;}
-  #dmThreads{max-height: calc(100vh - 210px); overflow:auto;}
-  .composer, .dmComposer{position:sticky; bottom:0; background:rgba(0,0,0,.35); backdrop-filter: blur(6px);}
-  .modal .box{max-height: 92vh; overflow:auto;}
-}
-
-/* Admin camera quick buttons */
-.admin-cam-btn{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:34px; height:34px;
-  border-radius:12px;
-  border:1px solid var(--line);
-  background:rgba(0,0,0,.35);
-  color:var(--text);
-  cursor:pointer;
-}
-.admin-cam-btn svg{width:18px;height:18px;}
