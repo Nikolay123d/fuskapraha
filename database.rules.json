@@ -1,0 +1,245 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+    "roles": {
+      "$uid": {
+        ".read": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')",
+        ".write": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')"
+      }
+    },
+    "bans": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com'))",
+        ".write": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')",
+        ".validate": "newData.hasChild('until') && newData.child('until').isNumber()"
+      }
+    },
+    "mutes": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com'))",
+        ".write": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')",
+        ".validate": "newData.hasChild('until') && newData.child('until').isNumber()"
+      }
+    },
+    "usersPublic": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && (auth.uid === $uid || (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com'))"
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "presence": {
+      ".indexOn": [
+        "ts"
+      ],
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChild('ts')"
+      }
+    },
+    "messages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null",
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "rentMessages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null",
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "friendRequests": {
+      "$to": {
+        "$from": {
+          ".read": "auth != null && (auth.uid === $to || auth.uid === $from)",
+          ".write": "auth != null && auth.uid === $from",
+          ".validate": "newData.hasChild('ts')"
+        }
+      }
+    },
+    "friends": {
+      "$a": {
+        "$b": {
+          ".read": "auth != null && (auth.uid === $a || auth.uid === $b)",
+          ".write": "auth != null && (auth.uid === $a || auth.uid === $b)"
+        }
+      }
+    },
+    "privateMembers": {
+      "$room": {
+        ".read": "auth != null && data.child(auth.uid).val() === true",
+        ".write": "auth != null && (!data.exists() || data.child(auth.uid).val() === true)",
+        "$uid": {
+          ".write": "auth != null && (auth.uid === $uid || !root.child('privateMembers/'+$room).exists() || root.child('privateMembers/'+$room+'/'+auth.uid).val() === true)",
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "privateRoomsByUser": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && (auth.uid === $uid)",
+        "$room": {
+          ".write": "auth != null && (auth.uid === $uid || root.child('privateMembers/'+$room+'/'+auth.uid).val() === true || !root.child('privateMembers/'+$room).exists())",
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "privateMessages": {
+      "$room": {
+        ".indexOn": [
+          "ts"
+        ],
+        ".read": "auth != null && root.child('privateMembers/'+$room+'/'+auth.uid).val() === true",
+        ".write": "auth != null && root.child('privateMembers/'+$room+'/'+auth.uid).val() === true",
+        "$msg": {
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "inboxMeta": {
+      "$uid": {
+        ".indexOn": [
+          "ts",
+          "lastTs"
+        ],
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "$chatId": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && (auth.uid === $uid || root.child('privateMembers/'+$chatId+'/'+auth.uid).val() === true)",
+          ".validate": "newData.hasChild('lastTs')"
+        }
+      }
+    },
+    "botRooms": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".indexOn": [
+          "ts"
+        ],
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && (auth.uid === $uid || (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com'))",
+        "$id": {
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "announcements": {
+      "global": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')",
+        ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+      }
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')",
+      "wallpapers": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')"
+      },
+      "sounds": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')"
+      },
+      "promo": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')"
+      }
+    },
+    "map": {
+      "poi": {
+        "$city": {
+          ".read": true,
+          ".write": "auth != null && ((auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com') || root.child('roles/'+auth.uid+'/moderator').val() === true)"
+        }
+      }
+    },
+    "bots": {
+      ".read": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')",
+      ".write": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')"
+    },
+    "userBots": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "fcmTokens": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "$token": {
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "vacancies": {
+      "$uid": {
+        ".indexOn": [
+          "ts"
+        ],
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid",
+        "$id": {
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "onlineStats": {
+      "public": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')"
+      }
+    },
+    "botTick": {
+      ".read": false,
+      ".write": false
+    },
+    "support": {
+      "tickets": {
+        ".read": "auth != null && (auth.token.email === 'urciknikolaj642@gmail.com' || auth.token.email === 'urciknikolaj62@gmail.com')",
+        "$id": {
+          ".write": "auth != null",
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "profileChangeRequests": {
+      ".indexOn": [
+        "ts"
+      ],
+      "$id": {
+        ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+        ".validate": "newData.hasChildren(['uid','ts','type']) && newData.child('ts').isNumber()"
+      }
+    }
+  }
+}
