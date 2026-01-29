@@ -1,0 +1,22 @@
+{
+  "database": {
+    "rules": "firebase/database.rules.json"
+  },
+  "storage": {
+    "rules": "firebase/storage.rules"
+  },
+  "functions": {
+    "source": "functions"
+  },
+  "hosting": {
+    "public": "docs",
+    "ignore": [
+      "**/.*",
+      "**/node_modules/**",
+      "docs/**",
+      "firebase.json",
+      "firebase/**",
+      "functions/**"
+    ]
+  }
+}
