@@ -1198,80 +1198,55 @@ async function fileToDataURL(f){
 }
 
 // === AUTH UI ===
-
-// === Auth UI (Email/Password + Google) ===
-function openModalAuth(mode='login'){
-  const m = $('#modalAuth'); if(!m) return;
-  // Ensure preloader never blocks clicks in auth
-  try{ hidePreloader(); }catch(e){}
-  document.body.classList.add('auth-open');
-  m.hidden=false;
-  m.dataset.mode = mode;
-  $('#authTitle').textContent = (mode==='login' ? 'Přihlášení' : 'Registrace');
-  $('#authNickRow').style.display = (mode==='register' ? '' : 'none');
-  $('#authRoleRow').style.display = (mode==='register' ? '' : 'none');
-  $('#authLoginBtn').style.display = (mode==='login' ? '' : 'none');
-  $('#authRegisterBtn').style.display = (mode==='register' ? '' : 'none');
-  $('#authSwitchToRegister').style.display = (mode==='login' ? '' : 'none');
-  $('#authSwitchToLogin').style.display = (mode==='register' ? '' : 'none');
-}
-function closeModalAuth(){
-  const m=$('#modalAuth');
-  if(m) m.hidden=true;
-  document.body.classList.remove('auth-open');
-}
-
-async function googleSignIn(){
+// === Google Auth ===
+async function googleSignIn() {
   const provider = new firebase.auth.GoogleAuthProvider();
-  // Always use redirect (works on mobile + avoids popup blockers)
-  try{
+  try {
+    // Всегда используем redirect (для мобильных и чтобы избежать popup-блокеров)
     await auth.signInWithRedirect(provider);
-  }catch(e){
+  } catch (e) {
     const code = e?.code || '';
-    if(code==='auth/unauthorized-domain'){
+    if (code === 'auth/unauthorized-domain') {
       toast('Google přihlášení: doména není povolená ve Firebase (Authorized domains).');
-    }else{
-      toast('Google přihlášení: '+(e?.message||'Chyba'));
+    } else {
+      toast('Google přihlášení: ' + (e?.message || 'Chyba'));
     }
+    console.error('Google SignIn error:', e);
     throw e;
   }
 }
 
-// Handle Google redirect return (Google signInWithRedirect)
-try{
-  auth.getRedirectResult().then((res)=>{
-    if(res && res.user){
-      try{ closeModalAuth(); }catch(e){}
-    }
-  }).catch((e)=>{
-    // Show the real error (otherwise it looks like “nothing happens”)
-    const code = e?.code || '';
-    if(code==='auth/unauthorized-domain'){
-      toast('Google přihlášení: doména není povolená ve Firebase (Authorized domains).');
-    }else if(code){
-      toast('Google přihlášení: '+code);
-    }
-  });
-}catch(e){}
-async function ensureUserPublic(u, extra={}){
-  if(!u) return;
-  const pubRef = db.ref('usersPublic/'+u.uid);
-  const snap = await pubRef.get();
-  const cur = snap.val() || {};
-  const merged = {
-    email: u.email || cur.email || '',
-    nick: cur.nick || extra.nick || u.displayName || u.email || 'Uživatel',
-    role: cur.role || extra.role || '',
-    avatar: cur.avatar || extra.avatar || window.DEFAULT_AVATAR,
-    createdAt: cur.createdAt || Date.now()
-  };
-  await pubRef.update(merged);
+// === Обработка результата редиректа после входа через Google ===
+async function handleGoogleRedirectResult() {
+  try {
+    const res = await auth.getRedirectResult();
+    console.log('RedirectResult:', res);
 
-  // email index for friend add
-  // emails/* mapping disabled (rules no longer allow it)
+    if (res && res.user) {
+      console.log('User signed in via Google:', res.user);
+      try { closeModalAuth(); } catch(e){}
+      await ensureUserPublic(res.user); // создаём или обновляем публичные данные пользователя
+    } else {
+      console.log('No user returned from redirect — возможно первый визит или mismatch домена');
+    }
+  } catch (e) {
+    const code = e?.code || '';
+    if (code === 'auth/unauthorized-domain') {
+      toast('Google přihlášení: doména není povolená ve Firebase (Authorized domains).');
+    } else if (code) {
+      toast('Google přihlášení chyba: ' + code);
+    } else {
+      toast('Google přihlášení chyba: ' + (e?.message || 'Neznámá chyba'));
+    }
+    console.error('Redirect error:', e);
+  }
 }
 
-function setVerifyDeadline(u){
+// === Автоматический вызов при загрузке страницы ===
+window.addEventListener('load', () => {
+  handleGoogleRedirectResult();
+});
+
   // 30 minutes after registration
   try{
     const until = Date.now() + 30*60*1000;
