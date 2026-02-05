@@ -1,0 +1,25 @@
+/* Compatibility shim: project uses assets/css/style.css */
+@import url("assets/css/style.css");
+
+
+/* === v21 Auth rotator stability (single line, green, -25%, no jitter) === */
+#modalAuth .auth-brand img{ display:none !important; } /* remove logo to save space */
+#modalAuth .auth-heroLine{
+  margin-top: 6px;
+  min-height: 20px; /* fixed height to prevent layout shift */
+  height: 20px;
+  line-height: 20px;
+  overflow: hidden;
+}
+#modalAuth .auth-heroLine .txt{
+  display:inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip; /* no ellipsis */
+  font-size: 0.75em; /* -25% */
+  color: #22c55e; /* green */
+}
+#modalAuth .auth-heroLine .cursor{
+  color: #22c55e;
+  font-size: 0.75em;
+}
