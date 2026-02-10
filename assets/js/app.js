@@ -1,24 +1,3 @@
-// === Firebase bootstrap (SINGLE SOURCE OF TRUTH) ===
-(function initFirebaseOnce(){
-  if (window.__firebaseReady) return;
-
-  if (!window.firebase) {
-    console.error('[firebase] SDK not loaded');
-    return;
-  }
-
-  if (!firebase.apps.length) {
-    firebase.initializeApp(window.FIREBASE_CONFIG);
-  }
-
-  window.auth = firebase.auth();
-  window.db   = firebase.database();
-  window.st   = firebase.storage();
-
-  window.__firebaseReady = true;
-  console.log('[firebase] initialized');
-})();
-
 try{ if(!window.__PRELOADER_T0) window.__PRELOADER_T0 = Date.now(); }catch(e){}
 
 
