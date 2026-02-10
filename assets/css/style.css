@@ -1,0 +1,4 @@
+body{font-family:system-ui;background:#0f172a;color:#fff;margin:0}
+.view{display:none;padding:20px}
+.view.active{display:block}
+button{padding:10px 16px;border-radius:10px;border:none;cursor:pointer}
