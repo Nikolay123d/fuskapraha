@@ -1,0 +1,6 @@
+body{margin:0;font-family:system-ui;background:#0f172a;color:#fff}
+.view{display:none;padding:20px}
+.view.active{display:block}
+#chat-messages{max-height:300px;overflow:auto;border:1px solid #333;margin-bottom:10px}
+#chat-messages div{padding:4px 0}
+input,button{padding:8px;margin:4px 0}
