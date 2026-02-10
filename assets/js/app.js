@@ -6108,3 +6108,131 @@ try{
 
   window.addEventListener('DOMContentLoaded', mkBootstrap);
 })();
+/*************************************************
+ * MK NAVIGATION PATCH — SINGLE SOURCE OF TRUTH
+ * fixes: F5, DM envelope bug, stuck loaders
+ *************************************************/
+
+(function(){
+
+  const TAB_KEY = 'mk_last_tab';
+
+  function setTab(tab){
+    try{ localStorage.setItem(TAB_KEY, tab); }catch(e){}
+  }
+
+  function getTab(){
+    return localStorage.getItem(TAB_KEY) || 'chat';
+  }
+
+  // ---- HARD RESET OLD FLAGS ----
+  try{
+    delete window.__RESTORING_VIEW__;
+    delete window.__DM_NEEDS_LOAD__;
+  }catch(e){}
+
+  // ---- OVERRIDE showView ----
+  window.showView = function(id){
+    document.querySelectorAll('.view').forEach(v=>{
+      v.classList.remove('active');
+      v.style.display='none';
+    });
+
+    const el = document.getElementById(id);
+    if(el){
+      el.classList.add('active');
+      el.style.display='block';
+    }
+
+    const tab = id.replace('view-','');
+    setTab(tab);
+
+    // never sync hash again
+    try{
+      history.replaceState(null,'',location.pathname);
+    }catch(e){}
+  };
+
+  // ---- OVERRIDE openDMInbox (ONLY ENTRY) ----
+  window.openDMInbox = async function(fromRestore=false){
+    const u = firebase.auth().currentUser;
+
+    setTab('dm');
+    showView('view-dm');
+
+    // show loader always
+    try{
+      setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true);
+    }catch(e){}
+
+    if(!u){
+      // auth not ready yet — wait
+      return;
+    }
+
+    try{
+      await loadDmThreads(true);
+    }catch(e){}
+
+    setTimeout(()=>{
+      try{ setMiniLoad('dmMiniLoad','', false); }catch(e){}
+    },200);
+  };
+
+  // ---- OVERRIDE restoreAfterReload ----
+  window.restoreAfterReload = async function(){
+    const tab = getTab();
+
+    console.log('[MK restore]', tab);
+
+    if(tab === 'dm'){
+      await openDMInbox(true);
+      return;
+    }
+
+    if(tab === 'friends'){
+      showView('view-friends');
+      try{ loadFriends(); }catch(e){}
+      return;
+    }
+
+    if(tab === 'members'){
+      showView('view-members');
+      try{ loadMembers(); }catch(e){}
+      return;
+    }
+
+    if(tab === 'rent'){
+      showView('view-rent');
+      try{ loadRent(); }catch(e){}
+      return;
+    }
+
+    // default
+    showView('view-chat');
+    try{ loadChat(); }catch(e){}
+  };
+
+  // ---- AUTH READY HOOK ----
+  firebase.auth().onAuthStateChanged(user=>{
+    if(!user) return;
+    restoreAfterReload();
+  });
+
+  // ---- TAB / ENVELOPE CLICKS ----
+  document.addEventListener('click', e=>{
+    const t = e.target.closest('[data-view]');
+    if(!t) return;
+
+    e.preventDefault();
+
+    const v = t.dataset.view;
+    if(v === 'view-dm'){
+      openDMInbox();
+      return;
+    }
+
+    showView(v);
+  });
+
+})();
