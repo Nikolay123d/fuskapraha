@@ -1,3 +1,24 @@
+// === Firebase bootstrap (SINGLE SOURCE OF TRUTH) ===
+(function initFirebaseOnce(){
+  if (window.__firebaseReady) return;
+
+  if (!window.firebase) {
+    console.error('[firebase] SDK not loaded');
+    return;
+  }
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(window.FIREBASE_CONFIG);
+  }
+
+  window.auth = firebase.auth();
+  window.db   = firebase.database();
+  window.st   = firebase.storage();
+
+  window.__firebaseReady = true;
+  console.log('[firebase] initialized');
+})();
+
 try{ if(!window.__PRELOADER_T0) window.__PRELOADER_T0 = Date.now(); }catch(e){}
 
 
@@ -612,13 +633,7 @@ function notify(title, body, type='notify'){
 // 3) Deploy firebase-messaging-sw.js at the site root
 window.WEB_PUSH_VAPID_KEY = window.WEB_PUSH_VAPID_KEY || 'BLag7sO2f6dIoVR6s4iAm7b_ohrxQNZ2QMIDTaFeA2dHi';
 window.FCM_PUBLIC_VAPID_KEY = window.FCM_PUBLIC_VAPID_KEY || window.WEB_PUSH_VAPID_KEY;
-if (!firebase.apps.length) {
-  firebase.initializeApp(window.FIREBASE_CONFIG);
-}
 
-const auth = firebase.auth();
-const db   = firebase.database();
-const st   = firebase.storage();
 // Cookie banner
 
 function cookieBanner(){
