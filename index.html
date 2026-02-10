@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Makáme.cz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div id="view-auth" class="view active"><h2>Auth</h2></div>
+
+<div id="view-chat" class="view">
+  <h2>Public Chat</h2>
+</div>
+
+<div id="view-dm" class="view">
+  <h2>DM</h2>
+  <div id="dm-list"></div>
+  <div id="dm-room" style="display:none">
+    <div id="dm-messages"></div>
+    <input id="dm-input" placeholder="Message">
+    <button id="dm-send">Send</button>
+  </div>
+</div>
+
+<div id="view-friends" class="view"><h2>Friends</h2></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script src="assets/js/firebase.init.js"></script>
+<script src="assets/js/dm.js"></script>
+<script src="assets/js/app.fixed.js" defer></script>
+</body>
+</html>

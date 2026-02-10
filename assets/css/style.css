@@ -1,0 +1,7 @@
+body{margin:0;font-family:system-ui;background:#0f172a;color:#fff}
+.view{display:none;padding:20px}
+.view.active{display:block}
+#dm-list div{padding:6px;border-bottom:1px solid #333;cursor:pointer}
+#dm-messages{max-height:200px;overflow:auto;border:1px solid #333;margin:6px 0}
+#dm-messages div{padding:4px}
+input,button{padding:8px;margin:4px 0}
