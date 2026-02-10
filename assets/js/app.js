@@ -6108,3 +6108,826 @@ try{
 
   window.addEventListener('DOMContentLoaded', mkBootstrap);
 })();
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/assets/js/app.js b/assets/js/app.js
+index 198c7692cc5f7df9760a557fa4101ae400aab9c1..1692cb8fe7cb56f1f8608a0b774c0c15b67b4ac8 100644
+--- a/assets/js/app.js
++++ b/assets/js/app.js
+@@ -766,244 +766,208 @@ function schedulePromoOffer(){
+ 
+           openModal('promoOverlay');
+           if(soundUrl){ try{ playSoundUrl(soundUrl); }catch(e){} }
+         }else{
+           toast((p.title||'Oznámení')+': '+(p.text||''));
+           if(p.sound){ try{ playSoundUrl(p.sound); }catch(e){} }
+         }
+       }).catch(()=>{ tryNext(i+1); });
+     };
+ 
+     tryNext(0);
+   }catch(e){}
+ }
+ 
+ 
+ 
+ // Views
+ // Close any open overlays/modals when switching tabs (prevents "window on window")
+ function __closeAllOverlays(){
+   try{ if(typeof modalRoot!="undefined" && modalRoot) modalRoot.innerHTML=""; }catch(e){}
+   try{ document.querySelectorAll(".modal, .overlay, .sheet, .popup").forEach(el=>{ try{ el.hidden=true; }catch(e){} try{ el.classList.remove("open","show","active"); }catch(e){} }); }catch(e){}
+   try{ document.body.classList.remove("modal-open"); }catch(e){}
+ }
+ 
+ 
+-// --- Routing hash helper (keeps DM path consistent between envelope/menu) ---
+-function setHashSafe(tag){
+-  try{
+-    const h = (location.hash||'').replace('#','').toLowerCase();
+-    const t = String(tag||'').toLowerCase();
+-    if(!t) return;
+-    if(h===t) return;
+-    const base = location.pathname + location.search;
+-    history.replaceState(null,'', base + '#' + t);
+-  }catch(e){}
+-}
+-
+-function clearHashSafe(){
+-  try{
+-    const base = location.pathname + location.search;
+-    if((location.hash||'')==='') return;
+-    history.replaceState(null,'', base);
+-  }catch(e){}
+-}
+-
+-
+ function showView(id){
+   __closeAllOverlays();
+   $$('.view').forEach(v=>v.classList.remove('active'));
+   const el = $('#'+id);
+-  if(el){ el.classList.add('active'); try{ localStorage.setItem('lastView', id); localStorage.setItem('mk_last_view', id); }catch(e){}
++  if(el){ el.classList.add('active');
+   try{ window.__ACTIVE_TAB__ = id.replace('view-',''); localStorage.setItem('mk_last_tab', window.__ACTIVE_TAB__); }catch(e){} }
+-  // sync URL hash with active view (so refresh restores correctly)
+-  try{
+-    const tab = (id||'').replace('view-','');
+-    if(tab==='chat') clearHashSafe();
+-    else if(tab && tab!=='profile') setHashSafe(tab);
+-  }catch(e){}
+ 
+   // keep tab highlight in sync
+   try{ $$('.tab').forEach(t=>{ try{ t.classList.toggle('active', (t.dataset.view===id)); }catch(e){} }); }catch(e){}
+   try{ if(id!=='view-chat') setMiniLoad('chatMiniLoad','', false); }catch(e){}
+ 
+ 
+   // DM: always show mini-loader + ensure inbox loads (prevents empty screen after F5 / via envelope)
+   try{
+     if(id==='view-dm'){
+       setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true);
+       setTimeout(()=>{ try{ ensureDMInboxLoaded && ensureDMInboxLoaded('showView'); }catch(e){} }, 0);
+     }
+   }catch(e){}
+ 
+   // Lazy-load heavy modules per tab (prevents slow startup and "loops")
+   window.__friendsLoaded = window.__friendsLoaded || false;
+   window.__membersLoaded = window.__membersLoaded || false;
+   window.__dmThreadsLoaded = window.__dmThreadsLoaded || false;
+   window.__mapLoaded = window.__mapLoaded || false;
+ 
+   try{
+     if(id==='view-chat'){
+       if(!window.__chatLoaded){ window.__chatLoaded=true; try{ loadChat(); }catch{} }
+       return;
+     }
+     if(id==='view-rent'){
+       if(!window.__rentLoaded){ window.__rentLoaded=true; try{ loadRent(); }catch{} }
+       return;
+     }
+     if(id==='view-friends'){
+       if(!window.__friendsLoaded){ window.__friendsLoaded=true; }
+       // friends can refresh often, but ensure loader finally inside loadFriends
+       try{ loadFriends(); }catch{}
+       return;
+     }
+     if(id==='view-members'){
+       if(!window.__membersLoaded){ window.__membersLoaded=true; }
+       try{ loadMembers(); }catch{}
+       return;
+     }
+     if(id==='view-dm'){
+       // DM threads list (inbox)
+       // If user navigates to DM without selecting a thread, we are in LIST mode.
+       // During restore-after-reload we keep the previously saved dmMode.
+-      try{ if(!window.__RESTORING_VIEW__) setDmState('list', null); }catch(e){}
+-      try{ if(!window.__RESTORING_VIEW__){ currentDmRoom=null; currentDmPeerUid=null; } }catch(e){}
+-      try{ if(!window.__RESTORING_VIEW__) document.body.classList.remove('dm-room-open'); }catch(e){}
++      try{ setDmState('list', null); }catch(e){}
++      try{ currentDmRoom=null; currentDmPeerUid=null; }catch(e){}
++      try{ document.body.classList.remove('dm-room-open'); }catch(e){}
+       // IMPORTANT: do NOT "load once" here. If the user opens DM via the top
+       // envelope before auth becomes ready, a one-time load would freeze DM in an
+       // empty state. We always attempt to load.
+       try{ setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true); }catch(e){}
+       try{ ensureDMInboxLoaded && ensureDMInboxLoaded('auth-active'); }catch{}
+       return;
+     }
+     if(id==='view-map'){
+       if(!window.__mapLoaded){ window.__mapLoaded=true; try{ ensureMapLoadedOnce && ensureMapLoadedOnce(); }catch{} }
+       setTimeout(()=>{ try{ window.__MAP && window.__MAP.invalidateSize(true); }catch{} }, 150);
+       return;
+     }
+   }catch(e){}
+ }
+ 
+ 
+ // Persist last active tab (used for reload restore)
+ function setActiveTab(tab){
+   try{
+     window.__ACTIVE_TAB__ = tab;
+     localStorage.setItem('mk_last_tab', tab);
+   }catch(e){}
+ }
+ window.setActiveTab = setActiveTab;
+ 
+ function rememberDmRoom(roomId){
+   try{ if(roomId) localStorage.setItem('mk_last_dm_room', roomId); }catch(e){}
+ }
+ window.rememberDmRoom = rememberDmRoom;
+ 
+ async function restoreAfterReload(){
+   try{
+     const tab = (localStorage.getItem('mk_last_tab') || '').trim();
+-    const view = (localStorage.getItem('mk_last_view') || localStorage.getItem('lastView') || '').trim();
+-
+-    // Prefer explicit tab, otherwise derive from last view
+-    const t = tab || (view ? view.replace('view-','') : 'chat');
++    const t = tab || 'chat';
+ 
+     // Only restore one tab (lazy strategy)
+     if(t === 'dm'){
+-      try{ showView('view-dm'); }catch(e){}
+-        try{ setHashSafe('dm'); }catch(e){}
+-try{ await openDMInbox(true); }catch(e){ try{ ensureDMInboxLoaded && ensureDMInboxLoaded('restore'); }catch(_){} }
++      try{ await openDMInbox(true); }catch(e){ try{ ensureDMInboxLoaded && ensureDMInboxLoaded('restore'); }catch(_){} }
+       return;
+     }
+     if(t === 'friends'){
+       try{ showView('view-friends'); }catch(e){}
+       try{ loadFriends && loadFriends(); }catch(e){}
+       return;
+     }
+     if(t === 'members'){
+       try{ showView('view-members'); }catch(e){}
+       try{ loadMembers && loadMembers(); }catch(e){}
+       return;
+     }
+     if(t === 'rent'){
+       try{ showView('view-rent'); }catch(e){}
+       try{ loadRent && loadRent(); }catch(e){}
+       return;
+     }
+     // default chat
+     try{ showView('view-chat'); }catch(e){}
+     try{ loadChat && loadChat(); }catch(e){}
+   }catch(e){}
+ }
+ window.restoreAfterReload = restoreAfterReload;
+ 
+ // Unified DM entry-point (top envelope, drawer item, tabs)
+ // Prevents the "DM shows empty when opened from icon" bug by ensuring:
+ // 1) view is switched, 2) DOM is painted, 3) threads are loaded.
+ async function openDMInbox(forceReload=true){
+   const me = auth?.currentUser;
+   if(!me){
+     // If auth is still initializing, do NOT force-auth modal. Just remember intent and paint DM with loader.
+     if(!window.__AUTH_READY__){
+       window.__PENDING_VIEW__ = 'view-dm';
+-      try{ window.__DM_NEEDS_LOAD__ = true; }catch(e){}
+-      try{ setHashSafe('dm'); }catch(e){}
+       try{ showView('view-dm'); }catch(e){}
+       try{ setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true); }catch(e){}
+       return;
+     }
+     // Auth is ready but user is not signed in -> open auth modal (explicit user action).
+     window.__PENDING_VIEW__ = 'view-dm';
+-    try{ window.__DM_NEEDS_LOAD__ = true; }catch(e){}
+     try{ openModalAuth('login'); }catch(e){ try{ document.getElementById('modalAuth').hidden=false; }catch(_){} }
+     return;
+   }
+   try{ showView('view-dm'); }catch(e){}
+   // DM entry via envelope/menu must always mean: list (not last thread)
+   try{ setDmState('list', null); }catch(e){}
+   try{ window.__DM_ROOM_RESTORED__ = false; window.__DM_RESTORE_PEER__=''; }catch(e){}
+   try{ currentDmRoom=null; currentDmPeerUid=null; }catch(e){}
+   try{ document.body.classList.remove('dm-room-open'); }catch(e){}
+   try{ window.closeDmMobile && window.closeDmMobile(); }catch(e){}
+   // Unified loader + robust "ensure" (auth-gated + retries)
+   try{ setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true); }catch(e){}
+   try{ loadDmThreads && loadDmThreads(true); }catch(e){}
+   setTimeout(()=>{ try{ ensureDMInboxLoaded && ensureDMInboxLoaded('openDMInbox'); }catch(e){} }, 0);
+ }
+ window.openDMInbox = openDMInbox;
+ 
+ // Ensure DM inbox loads after reload without requiring tab switching.
+-// We call it on: restoreLastView('view-dm'), auth ready, and when DM becomes active.
++// We call it on auth ready and when DM becomes active.
+ function ensureDMInboxLoaded(reason){
+   try{
+     // Run only when DM view is active
+     const dmView = document.getElementById('view-dm');
+     if(!dmView || !dmView.classList.contains('active')) return;
+ 
+     // Auth not ready yet -> defer (do NOT spam loaders/modals here)
+     const me = auth?.currentUser;
+     if(!me){
+-      try{ window.__DM_NEEDS_LOAD__ = true; }catch(e){}
+       return;
+     }
+ 
+     // If threads already rendered, just ensure loader is hidden
+     try{
+       const box = document.getElementById('dmThreads');
+       if(box && box.children && box.children.length>0){
+         try{ setMiniLoad('dmMiniLoad','', false); }catch(e){}
+         return;
+       }
+     }catch(e){}
+ 
+     // Avoid parallel loads
+     if(window.__dmThreadsLoading) return;
+     window.__dmThreadsLoading = true;
+ 
+     // Show loader while loading (loadDmThreads has its own finally-hide)
+     try{ setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true); }catch(e){}
+ 
+     Promise.resolve().then(()=>{
+       try{ return loadDmThreads && loadDmThreads(true); }catch(e){ return null; }
+     }).catch(()=>{}).finally(()=>{
+       try{ window.__dmThreadsLoading = false; }catch(e){}
+       // Hard-stop: never let the DM loader spin forever
+       setTimeout(()=>{ try{ setMiniLoad('dmMiniLoad','', false); }catch(e){} }, 50);
+@@ -1564,52 +1528,52 @@ function watchDmUnread(uid){
+   __inboxMetaRef.on('value', __inboxMetaCb);
+ }
+ 
+ 
+ 
+ let __dmThreadsLiveRef = null;
+ let __dmThreadsLiveCb = null;
+ let __dmThreadsLiveTimer = null;
+ 
+ // Live refresh DM thread list when inboxMeta changes (so new messages appear immediately)
+ function watchDmThreadsLive(uid){
+   try{ if(__dmThreadsLiveRef && __dmThreadsLiveCb) __dmThreadsLiveRef.off('value', __dmThreadsLiveCb); }catch(e){}
+   __dmThreadsLiveRef = null;
+   __dmThreadsLiveCb = null;
+   if(__dmThreadsLiveTimer){ try{ clearTimeout(__dmThreadsLiveTimer); }catch(e){} __dmThreadsLiveTimer=null; }
+   if(!uid) return;
+ 
+   __dmThreadsLiveRef = db.ref('inboxMeta/'+uid).orderByChild('ts').limitToLast(50);
+   __dmThreadsLiveCb = ()=>{
+     // debounce to avoid spam on fast updates
+     if(__dmThreadsLiveTimer) return;
+     __dmThreadsLiveTimer = setTimeout(async ()=>{
+       __dmThreadsLiveTimer = null;
+       try{
+         // Only auto-refresh when DM tab was opened at least once OR is currently visible.
+-        const cur = (localStorage.getItem('mk_last_view')||localStorage.getItem('lastView')||'view-chat');
+-        if(cur==='view-dm' || window.__dmThreadsLoaded){
++        const cur = (localStorage.getItem('mk_last_tab')||'chat');
++        if(cur==='dm' || window.__dmThreadsLoaded){
+           await loadDmThreads();
+         }
+       }catch(e){}
+     }, 350);
+   };
+   __dmThreadsLiveRef.on('value', __dmThreadsLiveCb);
+ }
+ 
+ // Handle Google redirect return (must run on every page load)
+ let __REDIRECT_HANDLED = false;
+ async function handleGoogleRedirectResult(){
+   if(__REDIRECT_HANDLED) return;
+   __REDIRECT_HANDLED = true;
+   try{
+     // Ensure persistence promise resolved before reading redirect result
+     try{ await (window.__AUTH_PERSIST_PROMISE__||Promise.resolve()); }catch(e){}
+     const res = await auth.getRedirectResult();
+     // NOTE: res.user can be null on normal loads; that's ok.
+     if(res && res.user){
+       try{ sessionStorage.removeItem('__mk_auth_redirecting'); }catch(e){}
+       try{ await ensureUserPublic(res.user); }catch(e){}
+       try{ closeModalAuth(); }catch(e){}
+     }
+   }catch(e){
+     // Show the real error (otherwise it looks like “nothing happens”)
+@@ -3135,114 +3099,75 @@ auth.onAuthStateChanged(async (u)=>{
+   try{ if(u && isAdminUser(u)) wireAdminQuickCams(); }catch(e){}
+     try{ await adminAutoCleanupOncePer24h(); }catch(e){}
+ // profile display
+   if(u){
+     try{ await seedAdminIfWhitelisted?.(); }catch{}
+     await ensureMyPublic(u);
+     setPresence(u);
+     await refreshMe();
+     // Show employer vacancy UI
+     try{
+       const mePub = await fetchUserPublic(u.uid);
+       const vacCard = document.getElementById('myVacancyCard');
+       if(vacCard) vacCard.style.display = (mePub.role==='employer') ? '' : 'none';
+       if(mePub.role==='employer') loadMyVacancies?.();
+     }catch(e){}
+     // friends are loaded lazily when opening the tab
+     try{ listenNotifications(); }catch(e){}
+     try{ watchDmUnread(u.uid); }catch(e){}
+     try{ watchDmThreadsLive(u.uid); }catch(e){}
+ 
+     // Open pending view after login (e.g., clicked envelope before auth)
+     try{
+       if(window.__PENDING_VIEW__){
+         const v = window.__PENDING_VIEW__;
+         window.__PENDING_VIEW__ = null;
+-        showView(v);
++        if(v==='view-dm') try{ await openDMInbox(true); }catch(e){ showView(v); }
++        else showView(v);
+       }
+     }catch(e){}
+ 
+-    // If DM view is already open (e.g. user clicked envelope very early), refresh
+-    // the inbox now that auth is available.
++    // Restore last active tab only after auth becomes ready.
+     try{
+-      const activeId = (localStorage.getItem('mk_last_view')||localStorage.getItem('lastView')||'view-chat');
+-
+-      // v10: if DM tried to load before auth (reload case), force-load now.
+-      try{
+-        if(window.__DM_NEEDS_LOAD__){
+-          window.__DM_NEEDS_LOAD__ = false;
+-          try{ setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true); }catch(e){}
+-          try{ ensureDMInboxLoaded && ensureDMInboxLoaded('auth'); }catch(e){}
+-        }
+-      }catch(e){}
+-      // Make sure the active view really loads after reload (auth becomes ready later).
+-      if(activeId==='view-dm' || document.getElementById('view-dm')?.classList.contains('active')){
+-        try{ setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true); }catch(e){}
+-        loadDmThreads && loadDmThreads(true);
++      const activeTab = (localStorage.getItem('mk_last_tab')||'chat').trim() || 'chat';
+ 
+-        // HARD RETRY: some devices fire auth before the DM DOM is fully painted.
+-        // This guarantees that after F5 / hash #dm / envelope navigation, the inbox loads without needing a second click.
+-        try{
+-          const __dmRetry = ()=>{
+-            try{
+-              const isDmHash = ((location.hash||'').toLowerCase().includes('dm'));
+-              const isDmActive = document.getElementById('view-dm')?.classList.contains('active');
+-              if(isDmHash || isDmActive || window.__DM_NEEDS_LOAD__){
+-                window.__DM_NEEDS_LOAD__ = false;
+-                try{ ensureDMInboxLoaded && ensureDMInboxLoaded('auth-retry'); }catch(e){}
+-                try{ loadDmThreads && loadDmThreads(true); }catch(e){}
+-              }
+-            }catch(e){}
+-          };
+-          setTimeout(__dmRetry, 0);
+-          setTimeout(__dmRetry, 350);
+-          setTimeout(__dmRetry, 950);
+-        }catch(e){}
++      // Restore last active tab after reload (only one tab, keeps lazy loading)
++      try{ await restoreAfterReload(); }catch(e){}
+ 
+-        // Restore the exact DM room (if user was inside a conversation before F5).
+-        try{
+-          const st = (typeof getDmState==='function') ? getDmState() : {mode:'list', peer:''};
+-          const peer = ((st.mode==='thread' && st.peer) ? st.peer : (window.__DM_RESTORE_PEER__||'')).trim();
+-          if(peer && !window.__DM_ROOM_RESTORED__){
+-            window.__DM_ROOM_RESTORED__ = true;
+-            setTimeout(()=>{
+-              try{ openDMRoom(u.uid, peer); }catch(e){}
+-            }, 450);
+-          }
+-        }catch(e){}
++      if(activeTab==='dm' || document.getElementById('view-dm')?.classList.contains('active')){
++        try{ setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true); }catch(e){}
++        try{ ensureDMInboxLoaded && ensureDMInboxLoaded('auth'); }catch(e){}
+       }
+-      if(activeId==='view-friends' || document.getElementById('view-friends')?.classList.contains('active')){
++      if(activeTab==='friends' || document.getElementById('view-friends')?.classList.contains('active')){
+         try{ setMiniLoad('friendsMiniLoad','Načítáme přátele…', true); }catch(e){}
+         try{ loadFriends && loadFriends(true); }catch(e){}
+       }
+-      if(activeId==='view-members' || document.getElementById('view-members')?.classList.contains('active')){
++      if(activeTab==='members' || document.getElementById('view-members')?.classList.contains('active')){
+         try{ setMiniLoad('membersMiniLoad','Načítáme…', true); }catch(e){}
+         try{ loadMembers && loadMembers(true); }catch(e){}
+       }
+-      // Restore last active tab after reload (only one tab, keeps lazy loading)
+-      try{ await restoreAfterReload(); }catch(e){}
+-      if(activeId==='view-map' || document.getElementById('view-map')?.classList.contains('active')){
++      if(activeTab==='map' || document.getElementById('view-map')?.classList.contains('active')){
+         try{ setMiniLoad('mapMiniLoad','Načítáme mapu…', true); }catch(e){}
+         try{ ensureMapLoadedOnce && ensureMapLoadedOnce(); }catch(e){}
+       }
+     }catch(e){}
+ 
+     // v15: start bot DM engine for admin (auto-replies)
+     try{ startBotDmEngine(); }catch(e){}
+     try{ if(isAdminUser(u)) startBotHostEngine(); else stopBotHostEngine(); }catch(e){}
+ 
+     // greeting only for specific email and only once per session
+     if(!greetedThisSession && u.email && u.email.toLowerCase()===GREET_EMAIL){
+       greetedThisSession = true;
+       // ensure permissions prompt is accepted once
+       cookieBanner();
+       // show greeting (user gesture needed for sound; will play if allowed)
+       showGreeting();
+     }
+     hidePreloader();
+     try{ maybeStartTour(); }catch(e){}
+ 
+   }else{
+     // keep preloader fail-safe; show logged out state
+     $('#profileEmail').textContent = 'E-mail: —';
+     $('#myName').textContent = 'Uživatel';
+     $('#myAvatar').src = window.DEFAULT_AVATAR;
+@@ -3917,59 +3842,55 @@ async function startDM(toUid, opts={}){
+   showView('view-dm');
+   // Ensure the right pane is immediately usable on mobile/desktop
+   try{
+     document.body.classList.add('dm-room-open');
+     const back = document.getElementById('dmBackMobile');
+     if(back) back.style.display = '';
+   }catch(e){}
+   if(opts && opts.closeModalId){ try{ closeModal(opts.closeModalId); }catch(e){} }
+   return room;
+ }
+ window.startDM = startDM;
+ 
+ // --- DM threads / inbox ---
+   // NOTE: currentDmRoom/currentDmPeerUid are global (see DM globals above).
+   function otherUidFromRoom(room, meUid){
+     const parts = String(room).split('_');
+     if(parts.length!==2) return null;
+     return (parts[0]===meUid) ? parts[1] : parts[0];
+   }
+ 
+   async function loadDmThreads(){
+     // Always show loader (even if DOM is not yet mounted on some mobile layouts)
+     try{ setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true); }catch(e){}
+     const box=document.getElementById('dmThreads');
+     if(!box){
+-      // If DM DOM isn't ready yet, mark for reload after bootstrap/auth.
+-      window.__DM_NEEDS_LOAD__ = true;
+       return;
+     }
+ 
+     const me = auth.currentUser;
+     if(!me){
+-      // Auth not ready yet: keep the loader and let the main auth handler reload DM when ready.
+-      window.__DM_NEEDS_LOAD__ = true;
+       setMiniLoad('dmMiniLoad','Přihlašujeme…', true);
+       return;
+     }
+ 
+     // Instant paint from cache.
+     try{
+       const ck = __cacheKey('dmthreads');
+       const cached = __cacheGet(ck, 12*60*60*1000);
+       if(cached && cached.val && typeof cached.val.html==='string'){
+         box.innerHTML = cached.val.html;
+       }
+     }catch(e){}
+ 
+     try{
+       const metaSnap = await db.ref('inboxMeta/'+me.uid).orderByChild('lastTs').limitToLast(50).get();
+       const v = metaSnap.val()||{};
+       const rooms = Object.keys(v).sort((a,b)=> ((v[b].lastTs||v[b].ts||0) - (v[a].lastTs||v[a].ts||0)));
+ 
+       // Avoid duplicates on re-open.
+       box.innerHTML = '';
+ 
+       for(const room of rooms){
+         const other = otherUidFromRoom(room, me.uid);
+         if(!other) continue;
+         const u = await getUser(other);
+@@ -3999,57 +3920,54 @@ window.startDM = startDM;
+           imgEl.onerror = ()=>{ try{ imgEl.src = window.DEFAULT_AVATAR; }catch(e){} };
+         }
+         avaEl?.addEventListener('click',(ev)=>{ ev.stopPropagation(); showUserCard(other); });
+         box.appendChild(row);
+       }
+       const label=document.getElementById('dmWithName');
+       if(label && !currentDmRoom) label.textContent='Osobní zprávy';
+ 
+       // Save cache after successful render.
+       try{
+         const ck = __cacheKey('dmthreads');
+         __cacheSet(ck, { html: box.innerHTML });
+       }catch(e){}
+     }catch(e){
+       console.warn('loadDmThreads failed', e);
+     }finally{
+       setMiniLoad('dmMiniLoad','', false);
+     }
+   }
+ 
+   // Override openDMRoom to set current room and update header
+   const _origOpenDMRoom = window.openDMRoom;
+   window.openDMRoom = async function(a,b){
+     // Ensure DM becomes the active view (and persists across reload).
+     try{ if(!document.getElementById('view-dm')?.classList.contains('active')) showView('view-dm'); }catch(e){}
+-    try{ localStorage.setItem('lastView','view-dm'); localStorage.setItem('mk_last_view','view-dm'); }catch(e){}
+     currentDmRoom = dmKey(a,b);
+     const other = (a===auth.currentUser?.uid) ? b : a;
+     // Persist the last opened DM peer so after F5 we can restore the exact conversation.
+     try{
+-      localStorage.setItem('mk_last_view','view-dm');
+-      localStorage.setItem('lastView','view-dm');
+       localStorage.setItem('mk_last_dm_peer', String(other));
+       try{ setDmState('thread', String(other)); }catch(e){}
+       localStorage.setItem('mk_last_dm_room', String(currentDmRoom));
+     }catch(e){}
+ 
+     // Mobile UX: if DM room is opened (including restore after reload), ensure the conversation
+     // card is visible even when DM list is shown as the default column.
+     try{
+       if(window.matchMedia && window.matchMedia('(max-width: 720px)').matches){
+         // open overlay modal that contains the conversation card
+         window.openDmMobile && window.openDmMobile();
+       }
+     }catch(e){}
+     const u = await getUser(other);
+     document.getElementById('dmWithName').textContent = u.nick||'Uživatel';
+     document.getElementById('dmWithStatus').textContent = u.online?'(online)':'(offline)';
+     return _origOpenDMRoom(a,b);
+   };
+ 
+   document.getElementById('dmClearBtn')?.addEventListener('click', ()=>{
+     const box=document.getElementById('dmFeed'); if(box) box.innerHTML='';
+   });
+ 
+   // Mobile back from DM room overlay
+   document.getElementById('dmBackMobile')?.addEventListener('click', ()=>{
+@@ -4921,51 +4839,50 @@ document.getElementById('chatFeed')?.addEventListener('click', (e)=>{
+           try{ showView('view-dm'); }catch(_){}
+           try{ setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true); }catch(_){}
+           try{ ensureDMInboxLoaded && ensureDMInboxLoaded('restoreLastView-fallback'); }catch(_){}
+         }
+       }else{
+         showView(view);
+       }
+     }
+     // Premium shortcut opens DM with bot
+     if(a.id==='drawerPremium'){ try{ openPremiumBot(); }catch{} }
+     closeDrawer();
+   });
+ 
+   // auth buttons in drawer
+   document.getElementById('btnLoginDrawer')?.addEventListener('click', ()=>{
+     closeDrawer();
+     try{ openModalAuth('login'); }catch{ try{ document.getElementById('modalAuth').hidden=false; }catch{} }
+   });
+   document.getElementById('btnSignoutDrawer')?.addEventListener('click', async ()=>{
+     closeDrawer();
+     try{ await auth.signOut(); }catch(e){ console.warn(e); }
+   });
+ 
+   // top icons
+   document.getElementById('btnDMTop')?.addEventListener('click', ()=>{
+-    try{ setHashSafe('dm'); }catch(e){}
+     // Envelope must use the same entry point as the DM tab/menu (one route, one init).
+     try{ openDMInbox && openDMInbox(true); }
+     catch(e){
+       try{ showView('view-dm'); }catch(_){}
+       try{ ensureDMInboxLoaded && ensureDMInboxLoaded('btnDMTop'); }catch(_){}
+     }
+   });
+   document.getElementById('btnFriendsTop')?.addEventListener('click', ()=> showView('view-friends'));
+   document.getElementById('btnMe')?.addEventListener('click', ()=> showView('view-profile'));
+   // 🔔 = feed of in-app notifications (permission is requested from cookie consent flow)
+   document.getElementById('btnBell')?.addEventListener('click', ()=>{
+     const me = auth?.currentUser;
+     if(!me){ try{ openModalAuth('login'); }catch{}; return; }
+     openModal(document.getElementById('modalNotif'));
+     try{ markNotificationsRead?.(); }catch{}
+   });
+ 
+   // swipe open/close (mobile only)
+   let sx=0, sy=0, tracking=false, openStart=false;
+   const EDGE=26, TH=55, VTH=60;
+   window.addEventListener('touchstart', (e)=>{
+     if(!isMobile()) return;
+     const t=e.touches[0];
+     sx=t.clientX; sy=t.clientY;
+     openStart = sx <= EDGE && !drawer?.classList.contains('open');
+@@ -5953,207 +5870,78 @@ try{
+       if(document.body && document.body.__mkAvatarFallbackInstalled) return;
+       if(document.body) document.body.__mkAvatarFallbackInstalled = true;
+       document.addEventListener('error', (ev)=>{
+         const t = ev.target;
+         if(!t || t.tagName !== 'IMG') return;
+         if(t.dataset && t.dataset.fallbackApplied) return;
+         if(!t.closest || !t.closest('.ava')) return;
+         t.dataset.fallbackApplied = '1';
+         const fallback = window.DEFAULT_AVATAR || 'assets/img/default-avatar.svg';
+         try{ t.src = fallback; }catch{}
+       }, true);
+     }catch(e){}
+   }
+ 
+   function startGlobalSyncs(){
+     try{
+       startWallpaperSync();
+       startAuthWallpaperSync();
+       startChatWallpaperSync();
+       startDmWallpaperSync();
+       startProfileWallpaperSync();
+       startSoundsSync();
+     }catch(e){}
+   }
+ 
+-  function restoreLastView(){
+-    // Default is ALWAYS Prague chat for a brand new visitor.
+-    // Only restore a different tab if we have an explicit saved value OR the URL hash asks for it.
+-    let view = 'view-chat';
+-    let hasSaved = false;
+-    try{
+-      const mv = (localStorage.getItem('mk_last_view')||'').trim();
+-      const lv = (localStorage.getItem('lastView')||'').trim();
+-      hasSaved = !!(mv || lv);
+-      view = (mv || lv || 'view-chat');
+-    }catch(e){}
+-
+-    // If URL contains explicit view anchor, prefer it
+-    try{
+-      const h = (location.hash||'').toLowerCase();
+-      if(h.includes('dm')) view = 'view-dm';
+-      if(h.includes('friends')) view = 'view-friends';
+-      if(h.includes('members')) view = 'view-members';
+-      if(h.includes('map')) view = 'view-map';
+-      if(h.includes('rent')) view = 'view-rent';
+-      if(h.includes('chat')) view = 'view-chat';
+-      // NOTE: we intentionally do NOT support restoring "profile" from URL hash.
+-    }catch(e){}
+-
+-    // Safety: never land on profile as the initial screen.
+-    // (It confused new users and also breaks expectations for "Prague chat first".)
+-    try{
+-      if(view==='view-profile' && !((location.hash||'').toLowerCase().includes('profile'))){
+-        view='view-chat';
+-      }
+-      // No saved view + no hash => always chat.
+-      if(!hasSaved && !(location.hash||'').trim()) view='view-chat';
+-    }catch(e){}
+-
+-    // IMPORTANT: restore must start the data load as well (no "empty DM until click").
+-    // For DM we use the unified entry-point so loaders + subscriptions always start.
+-    try{
+-      if(view==='view-dm'){
+-        // paint view first
+-        try{ window.__RESTORING_VIEW__ = true; }catch(e){}
+-        showView('view-dm');
+-        try{ window.__RESTORING_VIEW__ = false; }catch(e){}
+-        // start inbox load even before auth is ready (keeps loader and sets __DM_NEEDS_LOAD__).
+-        try{ setMiniLoad('dmMiniLoad','Načítáme soukromé zprávy…', true); }catch(e){}
+-        try{ loadDmThreads && loadDmThreads(true); }catch(e){}
+-        // if user was inside a conversation, remember it for post-auth restore
+-        try{
+-          const st = getDmState();
+-          window.__DM_RESTORE_PEER__ = (st.mode==='thread' && st.peer) ? st.peer : '';
+-        }catch(e){ window.__DM_RESTORE_PEER__=''; }
+-      }else{
+-        showView(view);
+-      }
+-    }catch(e){ try{ showView('view-chat'); }catch(_){} }
+-
+-    // If we restored DM before auth became ready, loadDmThreads() sets __DM_NEEDS_LOAD__ and the main auth handler re-triggers.
+-    // If we restored chat, ensure it is loaded immediately.
+-    try{
+-      if(view==='view-chat' && !window.__chatLoaded){
+-        window.__chatLoaded = true;
+-        const s = document.getElementById('preloaderStatus');
+-        if(s) s.textContent = 'Načítáme chat Praha…';
+-        try{ loadChat(); }catch(e){}
+-      }
+-      if(view==='view-rent' && !window.__rentLoaded){
+-        window.__rentLoaded = true;
+-        try{ loadRent(); }catch(e){}
+-      }
+-    }catch(e){}
+-  }
+-
+   function mkBootstrap(){
+     if(window.__MK_BOOTSTRAPPED) return;
+     window.__MK_BOOTSTRAPPED = true;
+ 
+     // 1) Consent first (also unlocks audio); notif prompt scheduled from cookie click
+     try{ cookieBanner(); }catch(e){}
+ 
+     // 2) Basic wires
+     wireAuthModalClose();
+     wireAdminJumps();
+     ensureDefaultCity();
+     installAvatarFallback();
+ 
+     // 3) Non-auth UI modules
+-    // DM/view lifecycle persistence helpers
++    // DM lifecycle helper
+     try{
+       if(!window.MK_DM_LIFECYCLE_WIRED){
+         window.MK_DM_LIFECYCLE_WIRED = true;
+-        window.addEventListener('beforeunload', ()=>{
+-          try{
+-            const activeView = document.querySelector('.view.active')?.id;
+-            if(activeView){ localStorage.setItem('mk_last_view', activeView); localStorage.setItem('lastView', activeView); }
+-          }catch(e){}
+-        });
+         window.addEventListener('pageshow', ()=>{
+           try{
+-            const v = (localStorage.getItem('mk_last_view')||localStorage.getItem('lastView')||'').trim();
+-            if(v==='view-dm' && document.getElementById('view-dm')?.classList.contains('active')){
++            const t = (localStorage.getItem('mk_last_tab')||'').trim();
++            if(t==='dm' && document.getElementById('view-dm')?.classList.contains('active')){
+               setTimeout(()=>{ try{ ensureDMInboxLoaded && ensureDMInboxLoaded('pageshow'); }catch(e){} }, 250);
+             }
+           }catch(e){}
+         });
+       }
+     }catch(e){}
+ 
+     // 3) Non-auth UI modules
+     try{ initTicker(); }catch(e){ console.warn('[TICKER] init failed', e); }
+     try{ wirePromoOffer(); }catch(e){}
+     try{ initDmMobileModal(); }catch(e){}
+     try{ wireScrollDown('chatFeed','chatScrollDown'); }catch(e){}
+ 
+     // 4) Admin / FAB / Bots / Info pages
+     try{ initAdminSettings(); }catch(e){}
+     try{ initFabMenu(); }catch(e){}
+     try{ initBotsModalUI(); }catch(e){}
+     try{ initInfoPages(); }catch(e){}
+     try{ watchBroadcast(); }catch(e){}
+     try{ wireAdminEntryButtons(); }catch(e){}
+     try{ wireAdminUserCardButtons(); }catch(e){}
+ 
+     // 5) Syncs (wallpapers/sounds)
+     startGlobalSyncs();
+ 
+-    // 6) Restore last view AFTER everything is defined (fixes DM empty-after-F5)
+-    restoreLastView();
+-
+     // Let other scripts/parts know UI is ready
+     try{ window.dispatchEvent(new Event('app:ready')); }catch(e){}
+   }
+ 
+   window.addEventListener('DOMContentLoaded', mkBootstrap);
+ })();
+-
+-
+-// ====== STABLE ROUTER CORE v34 ======
+-(function(){
+-  const MK_TAB_KEY = 'mk_last_tab';
+-
+-  function mkSetTab(tab){
+-    localStorage.setItem(MK_TAB_KEY, tab);
+-  }
+-
+-  function mkGetTab(){
+-    return localStorage.getItem(MK_TAB_KEY) || 'chat';
+-  }
+-
+-  window.openView = function(tab){
+-    mkSetTab(tab);
+-    if(tab === 'dm'){
+-      window.openDMInbox();
+-    } else if(tab === 'friends'){
+-      showView('view-friends');
+-    } else {
+-      showView('view-chat');
+-    }
+-  };
+-
+-  window.openDMInbox = function(){
+-    mkSetTab('dm');
+-    showView('view-dm');
+-    if(typeof startDM === 'function'){
+-      startDM();
+-    }
+-  };
+-
+-  function restoreAfterReload(){
+-    const tab = mkGetTab();
+-    window.openView(tab);
+-  }
+-
+-  if(typeof onAuthStateChanged === 'function'){
+-    onAuthStateChanged(auth, (user)=>{
+-      if(!user){
+-        showView('view-auth');
+-        return;
+-      }
+-      restoreAfterReload();
+-    });
+-  }
+-})();
+- // ====== END CORE ======
+ 
+EOF
+)
