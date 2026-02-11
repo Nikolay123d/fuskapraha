@@ -1,0 +1,262 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+    "roles": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true))",
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+        "admin": {
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "bans": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true))",
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+        ".validate": "newData.hasChild('until') && newData.child('until').isNumber()"
+      }
+    },
+    "mutes": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true))",
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+        ".validate": "newData.hasChild('until') && newData.child('until').isNumber()"
+      }
+    },
+    "usersPublic": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true))"
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "presence": {
+      ".indexOn": [
+        "ts"
+      ],
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChild('ts')"
+      }
+    },
+    "messages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null",
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "rentMessages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null",
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "friendRequests": {
+      "$to": {
+        "$from": {
+          ".read": "auth != null && (auth.uid === $to || auth.uid === $from)",
+          ".write": "auth != null && (auth.uid === $from || auth.uid === $to)",
+          ".validate": "!newData.exists() || (newData.hasChildren(['ts','from']) && newData.child('ts').isNumber() && newData.child('from').val() === $from)"
+        }
+      }
+    },
+    "friends": {
+      "$a": {
+        "$b": {
+          ".read": "auth != null && (auth.uid === $a || auth.uid === $b)",
+          ".write": "auth != null && (auth.uid === $a || auth.uid === $b)"
+        }
+      }
+    },
+    "privateMembers": {
+      "$room": {
+        ".read": "auth != null && data.child(auth.uid).val() === true",
+        ".write": "auth != null && (!data.exists() || data.child(auth.uid).val() === true)",
+        "$uid": {
+          ".write": "auth != null && (auth.uid === $uid || !root.child('privateMembers/'+$room).exists() || root.child('privateMembers/'+$room+'/'+auth.uid).val() === true)",
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "privateRoomsByUser": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        "$room": {
+          ".write": "auth != null && (auth.uid === $uid || root.child('privateMembers/'+$room+'/'+auth.uid).val() === true)",
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "privateMessages": {
+      "$room": {
+        ".indexOn": [
+          "ts"
+        ],
+        ".read": "auth != null && root.child('privateMembers/'+$room+'/'+auth.uid).val() === true",
+        ".write": "auth != null && root.child('privateMembers/'+$room+'/'+auth.uid).val() === true",
+        "$msg": {
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "inboxMeta": {
+      "$uid": {
+        ".indexOn": [
+          "ts",
+          "lastTs"
+        ],
+        ".read": "auth != null && auth.uid === $uid",
+        "$chatId": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && (auth.uid === $uid || root.child('privateMembers/'+$chatId+'/'+auth.uid).val() === true)",
+          ".validate": "!newData.exists() || (newData.hasChild('lastTs') && newData.child('lastTs').isNumber())"
+        }
+      }
+    },
+    "botRooms": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".indexOn": [
+          "ts"
+        ],
+        ".read": "auth != null && auth.uid === $uid",
+        "$id": {
+          ".write": "auth != null",
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber() && (!newData.hasChild('type') || newData.child('type').isString()) && (!newData.hasChild('text') || newData.child('text').isString()) && (!newData.hasChild('from') || newData.child('from').isString())"
+        }
+      }
+    },
+    "announcements": {
+      "global": {
+        ".read": true,
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+        ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+      }
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+      "wallpapers": {
+        ".read": true,
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)"
+      },
+      "sounds": {
+        ".read": true,
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)"
+      },
+      "promo": {
+        ".read": true,
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)"
+      }
+    },
+    "map": {
+      "poi": {
+        "$city": {
+          ".read": true,
+          ".write": "auth != null && ((root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true) || root.child('roles/'+auth.uid+'/moderator').val() === true)"
+        }
+      }
+    },
+    "bots": {
+      ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+      ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)"
+    },
+    "userBots": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "fcmTokens": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "$token": {
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "vacancies": {
+      "$uid": {
+        ".read": "true",
+        ".write": "auth != null && auth.uid === $uid",
+        ".indexOn": [
+          "ts"
+        ],
+        "$id": {
+          ".validate": "newData.hasChildren(['ts','text'])"
+        }
+      }
+    },
+    "onlineStats": {
+      "public": {
+        ".read": true,
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)"
+      }
+    },
+    "botTick": {
+      ".read": false,
+      ".write": false
+    },
+    "support": {
+      "tickets": {
+        ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+        "$id": {
+          ".write": "auth != null",
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
+        }
+      }
+    },
+    "dmBans": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('roles/'+auth.uid+'/admin').val()===true)",
+        ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val()===true"
+      }
+    },
+    "payments": {
+      ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+      ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+      "requests": {
+        "$uid": {
+          ".read": "auth != null && (auth.uid === $uid || auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true))",
+          ".write": "auth != null && (auth.uid === $uid || auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true))",
+          "$id": {
+            ".write": "auth != null && auth.uid === $uid",
+            ".validate": "newData.hasChildren(['uid','plan','ts','status']) && newData.child('uid').val() === $uid && newData.child('ts').isNumber()"
+          }
+        }
+      },
+      "audit": {
+        "$uid": {
+          ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+          ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)"
+        }
+      }
+    }
+  }
+}
