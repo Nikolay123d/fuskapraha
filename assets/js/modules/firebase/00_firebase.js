@@ -46,3 +46,5 @@ export function initFirebaseOnce(){
   window.__MK_FB_READY__ = true;
   console.log('[firebase] initialized');
 }
+export const initFirebase = initFirebaseOnce;
+
