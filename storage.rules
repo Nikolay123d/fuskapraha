@@ -1,22 +1,15 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-
-    // Public chat images: readable by anyone, writable only by authenticated users
-    match /chatImages/{city}/{uid}/{file} {
+    match /chatImages/{uid}/{allPaths=**} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.uid == uid;
+      allow write: if request.auth != null
+                   && request.auth.uid == uid
+                   && request.resource.size < 5 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
     }
-
-    // Premium payment proof screenshots:
-    // Storage rules can't check RTDB roles; simplest safe-ish option:
-    // - write only owner
-    // - read any authenticated user (so admin can view)
-    // If you need strict admin-only read: store proofs in a separate bucket or use signed URLs.
-    match /premiumProof/{uid}/{file} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && request.auth.uid == uid;
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
-
   }
 }
