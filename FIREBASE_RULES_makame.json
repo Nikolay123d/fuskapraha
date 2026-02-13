@@ -1,0 +1,340 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+    "roles": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))",
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+        "admin": {
+          ".validate": "newData.isBoolean(false)"
+        },
+        "moderator": {
+          ".validate": "newData.isBoolean(false)"
+        }
+      }
+    },
+    "bans": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))",
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+        ".validate": "newData.hasChild('until') && newData.child('until').isNumber(false)"
+      }
+    },
+    "mutes": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))",
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+        ".validate": "newData.hasChild('until') && newData.child('until').isNumber(false)"
+      }
+    },
+    "usersPublic": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))",
+        "email": {
+          ".read": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))",
+          ".validate": "!newData.exists(false)"
+        },
+        "plan": {
+          ".validate": "!newData.exists(false) || ((root.child('roles/'+auth.uid+'/admin').val(false) === true ) || (auth != null && auth.uid === $uid && (data.exists(false) ? newData.val(false) === data.val(false) : newData.val(false) === 'free')))"
+        },
+        "premiumSince": {
+          ".validate": "!newData.exists(false) || (newData.isNumber(false) && ((root.child('roles/'+auth.uid+'/admin').val(false) === true ) || (auth != null && auth.uid === $uid && data.exists(false) && newData.val(false) === data.val(false))))"
+        },
+        "premiumUntil": {
+          ".validate": "!newData.exists(false) || (newData.isNumber(false) && ((root.child('roles/'+auth.uid+'/admin').val(false) === true ) || (auth != null && auth.uid === $uid && data.exists(false) && newData.val(false) === data.val(false))))"
+        }
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "notifLastSeenTs": {
+          ".validate": "newData.isNumber(false) && newData.val(false) >= 0 && newData.val(false) <= now + 120000 && (data.exists(false) ? newData.val(false) >= data.val(false) : true)"
+        }
+      }
+    },
+    "presence": {
+      ".indexOn": [
+        "ts"
+      ],
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber(false)"
+      }
+    },
+    "messages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null",
+          ".validate": "!newData.exists(false) ? (auth != null && (data.child('by').val(false) === auth.uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))) : ( newData.hasChildren(['ts','by']) && newData.child('ts').isNumber(false) && newData.child('ts').val(false) <= now + 120000 && newData.child('ts').val(false) >= now - 31536000000 && newData.child('by').isString(false) && (data.exists(false) ? (newData.child('by').val(false) === data.child('by').val(false) && newData.child('ts').val(false) === data.child('ts').val(false)) : true) && (newData.child('by').val(false) === auth.uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true )) && (!newData.hasChild('text') || (newData.child('text').isString(false) && newData.child('text').val(false).length > 0 && newData.child('text').val(false).length <= 1200)) )"
+        }
+      }
+    },
+    "rentMessages": {
+      "$city": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$msg": {
+          ".read": true,
+          ".write": "auth != null",
+          ".validate": "!newData.exists(false) ? (auth != null && (data.child('by').val(false) === auth.uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))) : ( newData.hasChildren(['ts','by']) && newData.child('ts').isNumber(false) && newData.child('ts').val(false) <= now + 120000 && newData.child('ts').val(false) >= now - 31536000000 && newData.child('by').isString(false) && (data.exists(false) ? (newData.child('by').val(false) === data.child('by').val(false) && newData.child('ts').val(false) === data.child('ts').val(false)) : true) && (newData.child('by').val(false) === auth.uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true )) && (!newData.hasChild('text') || (newData.child('text').isString(false) && newData.child('text').val(false).length > 0 && newData.child('text').val(false).length <= 1200)) )"
+        }
+      }
+    },
+    "friendRequests": {
+      "$to": {
+        "$from": {
+          ".read": "auth != null && (auth.uid === $to || auth.uid === $from)",
+          ".write": "auth != null && ((auth.uid === $from) || (auth.uid === $to && !newData.exists(false)) || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))",
+          ".validate": "!newData.exists(false) || (newData.hasChildren(['ts','from']) && newData.child('ts').isNumber(false) && newData.child('ts').val(false) <= now + 120000 && newData.child('ts').val(false) >= now - 31536000000 && newData.child('from').val(false) === $from)"
+        }
+      }
+    },
+    "friends": {
+      "$a": {
+        "$b": {
+          ".read": "auth != null && (auth.uid === $a || auth.uid === $b)",
+          ".write": "auth != null && (auth.uid === $a || auth.uid === $b)",
+          ".validate": "$a !== $b && (!newData.exists(false) || (newData.isString(false) && (newData.val(false) === 'pending' || newData.val(false) === 'accepted' || newData.val(false) === 'blocked' || newData.val(false) === 'removed') && (newData.val(false) !== 'accepted' || ((data.exists(false) && data.val(false) === 'accepted') || ((root.child('friendRequests/'+$a+'/'+$b).exists(false) && auth.uid === $a) || (root.child('friendRequests/'+$b+'/'+$a).exists(false) && auth.uid === $b))))))"
+        }
+      }
+    },
+    "privateMembers": {
+      "$room": {
+        ".read": "auth != null && data.child(auth.uid).val(false) === true",
+        ".write": false,
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.isBoolean(false)"
+        }
+      }
+    },
+    "privateRoomsByUser": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        "$room": {
+          ".write": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))",
+          ".validate": "newData.isBoolean(false)"
+        }
+      }
+    },
+    "privateMessages": {
+      "$room": {
+        ".indexOn": [
+          "ts"
+        ],
+        ".read": "auth != null && root.child('privateMembers/'+$room+'/'+auth.uid).val(false) === true",
+        ".write": "auth != null && root.child('privateMembers/'+$room+'/'+auth.uid).val(false) === true",
+        "$msg": {
+          ".validate": "!newData.exists(false) ? (auth != null && (data.child('by').val(false) === auth.uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))) : ( newData.hasChildren(['ts','by']) && newData.child('ts').isNumber(false) && newData.child('ts').val(false) <= now + 120000 && newData.child('ts').val(false) >= now - 31536000000 && newData.child('by').isString(false) && (data.exists(false) ? (newData.child('by').val(false) === data.child('by').val(false) && newData.child('ts').val(false) === data.child('ts').val(false)) : true) && (newData.child('by').val(false) === auth.uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true )) && (!newData.hasChild('text') || (newData.child('text').isString(false) && newData.child('text').val(false).length > 0 && newData.child('text').val(false).length <= 1200)) )"
+        }
+      }
+    },
+    "inboxMeta": {
+      "$uid": {
+        ".indexOn": [
+          "ts",
+          "lastTs"
+        ],
+        ".read": "auth != null && auth.uid === $uid",
+        "$chatId": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ) || (root.child('privateMembers/'+$chatId+'/'+auth.uid).val(false) === true && ($chatId === (auth.uid + '_' + $uid) || $chatId === ($uid + '_' + auth.uid)) && newData.child('with').isString(false) && newData.child('with').val(false) === auth.uid))",
+          ".validate": "!newData.exists(false) || (newData.hasChild('lastTs') && newData.child('lastTs').isNumber(false))"
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".indexOn": [
+          "ts"
+        ],
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && ((root.child('roles/'+auth.uid+'/admin').val(false) === true ) || (auth.uid === $uid && !newData.exists(false)))",
+        "$id": {
+          ".write": "auth != null && ((root.child('roles/'+auth.uid+'/admin').val(false) === true ) || (auth.uid === $uid && !newData.exists(false)))",
+          ".validate": "!newData.exists(false) || (newData.hasChildren(['ts','type']) && newData.child('ts').isNumber(false) && newData.child('ts').val(false) <= now + 120000 && newData.child('ts').val(false) >= now - 31536000000 && newData.child('type').isString(false) && newData.child('type').val(false).length <= 40 && (!newData.hasChild('title') || (newData.child('title').isString(false) && newData.child('title').val(false).length <= 120)) && (!newData.hasChild('text') || (newData.child('text').isString(false) && newData.child('text').val(false).length > 0 && newData.child('text').val(false).length <= 800)) && (!newData.hasChild('from') || newData.child('from').isString(false)) && (!newData.hasChild('room') || newData.child('room').isString(false)) && (!newData.hasChild('meta') || (newData.child('meta').isString(false) && newData.child('meta').val(false).length <= 1200)))"
+        }
+      }
+    },
+    "auditLogs": {
+      ".indexOn": [
+        "ts"
+      ],
+      "$id": {
+        ".read": "auth != null && ((root.child('roles/'+auth.uid+'/admin').val(false) === true ) || root.child('roles/'+auth.uid+'/moderator').val(false) === true)",
+        ".write": "auth != null && ((root.child('roles/'+auth.uid+'/admin').val(false) === true ) || root.child('roles/'+auth.uid+'/moderator').val(false) === true)",
+        ".validate": "newData.hasChildren(['actorUid','action','target','ts']) && newData.child('actorUid').isString(false) && newData.child('actorUid').val(false) === auth.uid && newData.child('action').isString(false) && newData.child('action').val(false).length > 0 && newData.child('action').val(false).length <= 80 && newData.child('target').isString(false) && newData.child('target').val(false).length <= 200 && newData.child('ts').isNumber(false) && newData.child('ts').val(false) <= now + 120000 && newData.child('ts').val(false) >= now - 31536000000 && (!newData.hasChild('meta') || (newData.child('meta').isString(false) && newData.child('meta').val(false).length <= 2000))"
+      }
+    },
+    "announcements": {
+      "global": {
+        ".read": true,
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+        ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber(false)"
+      }
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+      "wallpapers": {
+        ".read": true,
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )"
+      },
+      "sounds": {
+        ".read": true,
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )"
+      },
+      "promo": {
+        ".read": true,
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )"
+      },
+      "premium": {
+        ".read": true,
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )"
+      }
+    },
+    "map": {
+      "poi": {
+        "$city": {
+          ".read": true,
+          ".write": "auth != null && ((root.child('roles/'+auth.uid+'/admin').val(false) === true ) || root.child('roles/'+auth.uid+'/moderator').val(false) === true)"
+        }
+      }
+    },
+    "bots": {
+      ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+      ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )"
+    },
+    "userBots": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "fcmTokens": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "$token": {
+          ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber(false)"
+        }
+      }
+    },
+    "vacancies": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid",
+        ".indexOn": [
+          "ts"
+        ],
+        "$id": {
+          ".validate": "newData.hasChildren(['ts','text']) && newData.child('ts').isNumber(false) && newData.child('text').isString(false)"
+        }
+      }
+    },
+    "onlineStats": {
+      "public": {
+        ".read": true,
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )"
+      }
+    },
+    "profileChangeRequests": {
+      ".indexOn": [
+        "ts"
+      ],
+      ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+      "$id": {
+        ".write": "auth != null && ((!data.exists(false) && newData.child('uid').val(false) === auth.uid) || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))",
+        ".validate": "newData.hasChildren(['uid','ts','type','status']) && newData.child('uid').isString(false) && newData.child('ts').isNumber(false) && newData.child('type').isString(false) && newData.child('status').isString(false)"
+      }
+    },
+    "botRooms": {
+      ".indexOn": [
+        "ts"
+      ],
+      "$room": {
+        ".read": "auth != null && ((root.child('roles/'+auth.uid+'/admin').val(false) === true ) || data.child('userUid').val(false) === auth.uid)",
+        ".write": "auth != null && ((root.child('roles/'+auth.uid+'/admin').val(false) === true ) || newData.child('userUid').val(false) === auth.uid)",
+        ".validate": "!newData.exists(false) || (newData.hasChildren(['ts','userUid','botUid']) && newData.child('ts').isNumber(false) && newData.child('ts').val(false) <= now + 120000 && newData.child('ts').val(false) >= now - 31536000000 && newData.child('userUid').isString(false) && newData.child('botUid').isString(false) && newData.child('botUid').val(false).matches(/^bot_[A-Za-z0-9_-]+$/) && ($room === (newData.child('userUid').val(false) + '_' + newData.child('botUid').val(false)) || $room === (newData.child('botUid').val(false) + '_' + newData.child('userUid').val(false))) && (root.child('usersPublic/'+newData.child('botUid').val(false)+'/role').val(false) === 'bot' || (root.child('roles/'+auth.uid+'/admin').val(false) === true )) && (!newData.hasChild('lastHandledTs') || newData.child('lastHandledTs').isNumber(false)))"
+      }
+    },
+    "botsInbox": {
+      ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+      ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+      "$admin": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$botUid": {
+          ".indexOn": [
+            "ts"
+          ],
+          "$msg": {
+            ".validate": "!newData.exists(false) || (newData.hasChild('ts') && newData.child('ts').isNumber(false))"
+          }
+        }
+      }
+    },
+    "botTick": {
+      ".read": false,
+      ".write": false
+    },
+    "support": {
+      "tickets": {
+        ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+        "$id": {
+          ".write": "auth != null",
+          ".validate": "!newData.exists(false) ? ((root.child('roles/'+auth.uid+'/admin').val(false) === true )) : ( newData.hasChild('ts') && newData.child('ts').isNumber(false) && newData.child('by').isString(false) && (data.exists(false) ? (newData.child('by').val(false) === data.child('by').val(false) && newData.child('ts').val(false) === data.child('ts').val(false)) : true) && (newData.child('by').val(false) === auth.uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true )) && (!newData.hasChild('text') || (newData.child('text').isString(false) && newData.child('text').val(false).length <= 1200)) )"
+        }
+      },
+      "planRequests": {
+        ".indexOn": [
+          "ts"
+        ],
+        "$id": {
+          ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || data.child('by').val() === auth.uid)",
+          ".write": "auth != null && ( (root.child('roles/'+auth.uid+'/admin').val() === true) || (!data.exists() && newData.child('by').val() === auth.uid) )",
+          ".validate": "newData.hasChildren(['by','plan','ts','status']) && newData.child('by').isString() && newData.child('by').val().length > 0 && newData.child('by').val().length <= 80 && newData.child('plan').isString() && newData.child('plan').val().length > 0 && newData.child('plan').val().length <= 40 && newData.child('ts').isNumber() && newData.child('ts').val() <= now + 120000 && newData.child('ts').val() >= now - 31536000000 && newData.child('status').isString() && newData.child('status').val().length <= 20 && (!newData.hasChild('proofImg') || newData.child('proofImg').isString()) && (!newData.hasChild('price') || newData.child('price').isNumber()) && (!newData.hasChild('period') || newData.child('period').isString()) && (!newData.hasChild('type') || newData.child('type').isString())"
+        },
+        ".read": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true",
+        ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true"
+      }
+    },
+    "dmBans": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))",
+        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )"
+      }
+    },
+    "payments": {
+      ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+      ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+      "requests": {
+        "$uid": {
+          ".read": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))",
+          ".write": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val(false) === true ))",
+          "$id": {
+            ".write": "auth != null && auth.uid === $uid",
+            ".validate": "newData.hasChildren(['uid','plan','ts','status']) && newData.child('uid').val(false) === $uid && newData.child('ts').isNumber(false)"
+          }
+        }
+      },
+      "audit": {
+        "$uid": {
+          ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )",
+          ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val(false) === true )"
+        }
+      }
+    }
+  }
+}
