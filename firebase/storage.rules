@@ -1,0 +1,39 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    // Admin check by UID (Storage rules can't read RTDB roles)
+    function isAdmin() {
+      return isSignedIn() && (
+         request.auth.uid == 'PsnyM4j68AR2EyXZaC9ElNqnow12' ||
+         request.auth.uid == 'VrP5IzhgxmT0uKWc9UWlXSCe6nM2' ||
+         request.auth.uid == 'rN93vIzh0AUhX1YsSWb6Th6W9w82'
+      );
+    }
+
+    // Public read for app assets (avatars/wallpapers/sounds shared to everyone)
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && request.resource.size < 25 * 1024 * 1024;
+    }
+
+    // User uploads (private by ownership; app can still share links)
+    match /uploads/{uid}/{allPaths=**} {
+      allow read: if true; // if you want private uploads, change to: isSignedIn() && request.auth.uid == uid
+      allow write: if isSignedIn()
+                   && request.auth.uid == uid
+                   && request.resource.size < 15 * 1024 * 1024
+                   && (request.resource.contentType.matches('image/.*') ||
+                       request.resource.contentType.matches('audio/.*'));
+    }
+
+    // Deny everything else by default
+    match /{allPaths=**} {
+      allow read: if false;
+      allow write: if false;
+    }
+  }
+}
