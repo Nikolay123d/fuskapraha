@@ -31,7 +31,7 @@
     "usersPublic": {
       "$uid": {
         ".read": true,
-        ".write": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true)",
+        ".write": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val() === true))",
         "nick": {
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0 && newData.val().length <= 60)"
         },
@@ -62,16 +62,9 @@
         },
         "$other": {
           ".validate": "newData.val() === data.val()"
-        },
-        "nickLower": {
-          ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0 && newData.val().length <= 60)"
         }
       },
-      ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
-      ".indexOn": [
-        "nickLower",
-        "createdAt"
-      ]
+      ".read": "auth != null"
     },
     "users": {
       "$uid": {
@@ -86,6 +79,28 @@
         "vacanciesLastSeenTs": {
           ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= now + 120000 && (data.exists() ? newData.val() >= data.val() : true)"
         },
+        "profile": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && auth.uid === $uid",
+          "about": {
+            ".validate": "newData.isString() && newData.val().length <= 2000"
+          },
+          "company": {
+            ".validate": "newData.isString() && newData.val().length <= 200"
+          },
+          "phone": {
+            ".validate": "newData.isString() && newData.val().length <= 50"
+          },
+          "nickLocked": {
+            ".validate": "newData.isBoolean()"
+          },
+          "roleLocked": {
+            ".validate": "newData.isBoolean()"
+          },
+          "$other": {
+            ".validate": "!newData.exists() || newData.isBoolean() || newData.isNumber() || (newData.isString() && newData.val().length <= 500)"
+          }
+        },
         "limits": {
           "$day": {
             "$action": {
@@ -93,6 +108,9 @@
             }
           },
           ".write": "auth != null && root.child('roles/'+auth.uid+'/admin').val() === true"
+        },
+        "$other": {
+          ".validate": "newData.val() === data.val()"
         }
       }
     },
@@ -107,6 +125,15 @@
         ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber()"
       },
       ".read": "auth != null"
+    },
+    "typing": {
+      "$city": {
+        "$uid": {
+          ".read": "auth != null",
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "!newData.exists() || (newData.hasChild('ts') && newData.child('ts').isNumber() && newData.child('ts').val() <= now + 120000 && newData.child('ts').val() >= now - 600000)"
+        }
+      }
     },
     "messages": {
       "$city": {
@@ -227,7 +254,7 @@
           "ts"
         ],
         ".read": "auth != null && root.child('privateMembers/'+$room+'/'+auth.uid).val() === true",
-        ".write": "auth != null && root.child('privateMembers/'+$room+'/'+auth.uid).val() === true && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true || $room.matches(/^bot_.*/) || $room.matches(/.*_bot_.*/))",
+        ".write": "auth != null && root.child('privateMembers/'+$room+'/'+auth.uid).val() === true && (data.exists() || root.child('dmConfirmed/'+$room).exists() || $room.matches(/^bot_.*/) || $room.matches(/.*_bot_.*/)) && ( ($room.matches(/^bot_.*/) || $room.matches(/.*_bot_.*/)) || !root.child('dmConfirmed/'+$room).exists() || ( !root.child('blocks/'+auth.uid+'/' + (root.child('dmConfirmed/'+$room+'/a').val() === auth.uid ? root.child('dmConfirmed/'+$room+'/b').val() : root.child('dmConfirmed/'+$room+'/a').val())).exists() && !root.child('blocks/' + (root.child('dmConfirmed/'+$room+'/a').val() === auth.uid ? root.child('dmConfirmed/'+$room+'/b').val() : root.child('dmConfirmed/'+$room+'/a').val()) + '/' + auth.uid).exists() ) )",
         "$msg": {
           "by": {
             ".validate": "true"
@@ -266,7 +293,7 @@
         "$from": {
           ".read": "auth != null && (auth.uid === $to || auth.uid === $from)",
           ".write": false,
-          ".validate": "!newData.exists() || (!data.exists() && auth != null && auth.uid === $from && newData.hasChildren(['ts','fromUid','previewText']) && newData.child('ts').isNumber() && newData.child('ts').val() <= now + 120000 && newData.child('ts').val() >= now - 31536000000 && newData.child('fromUid').isString() && newData.child('fromUid').val() === $from && newData.child('previewText').isString() && newData.child('previewText').val().length > 0 && newData.child('previewText').val().length <= 240 && (!newData.hasChild('fromNick') || (newData.child('fromNick').isString() && newData.child('fromNick').val().length <= 60)) && (!newData.hasChild('fromAvatar') || (newData.child('fromAvatar').isString() && newData.child('fromAvatar').val().length <= 400000)) )"
+          ".validate": "!newData.exists() || (!data.exists() && auth != null && auth.uid === $from && newData.hasChildren(['ts','fromUid','previewText']) && newData.child('ts').isNumber() && newData.child('ts').val() <= now + 120000 && newData.child('ts').val() >= now - 31536000000 && newData.child('fromUid').isString() && newData.child('fromUid').val() === $from && newData.child('previewText').isString() && newData.child('previewText').val().length > 0 && newData.child('previewText').val().length <= 240 && (!newData.hasChild('text') || (newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 1200)) && (!newData.hasChild('fromNick') || (newData.child('fromNick').isString() && newData.child('fromNick').val().length <= 60)) && (!newData.hasChild('fromAvatar') || (newData.child('fromAvatar').isString() && newData.child('fromAvatar').val().length <= 400000)) )"
         }
       }
     },
@@ -286,7 +313,7 @@
         ".read": "auth != null && auth.uid === $uid",
         "$chatId": {
           ".read": "auth != null && auth.uid === $uid",
-          ".write": "auth != null && (auth.uid === $uid || root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
+          ".write": "auth != null && (auth.uid === $uid || (root.child('roles/'+auth.uid+'/admin').val() === true) || (root.child('privateMembers/'+$chatId+'/'+auth.uid).val() === true && ($chatId === (auth.uid + '_' + $uid) || $chatId === ($uid + '_' + auth.uid)) && newData.child('with').isString() && newData.child('with').val() === auth.uid))",
           ".validate": "!newData.exists() || (newData.hasChild('lastTs') && newData.child('lastTs').isNumber())"
         }
       }
@@ -443,7 +470,7 @@
     "autopostCampaigns": {
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || root.child('roles/'+auth.uid+'/admin').val() === true)",
-        ".write": "false",
+        ".write": false,
         "$campaignId": {
           ".validate": "!newData.exists() || (newData.hasChildren(['city','text','intervalMin','isActive','createdTs']) && newData.child('city').isString() && newData.child('city').val().length > 0 && newData.child('city').val().length <= 40 && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 1200 && newData.child('intervalMin').isNumber() && newData.child('intervalMin').val() >= 10 && newData.child('intervalMin').val() <= 1440 && newData.child('isActive').isBoolean() && newData.child('createdTs').isNumber() && newData.child('createdTs').val() <= now + 120000 && newData.child('createdTs').val() >= now - 31536000000 && (!newData.hasChild('imageUrl') || (newData.child('imageUrl').isString() && newData.child('imageUrl').val().length <= 400000)) && (!newData.hasChild('lastPostTs') || (newData.child('lastPostTs').isNumber() && newData.child('lastPostTs').val() <= now + 120000 && (data.child('lastPostTs').exists() ? newData.child('lastPostTs').val() >= data.child('lastPostTs').val() : true))) )"
         }
@@ -526,7 +553,7 @@
       "$uid": {
         ".read": "auth != null && (((root.child('roles/'+auth.uid+'/admin').val() === true)) || root.child('roles/'+auth.uid+'/moderator').val() === true)",
         "$id": {
-          ".write": "auth != null && ((((root.child('roles/'+auth.uid+'/admin').val() === true)) || root.child('roles/'+auth.uid+'/moderator').val() === true) || !data.exists())",
+          ".write": "auth != null && ((((root.child('roles/'+auth.uid+'/admin').val() === true)) || (root.child('roles/'+auth.uid+'/moderator').val() === true)) || !data.exists())",
           ".validate": "!newData.exists() || (newData.hasChildren(['from','ts','text']) && newData.child('from').isString() && newData.child('from').val() === auth.uid && newData.child('ts').isNumber() && newData.child('ts').val() <= now + 120000 && newData.child('ts').val() >= now - 31536000000 && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 600)"
         }
       }
@@ -643,23 +670,6 @@
           ".write": "auth != null && auth.uid === $uid && root.child('privateMembers/'+$room+'/'+auth.uid).val() === true",
           ".validate": "newData.hasChild('ts') && newData.child('ts').isNumber() && newData.child('ts').val() <= now + 2*60*1000 && newData.child('ts').val() >= 0 && (data.exists() ? newData.child('ts').val() >= data.child('ts').val() : true)"
         }
-      }
-    },
-    "autopostActive": {
-      ".read": "auth != null && (root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
-      ".write": "false",
-      ".indexOn": [
-        "nextPostTs"
-      ]
-    },
-    "autopostJobs": {
-      ".read": "false",
-      ".write": "false"
-    },
-    "autopostStats": {
-      "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || root.child('roles/'+auth.uid+'/admin').val() === true || root.child('roles/'+auth.uid+'/moderator').val() === true)",
-        ".write": "false"
       }
     }
   }
