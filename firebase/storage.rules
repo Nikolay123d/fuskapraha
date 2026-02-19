@@ -2,27 +2,73 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
 
-    // Public assets bundled with the app (admin-only write)
+    // ---------- helpers ----------
+    function signedIn() { return request.auth != null; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // Для загрузки проверяем тип/размер (request.resource есть только при upload/update)
+    function isImageUpload() {
+      return request.resource != null
+        && request.resource.contentType != null
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    function isAudioUpload() {
+      return request.resource != null
+        && request.resource.contentType != null
+        && request.resource.contentType.matches('audio/.*');
+    }
+
+    function sizeUnder(bytes) {
+      return request.resource != null && request.resource.size < bytes;
+    }
+
+    // ---------- PUBLIC / SETTINGS ----------
+    // Если ты используешь Storage для обоев/звуков/QR — пусть читают все.
+    // Писать с клиента запрещаем (если надо — загрузка через Firebase Console или через серверную функцию).
     match /public/{allPaths=**} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.admin == true;
+      allow write: if false;
     }
 
-    // User uploads (PRIVATE by default)
-    // Path convention: uploads/{uid}/...
-    match /uploads/{uid}/{allPaths=**} {
-      // Only the owner can read their uploads
-      allow read: if request.auth != null && (request.auth.uid == uid || request.auth.token.admin == true);
-
-      // Only the owner can write their uploads
-      // Limit size + allow only image/* (safe default)
-      allow write: if request.auth != null
-                   && request.auth.uid == uid
-                   && request.resource.size < 5 * 1024 * 1024
-                   && request.resource.contentType.matches('image/.*');
+    match /settings/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
     }
 
-    // Default deny
+    // ---------- AVATARS ----------
+    // Аватары обычно публичные (видны всем). Загружать может только владелец.
+    // Лимит 2MB, только image/*
+    match /avatars/{uid}/{fileName} {
+      allow read: if true;
+      allow write: if isOwner(uid) && isImageUpload() && sizeUnder(2 * 1024 * 1024);
+    }
+
+    // ---------- PAYMENT PROOFS (PRIVATE) ----------
+    // Скрин оплаты: читать/писать может только владелец.
+    // Лимит 8MB, только image/*
+    match /payments/proofs/{uid}/{fileName} {
+      allow read: if isOwner(uid);
+      allow write: if isOwner(uid) && isImageUpload() && sizeUnder(8 * 1024 * 1024);
+    }
+
+    // ---------- CHAT UPLOADS ----------
+    // Картинки для общего чата: читать могут только авторизованные (не гости).
+    // Писать может только владелец в свою папку.
+    // Лимит 5MB, только image/*
+    match /uploads/chat/{uid}/{fileName} {
+      allow read: if signedIn();
+      allow write: if isOwner(uid) && isImageUpload() && sizeUnder(5 * 1024 * 1024);
+    }
+
+    // ---------- OPTIONAL: SOUNDS ----------
+    // Если вдруг пользовательские аудио будут:
+    match /uploads/audio/{uid}/{fileName} {
+      allow read: if signedIn();
+      allow write: if isOwner(uid) && isAudioUpload() && sizeUnder(10 * 1024 * 1024);
+    }
+
+    // ---------- DEFAULT DENY ----------
     match /{allPaths=**} {
       allow read, write: if false;
     }
