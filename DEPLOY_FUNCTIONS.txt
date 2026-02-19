@@ -1,0 +1,76 @@
+ФУНКЦИИ ДЛЯ ДЕПЛОЯ (Firebase Cloud Functions, region=europe-west1)
+
+В этом проекте функции объявлены в:
+  firebase/functions/index.js
+
+ИМЕНА export’ов (можно деплоить все разом, или выборочно):
+
+БАЗОВЫЕ / ЛИМИТЫ
+- consumeLimit
+
+ПРОФИЛЬ (server-authority для usersPublic)
+- profileInit
+- profileUpdatePublic
+
+DM (server-only)
+- dmRequestSend
+- dmRequestDecline
+- dmConfirmAtomic
+- dmSend
+- dmMarkRead
+
+FRIENDS / BLOCK
+- friendSend
+- friendAccept
+- friendDecline
+- friendRemove
+- blockUser
+- unblockUser
+
+SUPPORT / REPORT
+- supportTicketCreate
+- reportUser
+
+PROMO / PAYMENTS
+- redeemPromo
+- createPaymentRequest
+- approvePayment
+
+AUTOPOST (callable)
+- createAutopostCampaign
+- updateAutopostCampaign
+- toggleAutopostCampaign
+- deleteAutopostCampaign
+
+AUTOPOST (aliases, если фронт ждёт другие имена)
+- autopostCampaignCreate
+- autopostCampaignUpdate
+- autopostCampaignToggle
+- autopostCampaignRemove
+
+СЕРВЕРНЫЕ ТРИГГЕРЫ/CRON (тоже деплоятся как функции):
+- autopostTick          (Cloud Scheduler каждые 5 минут)
+- promoChat25Tick       (Cloud Scheduler каждый день)
+- onChatMessageCreate   (Database trigger)
+
+Команды (Firebase CLI):
+
+1) Установка зависимостей функций
+   cd firebase/functions
+   npm install
+
+2) Деплой всех функций
+   cd ../..
+   firebase deploy --only functions
+
+3) Деплой правил RTDB (обязательно, если менял rules)
+   firebase deploy --only database
+
+4) Пример деплоя только callable (если нужно)
+   firebase deploy --only \
+     functions:consumeLimit,functions:profileInit,functions:profileUpdatePublic,\
+     functions:dmRequestSend,functions:dmRequestDecline,functions:dmConfirmAtomic,functions:dmSend,functions:dmMarkRead,\
+     functions:friendSend,functions:friendAccept,functions:friendDecline,functions:friendRemove,functions:blockUser,functions:unblockUser,\
+     functions:supportTicketCreate,functions:reportUser,functions:redeemPromo,functions:createPaymentRequest,functions:approvePayment,\
+     functions:createAutopostCampaign,functions:updateAutopostCampaign,functions:toggleAutopostCampaign,functions:deleteAutopostCampaign,\
+     functions:autopostCampaignCreate,functions:autopostCampaignUpdate,functions:autopostCampaignToggle,functions:autopostCampaignRemove
